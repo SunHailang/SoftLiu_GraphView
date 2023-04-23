@@ -12,14 +12,15 @@ namespace Editor.Nodes
         {
             // 创建输入
             Port input = GraphViewUtils.GetInstantiatePort(this, Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(int));
-            input.portName = "input";
-            input.portColor = Color.blue;
+            
             this.Add(input);
             
             Port output = GraphViewUtils.GetInstantiatePort(this, Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(int));
-            input.portName = "output";
-            input.portColor = Color.green;
-            this.Add(input);
+            output.portName = "output";
+            output.portColor = Color.green;
+            this.Add(output);
+
+            _state = ScriptableObject.CreateInstance<GroundScriptable>();
         }
     
     

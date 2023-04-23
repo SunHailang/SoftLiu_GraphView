@@ -14,12 +14,12 @@ namespace Editor.Nodes
         private string _guidValue;
         public string GuidValue => _guidValue;
 
-        public State state;
+        protected ScriptableObject _state;
+        public ScriptableObject State => _state;
 
         public BaseNode()
         {
             _guidValue = Guid.NewGuid().ToString();
-            state = ScriptableObject.CreateInstance<State>();
         }
 
         public override void OnSelected()

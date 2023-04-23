@@ -27,9 +27,9 @@ namespace Editor.GraphViews
             Debug.Log($"显示节点的Inspector面板 {selected}");
             UnityEngine.Object.DestroyImmediate(_editor);
 
-            if (nodeView == null)
+            if (nodeView == null || nodeView.State == null)
                 return;
-            _editor = UnityEditor.Editor.CreateEditor(nodeView.state);
+            _editor = UnityEditor.Editor.CreateEditor(nodeView.State);
             ScrollView scrollView = new ScrollView();
             IMGUIContainer container = new IMGUIContainer(() => {
                 if (nodeView != null)
