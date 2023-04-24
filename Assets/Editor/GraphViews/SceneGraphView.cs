@@ -1,14 +1,12 @@
 using System;
-using System.Collections;
+using GraphEditor.Nodes;
 using System.Collections.Generic;
-using Editor.Nodes;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Editor.GraphViews
+namespace GraphEditor.GraphViews
 {
     public class SceneGraphView : GraphView
     {
@@ -18,6 +16,7 @@ namespace Editor.GraphViews
 
         public event Action<BaseNode, bool> onNodeSelected;
         public EditorWindow window;
+
         public SceneGraphView()
         {
             Insert(0, new GridBackground());
@@ -39,16 +38,42 @@ namespace Editor.GraphViews
 
             this.RegisterCallback<MouseDownEvent>(OnMouseDownCallback, TrickleDown.NoTrickleDown);
             this.RegisterCallback<MouseUpEvent>(OnMouseUpCallback, TrickleDown.TrickleDown);
-
         }
 
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+        {
+            List<Port> compatiblePorts = new List<Port>();
+
+            ports.ForEach((port) =>
+            {
+                // 对每一个 GraphView 里面的Port判断规则：
+                // 1. port不可以与自身相连
+                // 2. 同一个节点的port之间不可以相连
+                if (port != startPort && port.node != startPort.node && startPort.direction != port.direction && startPort.portType == port.portType)
+                {
+                    compatiblePorts.Add(port);
+                }
+            });
+            return compatiblePorts;
+        }
 
         private void OnMouseDownCallback(MouseDownEvent evt)
         {
-            if(evt.button == 1)
+            if (evt.button == 1)
             {
-                // 右键按下
-                Debug.Log($"OnMouseDownCallback:{evt.button}");
+                // 右键按下 缓存当前鼠标相对窗体的坐标点
+                Vector2 localPos = evt.localMousePosition;
+                GenericMenu menu = new GenericMenu();
+                menu.AddItem(new GUIContent("SceneNode"), false, () => { CreateNode<SceneNode>(localPos); });
+                menu.AddItem(new GUIContent("GroundNode"), false, () => { CreateNode<GroundNode>(localPos); });
+                menu.AddItem(new GUIContent("GameObjectNode"), false, () =>
+                {
+                    GameObjectNode node =  CreateNode<GameObjectNode>(localPos);
+                    node.RefreshTempleGo(window);
+                });
+                
+                menu.ShowAsContext();
+                Event.current.Use();
             }
         }
 
@@ -57,26 +82,36 @@ namespace Editor.GraphViews
             //Debug.Log($"OnMouseUpCallback:{evt.button}");
         }
 
-        public void CreateNode<T>(Vector2 pos) where T : BaseNode, new()
+        public T CreateNode<T>(Vector2 pos) where T : BaseNode, new()
         {
-            System.Type type = typeof(T);
+            Type type = typeof(T);
+            string title = type.Name;
+            string guid = System.Guid.NewGuid().ToString();
+            return CreateNode<T>(pos, title, guid);
+        }
+
+        public T CreateNode<T>(Vector2 pos, string title, string guid) where T : BaseNode, new()
+        {
             T node = new T();
             //添加Component，关联节点
             node.onSelected += OnNodeSelected;
-            node.name = $"{type.Name}";
-            node.SetTitle(type.Name);
+            if (string.IsNullOrEmpty(title))
+            {
+                Type type = typeof(T);
+                title = type.Name;
+                Debug.LogError($"CreateNode Error: title is Empty.");
+            }
+            node.name = title;
+            node.SetTitle(title);
+            node.SetGuid(guid);
+            // 屏幕坐标转本地坐标
             node.SetPosition(new Rect(pos, node.GetPosition().size));
-
 
             node.RefreshExpandedState();
             node.RefreshPorts();
-
             this.AddElement(node);
-        }
 
-        public void ResetNodeView()
-        {
-
+            return node;
         }
 
         private void OnNodeSelected(BaseNode node, bool selected)

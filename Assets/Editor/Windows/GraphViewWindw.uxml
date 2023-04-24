@@ -7,19 +7,18 @@
         xsi:schemaLocation="UnityEditor.UIElements file:///E:/StudyGit/SoftLiu_GraphView/UIElementsSchema/UnityEditor.UIElements.xsd">
     <editor:Toolbar name="TopToolBal" style="height: 30px;" class="graph_view_toolbar">
         <engine:Label text="Input:" style="-unity-text-align: middle-center;"/>
-        <engine:TextField name="InputPath" style="width: 180px" />
-        <engine:Button name="BtnAddGround" text="Ground" style="width: 50px; height: auto;"/>
-        <engine:Button name="SaveGround" text="Save" style="width: 50px; height: auto;"/>
+        <engine:TextField name="InputPath" style="width: 320px" />
+        <engine:Button name="SaveScene" text="Save" style="width: 50px; height: 25px; margin-top: 2px; position: Absolute; top: 0px; right: 2px;"/>
     </editor:Toolbar>
     <engine:VisualElement style="flex-direction: row; height: 100%; width: 100%">
         <engine:VisualElement style="height: 100%; width: 30%; " class="inspector_graph_view">
             <engine:Label text="Inspector" class="title_graph_view_label"/>
             <engine:Box style="height: 1px; width: 100%; background-color: rgb(111, 111, 111);"/>
-            <Editor.GraphViews.InspectorGraphView name="InspectorGraphView" style="height: 100%; width: 100%;" />
+            <GraphEditor.GraphViews.InspectorGraphView name="InspectorGraphView" style="height: 100%; width: 100%;" />
         </engine:VisualElement>
         <engine:VisualElement style="height: 100%; width: 70%">
             <engine:Label text="Scene" class="title_graph_view_label"/>
-            <Editor.GraphViews.SceneGraphView name="SceneGraphView" style="height: 100%; width: 100%;"/>
+            <GraphEditor.GraphViews.SceneGraphView name="SceneGraphView" style="height: 100%; width: 100%;"/>
         </engine:VisualElement>
     </engine:VisualElement>
 </engine:UXML>

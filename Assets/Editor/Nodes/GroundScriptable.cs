@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-[System.Serializable]
-public class GroundScriptable : ScriptableObject
+namespace GraphEditor.Nodes
 {
-    
+    [System.Serializable]
+    public class GroundScriptable : BaseScriptable
+    {
+
+    }
 }

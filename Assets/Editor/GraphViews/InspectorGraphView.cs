@@ -1,18 +1,15 @@
-using Editor.Nodes;
+using GraphEditor.Nodes;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Editor.GraphViews
+namespace GraphEditor.GraphViews
 {
     public class InspectorGraphView : GraphView
     {
         public class UxmlFactor : UxmlFactory<InspectorGraphView, UxmlTraits>
         {
         }
-
-        private UnityEditor.Editor _editor;
 
         public InspectorGraphView()
         {
@@ -24,19 +21,16 @@ namespace Editor.GraphViews
         public void UpdateSelection(BaseNode nodeView, bool selected)
         {
             Clear();
-            Debug.Log($"显示节点的Inspector面板 {selected}");
-            UnityEngine.Object.DestroyImmediate(_editor);
-
+            if (!selected)
+            {
+                return;
+            }
             if (nodeView == null || nodeView.State == null)
                 return;
-            _editor = UnityEditor.Editor.CreateEditor(nodeView.State);
             ScrollView scrollView = new ScrollView();
-            IMGUIContainer container = new IMGUIContainer(() => {
-                if (nodeView != null)
-                {
-                    //EditorGUILayout.LabelField("Node名称：", nodeView.title);
-                    _editor.OnInspectorGUI();
-                }
+            IMGUIContainer container = new IMGUIContainer(() =>
+            {
+                nodeView.DrawInspectorGUI();
             });
             scrollView.Add(container);
             this.Add(scrollView);

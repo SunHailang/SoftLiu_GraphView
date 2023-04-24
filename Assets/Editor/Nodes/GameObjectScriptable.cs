@@ -1,15 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Editor.Nodes
+namespace GraphEditor.Nodes
 {
     [System.Serializable]
-    public class GameObjectScriptable : ScriptableObject
+    public class GameObjectScriptable : BaseScriptable
     {
-        public Vector3 Postion = Vector3.zero;
-        public Quaternion Rotation = Quaternion.identity;
+        public Vector3 Position = Vector3.zero;
+        public Vector3 Rotation = Vector3.zero;
         public Vector3 Scale = Vector3.one;
-        public GameObject Template;
+        public string TemplateGo;
+
+        [Range(0, 1)] public float Probability = 0.2f;
+
+        public bool ForceStatic = true;
     }
 }

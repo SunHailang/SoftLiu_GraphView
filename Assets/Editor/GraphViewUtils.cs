@@ -1,7 +1,7 @@
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace Editor
+namespace GraphEditor
 {
     public static class GraphViewUtils
     {
@@ -12,7 +12,7 @@ namespace Editor
             System.Type type)
         {
             Port port = node.InstantiatePort(orientation, direction, capacity, type);
-            port.portName = nameof(direction);
+            port.portName = direction.ToString();
             port.portColor = direction == Direction.Input ? Color.blue : Color.green;
             return port;
         }

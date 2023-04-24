@@ -1,10 +1,10 @@
-using Editor.Nodes;
+using GraphEditor.Nodes;
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEditor.UIElements;
 
-namespace Editor.GraphViews
+namespace GraphEditor.GraphViews
 {
     public class GraphViewWindw : EditorWindow
     {
@@ -15,9 +15,26 @@ namespace Editor.GraphViews
             wnd.titleContent = new GUIContent("GraphViewWindw");
         }
 
+        [UnityEditor.Callbacks.OnOpenAsset(1)]
+        public static bool OpenGraphViewWindow(int instanceID, int line)
+        {
+            Object activeObject = EditorUtility.InstanceIDToObject(instanceID);
+            string path = AssetDatabase.GetAssetPath(instanceID);
+            if (activeObject is SceneContainer container)
+            {
+                GraphViewWindw wnd = GetWindow<GraphViewWindw>();
+                wnd.titleContent = new GUIContent("GraphViewWindw");
+                wnd.LoadSceneView(path, container);
+                return true;
+            }
+
+            return false;
+        }
+
+        private TextField _inputPath = null;
         private SceneGraphView _sceneGraphView;
         private InspectorGraphView _inspectorGraphView;
-        
+
         public void CreateGUI()
         {
             // Each editor window contains a root VisualElement object
@@ -29,25 +46,34 @@ namespace Editor.GraphViews
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath("4b2fe49cd955a744fa3ea4bb5cdfe19d"));
             root.styleSheets.Add(styleSheet);
 
+            _inputPath = root.Q<TextField>("InputPath");
+            
+            Button save = root.Q<Button>("SaveScene");
+            save.clicked += BtnSaveScene_OnClick;
+
+
             _sceneGraphView = root.Q<SceneGraphView>("SceneGraphView");
             _sceneGraphView.onNodeSelected += OnNodeSelected;
             _sceneGraphView.window = this;
 
             _inspectorGraphView = root.Q<InspectorGraphView>("InspectorGraphView");
-            
-            Button addGround = root.Q<Button>("BtnAddGround");
-            addGround.clicked += BtnAddGround_OnClick;
         }
 
-
-        private void BtnAddGround_OnClick()
+        public void LoadSceneView(string path, SceneContainer container)
         {
-            _sceneGraphView.CreateNode<GroundNode>(Vector2.zero);
+            _inputPath.value = path;
+            GraphSceneSaveUtility.GetInstance(_sceneGraphView).Load(container);
+        }
+
+        private void BtnSaveScene_OnClick()
+        {
+            GraphSceneSaveUtility.GetInstance(_sceneGraphView).Save();
         }
 
         private void OnNodeSelected(BaseNode node, bool select)
         {
             _inspectorGraphView.UpdateSelection(node, select);
         }
+
     }
 }
