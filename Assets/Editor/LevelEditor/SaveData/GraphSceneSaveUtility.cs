@@ -33,9 +33,9 @@ namespace GraphEditor
         }
 
 
-        public void Save()
+        public string Save(string path)
         {
-            if (!edges.Any()) return;
+            if (!edges.Any()) return path;
 
             SceneContainer container = ScriptableObject.CreateInstance<SceneContainer>();
 
@@ -87,22 +87,33 @@ namespace GraphEditor
                     container.NodeGameObjectDatas.Add(goState);
                 }
             }
+            string savePath = path;
+            if (string.IsNullOrEmpty(savePath))
+            {
+                string filePath = EditorUtility.SaveFilePanel("选择文件", Application.dataPath,  "SceneContainer","asset");
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    savePath = filePath.Substring(Application.dataPath.Length - 6);
+                }
+            }
+            FileExistAndDelete(savePath);
+            AssetDatabase.CreateAsset(container, savePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            return savePath;
+        }
 
-            string path = "Assets/ResourcesRex/SceneContainerData.asset";
-            if (File.Exists(path))
+        private void FileExistAndDelete(string path)
+        {
+            if (!string.IsNullOrEmpty(path) && File.Exists(path))
             {
                 File.Delete(path);
                 if (File.Exists($"{path}.meta"))
                 {
                     File.Delete($"{path}.meta");
                 }
-
                 AssetDatabase.Refresh();
             }
-
-            AssetDatabase.CreateAsset(container, path);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
         }
 
         public void Load(SceneContainer container)

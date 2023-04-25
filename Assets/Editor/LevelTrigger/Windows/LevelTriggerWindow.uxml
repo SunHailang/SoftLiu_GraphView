@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:editor="UnityEditor.UIElements" xmlns:ui="UnityEditor.UIElements"
+        xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+        xsi:schemaLocation="UnityEditor.UIElements file:///E:/StudyGit/SoftLiu_GraphView/UIElementsSchema/UnityEditor.UIElements.xsd">
+    <ui:Toolbar name="Toolbar" class="toolbar" >
+        <engine:Button name="BtnDesc" text="Desc" style="width: 45px;"/>
+    </ui:Toolbar>
+    <engine:VisualElement style="width: 100%; height: 100%" >
+        <engine:VisualElement style="width: 20%; height: 100%">
+            <engine:Label text="Hierarchy"/>
+            <
+        </engine:VisualElement>
+        
+    </engine:VisualElement>
+    
+</engine:UXML>

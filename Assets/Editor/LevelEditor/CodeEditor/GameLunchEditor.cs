@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
 using GraphEditor;
 using GraphEditor.Nodes;
-using NUnit.Framework;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,13 +14,34 @@ public class GameLunchEditor : UnityEditor.Editor
     private void OnEnable()
     {
         _selectTarget = Selection.activeObject as GameObject;
+
+        string guid = EditorPrefs.GetString("SceneContainer");
+        if (!string.IsNullOrEmpty(guid))
+        {
+            _sceneContainer = AssetDatabase.LoadAssetAtPath<SceneContainer>(AssetDatabase.GUIDToAssetPath(guid));
+            instanceID = _sceneContainer.GetInstanceID();
+        }
     }
+
+    private int instanceID = 0;
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-
         _sceneContainer = EditorGUILayout.ObjectField("SceneContainer", _sceneContainer, typeof(SceneContainer), false) as SceneContainer;
+        int newId = _sceneContainer == null ? 0 : _sceneContainer.GetInstanceID();
+        if (instanceID != newId)
+        {
+            instanceID = newId;
+            string guid = "";
+            if (instanceID != 0)
+            {
+                string path = AssetDatabase.GetAssetPath(_sceneContainer.GetInstanceID());
+                guid = AssetDatabase.AssetPathToGUID(path);
+            }
+            EditorPrefs.SetString("SceneContainer", guid);
+        }
+
         if (GUILayout.Button("Create Scene", GUI.skin.button, GUILayout.Height(25)))
         {
             CreateScene();
@@ -198,7 +216,6 @@ public class GameLunchEditor : UnityEditor.Editor
 
     private void CreateWallGo(Transform parent, int seed, List<GameObjectScriptable> baseList)
     {
-        float widthStep = 2;
         float lenStep = 4;
         int xCount = (int) (_curScenePosition.x / lenStep);
         int zCount = (int) (_curScenePosition.z / lenStep);
@@ -261,20 +278,20 @@ public class GameLunchEditor : UnityEditor.Editor
             return;
         }
 
-        UnityEngine.Random.InitState(seed);
+        Random.InitState(seed);
         for (int i = 2; i < xCount - 2; i++)
         {
             for (int j = 2; j < zCount - 2; j++)
             {
-                float value = UnityEngine.Random.Range(0f, 1.0f);
+                float value = Random.Range(0f, 1.0f);
                 if (!GetRandomIndex(value, list, out int index))
                 {
                     continue;
                 }
-
                 GameObject go = Instantiate<GameObject>(goList[index], parent);
                 go.transform.position = new Vector3(i * widthStep, 0, j * widthStep);
                 go.transform.localScale = baseList[index].Scale;
+                go.transform.Rotate(Vector3.up, baseList[index].Rotation.y);
                 go.isStatic = baseList[index].ForceStatic;
             }
         }

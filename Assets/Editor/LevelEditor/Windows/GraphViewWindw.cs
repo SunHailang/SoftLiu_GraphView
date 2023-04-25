@@ -59,7 +59,7 @@ namespace GraphEditor.GraphViews
             _inspectorGraphView = root.Q<InspectorGraphView>("InspectorGraphView");
         }
 
-        public void LoadSceneView(string path, SceneContainer container)
+        private void LoadSceneView(string path, SceneContainer container)
         {
             _inputPath.value = path;
             GraphSceneSaveUtility.GetInstance(_sceneGraphView).Load(container);
@@ -67,7 +67,7 @@ namespace GraphEditor.GraphViews
 
         private void BtnSaveScene_OnClick()
         {
-            GraphSceneSaveUtility.GetInstance(_sceneGraphView).Save();
+            _inputPath.value = GraphSceneSaveUtility.GetInstance(_sceneGraphView).Save(_inputPath.value);
         }
 
         private void OnNodeSelected(BaseNode node, bool select)
