@@ -8,12 +8,15 @@
     <ui:Toolbar name="Toolbar" class="toolbar" >
         <engine:Button name="BtnDesc" text="Desc" style="width: 45px;"/>
     </ui:Toolbar>
-    <engine:VisualElement style="width: 100%; height: 100%" >
+    <engine:VisualElement style="width: 100%; height: 100%; flex-direction: row" >
         <engine:VisualElement style="width: 20%; height: 100%">
             <engine:Label text="Hierarchy"/>
-            <
+            
         </engine:VisualElement>
-        
+        <engine:VisualElement style="width: 60%; height: 100%">
+            <engine:Label text="Scene"/>
+            <GraphEditor.LevelTrigger.SceneTriggerView style="width:100%; height: 100%;"/>
+        </engine:VisualElement>
     </engine:VisualElement>
     
 </engine:UXML>
