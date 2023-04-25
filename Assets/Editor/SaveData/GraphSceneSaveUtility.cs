@@ -48,6 +48,7 @@ namespace GraphEditor
                 {
                     linkData.OutputNodeGuid = outputNode.State.Guid;
                 }
+
                 if (edge.input.node is BaseNode inputNode)
                 {
                     linkData.InputNodeGuid = inputNode.State.Guid;
@@ -72,6 +73,14 @@ namespace GraphEditor
                 else if (node.State is GroundScriptable groundState)
                 {
                     container.NodeGroundDatas.Add(groundState);
+                }
+                else if (node.State is ObstacleScriptable obstacle)
+                {
+                    container.NodeObstacleDatas.Add(obstacle);
+                }
+                else if (node.State is WallScriptable wall)
+                {
+                    container.NodeWallDatas.Add(wall);
                 }
                 else if (node.State is GameObjectScriptable goState)
                 {
@@ -98,7 +107,7 @@ namespace GraphEditor
 
         public void Load(SceneContainer container)
         {
-            if(_sceneGraphView == null) return;
+            if (_sceneGraphView == null) return;
             List<BaseNode> list = new List<BaseNode>();
             // 1. 遍历生成 Node 节点
             foreach (SceneScriptable sceneData in container.NodeSceneDatas)
@@ -109,14 +118,29 @@ namespace GraphEditor
                 {
                     data.ScenePostion = sceneData.ScenePostion;
                 }
+
                 list.Add(node);
             }
+
             foreach (GroundScriptable groundData in container.NodeGroundDatas)
             {
                 Vector2 pos = GetPosition(groundData.Guid, container);
                 GroundNode node = _sceneGraphView.CreateNode<GroundNode>(pos, groundData.Title, groundData.Guid);
                 list.Add(node);
             }
+            foreach (ObstacleScriptable obstacle in container.NodeObstacleDatas)
+            {
+                Vector2 pos = GetPosition(obstacle.Guid, container);
+                ObstacleNode node = _sceneGraphView.CreateNode<ObstacleNode>(pos, obstacle.Title, obstacle.Guid);
+                list.Add(node);
+            }
+            foreach (WallScriptable wall in container.NodeWallDatas)
+            {
+                Vector2 pos = GetPosition(wall.Guid, container);
+                WallNode node = _sceneGraphView.CreateNode<WallNode>(pos, wall.Title, wall.Guid);
+                list.Add(node);
+            }
+
             foreach (GameObjectScriptable objectData in container.NodeGameObjectDatas)
             {
                 Vector2 pos = GetPosition(objectData.Guid, container);
@@ -134,31 +158,17 @@ namespace GraphEditor
                 node.RefreshTempleGo(_sceneGraphView.window);
                 list.Add(node);
             }
-            
+
             // 2. 连线
             foreach (SceneNodeLinkData data in container.NodeLinkDatas)
             {
                 bool ret = GetEdgeNode(data, list, out BaseNode outputNode, out BaseNode inputNode);
                 if (ret)
                 {
-                    List<Port> inputPorts = inputNode.contentContainer.Query<Port>().ToList();
-                    List<Port> outputPorts = outputNode.contentContainer.Query<Port>().ToList();
-                    Port inputPort = null;
-                    Port outputPort = null;
-                    for (int i = 0; i < inputPorts.Count; i++)
-                    {
-                        if (inputPorts[i].direction == Direction.Input)
-                        {
-                            inputPort = inputPorts[i];
-                        }
-                    }
-                    for (int i = 0; i < outputPorts.Count; i++)
-                    {
-                        if (outputPorts[i].direction == Direction.Output)
-                        {
-                            outputPort = outputPorts[i];
-                        }
-                    }AddEdgeByPorts(outputPort, inputPort);
+                    Port inputPort = inputNode.inputContainer.Query<Port>().ToList().FirstOrDefault();
+                    Port outputPort = outputNode.outputContainer.Query<Port>().ToList().FirstOrDefault();
+                    if (inputPort == null || outputPort == null) continue;
+                    AddEdgeByPorts(outputPort, inputPort);
                 }
             }
         }

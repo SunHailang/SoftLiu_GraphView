@@ -12,7 +12,7 @@ namespace GraphEditor.Nodes
         public SceneNode()
         {
             Port output = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(int));
-            this.Add(output);
+            this.outputContainer.Add(output);
 
             scene = new SceneScriptable();
             State = scene;

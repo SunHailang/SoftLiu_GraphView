@@ -16,7 +16,7 @@ namespace GraphEditor.Nodes
         {
             // 添加一个 input
             Port input = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(int));
-            this.Add(input);
+            this.inputContainer.Add(input);
 
             _scriptable = new GameObjectScriptable();
             State = _scriptable;

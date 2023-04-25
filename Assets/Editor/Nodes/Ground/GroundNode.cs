@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -8,16 +9,24 @@ namespace GraphEditor.Nodes
     /// </summary>
     public class GroundNode : BaseNode
     {
+        private GroundScriptable _ground;
         public GroundNode()
         {
             // 创建输入
             Port input = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(int));
-            this.Add(input);
+            this.inputContainer.Add(input);
 
             Port output = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(int));
-            this.Add(output);
+            this.outputContainer.Add(output);
 
-            State = new GroundScriptable();
+            _ground = new GroundScriptable();
+            State = _ground;
+        }
+
+        public override void DrawInspectorGUI()
+        {
+            base.DrawInspectorGUI();
+            _ground.Seed = EditorGUILayout.IntField("Seed", _ground.Seed, GUILayout.ExpandWidth(true));
         }
     }
 }

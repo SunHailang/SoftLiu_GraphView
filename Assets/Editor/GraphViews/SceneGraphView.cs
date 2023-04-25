@@ -66,12 +66,14 @@ namespace GraphEditor.GraphViews
                 GenericMenu menu = new GenericMenu();
                 menu.AddItem(new GUIContent("SceneNode"), false, () => { CreateNode<SceneNode>(localPos); });
                 menu.AddItem(new GUIContent("GroundNode"), false, () => { CreateNode<GroundNode>(localPos); });
+                menu.AddItem(new GUIContent("ObstacleNode"), false, () => { CreateNode<ObstacleNode>(localPos); });
+                menu.AddItem(new GUIContent("WallNode"), false, () => { CreateNode<WallNode>(localPos); });
                 menu.AddItem(new GUIContent("GameObjectNode"), false, () =>
                 {
-                    GameObjectNode node =  CreateNode<GameObjectNode>(localPos);
+                    GameObjectNode node = CreateNode<GameObjectNode>(localPos);
                     node.RefreshTempleGo(window);
                 });
-                
+
                 menu.ShowAsContext();
                 Event.current.Use();
             }
@@ -101,6 +103,7 @@ namespace GraphEditor.GraphViews
                 title = type.Name;
                 Debug.LogError($"CreateNode Error: title is Empty.");
             }
+
             node.name = title;
             node.SetTitle(title);
             node.SetGuid(guid);
