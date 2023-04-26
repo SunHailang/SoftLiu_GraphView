@@ -127,7 +127,8 @@ namespace GraphEditor
                 SceneNode node = _sceneGraphView.CreateNode<SceneNode>(pos, sceneData.Title, sceneData.Guid);
                 if (node.State is SceneScriptable data)
                 {
-                    data.ScenePostion = sceneData.ScenePostion;
+                    data.SceneScale = sceneData.SceneScale;
+                    data.ScenePosition = sceneData.ScenePosition;
                 }
 
                 list.Add(node);

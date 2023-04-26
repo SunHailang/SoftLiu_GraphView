@@ -2,21 +2,25 @@
 <engine:UXML
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:engine="UnityEngine.UIElements"
-        xmlns:editor="UnityEditor.UIElements" xmlns:ui="UnityEditor.UIElements"
+        xmlns:ui="UnityEditor.UIElements"
         xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
-        xsi:schemaLocation="UnityEditor.UIElements file:///E:/StudyGit/SoftLiu_GraphView/UIElementsSchema/UnityEditor.UIElements.xsd">
-    <ui:Toolbar name="Toolbar" class="toolbar" >
+        xsi:schemaLocation="UnityEditor.UIElements file:///../../../UIElementsSchema/UnityEditor.UIElements.xsd">
+    <ui:Toolbar name="Toolbar" class="graph_view_toolbar">
         <engine:Button name="BtnDesc" text="Desc" style="width: 45px;"/>
     </ui:Toolbar>
-    <engine:VisualElement style="width: 100%; height: 100%; flex-direction: row" >
-        <engine:VisualElement style="width: 20%; height: 100%">
-            <engine:Label text="Hierarchy"/>
-            
+    <engine:VisualElement name="LeftView" style="width: 20%; height: 100%;" class="inspector_graph_view">
+        <engine:Label text="Hierarchy" class="title_graph_view_label"/>
+        <engine:Box style="height: 1px; width: 100%; background-color: rgb(111, 111, 111);"/>
+    </engine:VisualElement>
+    <engine:VisualElement name="RightContentView" style="width: 80%; height: 100%; flex-direction: row;">
+        <engine:VisualElement name="MidView" style="width: 70%; height: 100%">
+            <engine:Label text="Scene" class="title_graph_view_label"/>
+            <GraphEditor.LevelTrigger.SceneTriggerView style="width: 100%; height: 100%;"/>
         </engine:VisualElement>
-        <engine:VisualElement style="width: 60%; height: 100%">
-            <engine:Label text="Scene"/>
-            <GraphEditor.LevelTrigger.SceneTriggerView style="width:100%; height: 100%;"/>
+        <engine:VisualElement name="RightView" style="width: 30%; height: 100%" class="inspector_graph_view">
+            <engine:Label text="Inspector" class="title_graph_view_label"/>
+            <engine:Box style="height: 1px; width: 100%; background-color: rgb(111, 111, 111);"/>
         </engine:VisualElement>
     </engine:VisualElement>
-    
+
 </engine:UXML>

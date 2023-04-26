@@ -46,6 +46,13 @@ namespace GraphEditor.GraphViews
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath("4b2fe49cd955a744fa3ea4bb5cdfe19d"));
             root.styleSheets.Add(styleSheet);
 
+            var splitView = new TwoPaneSplitView(0, 300, TwoPaneSplitViewOrientation.Horizontal);
+            var leftView = root.Q<VisualElement>("LeftView");
+            splitView.Add(leftView);
+            var rightView = root.Q<VisualElement>("RightView");
+            splitView.Add(rightView);
+            root.Add(splitView);
+
             _inputPath = root.Q<TextField>("InputPath");
             
             Button save = root.Q<Button>("SaveScene");

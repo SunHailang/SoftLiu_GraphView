@@ -34,7 +34,7 @@ public class GameLunchEditor : UnityEditor.Editor
         {
             instanceID = newId;
             string guid = "";
-            if (instanceID != 0)
+            if (instanceID != 0 &&_sceneContainer != null)
             {
                 string path = AssetDatabase.GetAssetPath(_sceneContainer.GetInstanceID());
                 guid = AssetDatabase.AssetPathToGUID(path);
@@ -55,6 +55,7 @@ public class GameLunchEditor : UnityEditor.Editor
         serializedObject.ApplyModifiedProperties();
     }
 
+    private Vector3 _curSceneScale = Vector3.one;
     private Vector3 _curScenePosition = Vector3.zero;
 
     private void CreateScene()
@@ -72,10 +73,11 @@ public class GameLunchEditor : UnityEditor.Editor
             // 1. 创建Scene节点
             GameObject go = new GameObject(data.Title);
             go.transform.parent = parent;
-            go.transform.position = data.ScenePostion;
+            go.transform.position = data.ScenePosition;
             // 2. 查找这个 Scene 的子节点
             List<BaseScriptable> list = GetSceneChild(data);
-            _curScenePosition = data.ScenePostion;
+            _curSceneScale = data.SceneScale;
+            _curScenePosition = data.ScenePosition;
             CreateGroundFramework(go.transform, list);
         }
     }
@@ -169,8 +171,8 @@ public class GameLunchEditor : UnityEditor.Editor
         float widthStep = 4;
         float lenStep = 4;
 
-        int xCount = (int) (_curScenePosition.x / widthStep);
-        int zCount = (int) (_curScenePosition.z / lenStep);
+        int xCount = (int) (_curSceneScale.x / widthStep);
+        int zCount = (int) (_curSceneScale.z / lenStep);
 
         if (!GetGoList(baseList, out List<KeyValuePair<float, float>> list, out List<GameObject> goList))
         {
@@ -178,7 +180,7 @@ public class GameLunchEditor : UnityEditor.Editor
             return;
         }
 
-        UnityEngine.Random.InitState(seed);
+        Random.InitState(seed);
         for (int i = 0; i < xCount; i++)
         {
             for (int j = 0; j < zCount; j++)
@@ -188,13 +190,17 @@ public class GameLunchEditor : UnityEditor.Editor
                 {
                     continue;
                 }
-
                 GameObject go = Instantiate<GameObject>(goList[index], parent);
-                go.transform.position = new Vector3(i * widthStep, 0, j * lenStep);
+                go.transform.position =GetTransPosition(new Vector3(i * widthStep, 0, j * lenStep));
                 go.transform.localScale = baseList[index].Scale;
                 go.isStatic = baseList[index].ForceStatic;
             }
         }
+    }
+
+    private Vector3 GetTransPosition(Vector3 basePos)
+    {
+        return _curScenePosition + basePos;
     }
 
     private bool GetGoList(List<GameObjectScriptable> baseList, out List<KeyValuePair<float, float>> list, out List<GameObject> goList)
@@ -217,8 +223,8 @@ public class GameLunchEditor : UnityEditor.Editor
     private void CreateWallGo(Transform parent, int seed, List<GameObjectScriptable> baseList)
     {
         float lenStep = 4;
-        int xCount = (int) (_curScenePosition.x / lenStep);
-        int zCount = (int) (_curScenePosition.z / lenStep);
+        int xCount = (int) (_curSceneScale.x / lenStep);
+        int zCount = (int) (_curSceneScale.z / lenStep);
 
         if (!GetGoList(baseList, out List<KeyValuePair<float, float>> list, out List<GameObject> goList))
         {
@@ -226,8 +232,8 @@ public class GameLunchEditor : UnityEditor.Editor
             return;
         }
 
-        List<float> xList = new List<float>() {0, _curScenePosition.x - lenStep};
-        List<float> zList = new List<float>() {0, _curScenePosition.z - lenStep};
+        List<float> xList = new List<float>() {0, _curSceneScale.x - lenStep};
+        List<float> zList = new List<float>() {0, _curSceneScale.z - lenStep};
         UnityEngine.Random.InitState(seed);
         for (int i = 0; i < xCount; i++)
         {
@@ -269,8 +275,8 @@ public class GameLunchEditor : UnityEditor.Editor
     private void CreateObstacleGo(Transform parent, int seed, List<GameObjectScriptable> baseList)
     {
         float widthStep = 2;
-        int xCount = (int) (_curScenePosition.x / widthStep);
-        int zCount = (int) (_curScenePosition.z / widthStep);
+        int xCount = (int) (_curSceneScale.x / widthStep);
+        int zCount = (int) (_curSceneScale.z / widthStep);
 
         if (!GetGoList(baseList, out List<KeyValuePair<float, float>> list, out List<GameObject> goList))
         {

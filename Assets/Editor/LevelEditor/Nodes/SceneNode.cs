@@ -21,7 +21,8 @@ namespace GraphEditor.Nodes
         public override void DrawInspectorGUI()
         {
             base.DrawInspectorGUI();
-            scene.ScenePostion = EditorGUILayout.Vector3Field("ScenePostion", scene.ScenePostion, GUILayout.ExpandWidth(true));
+            scene.SceneScale = EditorGUILayout.Vector3Field("SceneScale", scene.SceneScale, GUILayout.ExpandWidth(true));
+            scene.ScenePosition = EditorGUILayout.Vector3Field("ScenePosition", scene.ScenePosition, GUILayout.ExpandWidth(true));
         }
     }
 }
