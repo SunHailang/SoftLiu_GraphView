@@ -13,6 +13,7 @@ namespace GraphEditor.GraphViews
         {
             GraphViewWindw wnd = GetWindow<GraphViewWindw>();
             wnd.titleContent = new GUIContent("GraphViewWindw");
+            wnd.minSize = new Vector2(400, 280);
         }
 
         [UnityEditor.Callbacks.OnOpenAsset(1)]

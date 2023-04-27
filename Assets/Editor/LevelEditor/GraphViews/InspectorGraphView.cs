@@ -7,7 +7,7 @@ namespace GraphEditor.GraphViews
 {
     public class InspectorGraphView : GraphView
     {
-        public class UxmlFactor : UxmlFactory<InspectorGraphView, UxmlTraits>
+        public new class UxmlFactory: UxmlFactory<InspectorGraphView, UxmlTraits>
         {
         }
 

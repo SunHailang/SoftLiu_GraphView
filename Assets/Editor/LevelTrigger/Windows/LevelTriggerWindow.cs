@@ -12,6 +12,7 @@ namespace GraphEditor.LevelTrigger
         {
             LevelTriggerWindow wnd = GetWindow<LevelTriggerWindow>();
             wnd.titleContent = new GUIContent("关卡触发器");
+            wnd.minSize = new Vector2(600, 300);
         }
 
         public void CreateGUI()
@@ -26,21 +27,29 @@ namespace GraphEditor.LevelTrigger
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath("4b2fe49cd955a744fa3ea4bb5cdfe19d"));
             root.styleSheets.Add(styleSheet);
 
+            #region 面板分区
+
             var leftView = root.Q<VisualElement>("LeftView");
             var rightContentView = root.Q<VisualElement>("RightContentView");
 
             var splitView = new TwoPaneSplitView(0, 300, TwoPaneSplitViewOrientation.Horizontal);
+            splitView.fixedPaneInitialDimension = 200;
             root.Add(splitView);
             splitView.Add(leftView);
             splitView.Add(rightContentView);
-            
+
             var midView = root.Q<VisualElement>("MidView");
-            var rightView = root.Q<VisualElement>("RightView"); 
-            
-            var splitRightCountView = new TwoPaneSplitView(0, 300, TwoPaneSplitViewOrientation.Horizontal);
+            var rightView = root.Q<VisualElement>("RightView");
+
+            var splitRightCountView = new TwoPaneSplitView(1, 300, TwoPaneSplitViewOrientation.Horizontal);
             rightContentView.Add(splitRightCountView);
             splitRightCountView.Add(midView);
             splitRightCountView.Add(rightView);
+
+            #endregion
+            
+            
+            
         }
     }
 }

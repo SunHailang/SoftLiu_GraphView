@@ -10,12 +10,14 @@ namespace GraphEditor.GraphViews
 {
     public class SceneGraphView : GraphView
     {
-        public class UxmlFactor : UxmlFactory<SceneGraphView, UxmlTraits>
+        public new class UxmlFactory : UxmlFactory<SceneGraphView, UxmlTraits>
         {
         }
 
         public event Action<BaseNode, bool> onNodeSelected;
         public EditorWindow window;
+
+        private Vector2 curMousePos = Vector2.zero;
 
         public SceneGraphView()
         {
@@ -36,8 +38,65 @@ namespace GraphEditor.GraphViews
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath("73411fe8094701f49b6a65893deb79fa"));
             styleSheets.Add(styleSheet);
 
-            this.RegisterCallback<MouseDownEvent>(OnMouseDownCallback, TrickleDown.NoTrickleDown);
-            this.RegisterCallback<MouseUpEvent>(OnMouseUpCallback, TrickleDown.TrickleDown);
+            this.RegisterCallback<MouseDownEvent>(OnMouseDownCallback, TrickleDown.TrickleDown);
+
+            LevelNodeProvider providerNode = ScriptableObject.CreateInstance<LevelNodeProvider>();
+            providerNode.OnSelectEntryHandler += OnMenuSelectEntry;
+
+            nodeCreationRequest += context => { SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), providerNode); };
+        }
+
+        private bool OnMenuSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
+        {
+            if (searchTreeEntry.userData is Type type)
+            {
+                BaseNode node = CreateNode(type, curMousePos);
+                if (node is GameObjectNode goNode)
+                {
+                    goNode.RefreshTempleGo(window);
+                }
+                return node != null;
+            }
+
+            return false;
+        }
+
+        public BaseNode CreateNode(Type type, Vector2 pos)
+        {
+            if (type != null)
+            {
+                string title = type.Name;
+                string guid = System.Guid.NewGuid().ToString();
+                return CreateNode(type, pos, title, guid);
+            }
+
+            return null;
+        }
+
+        public BaseNode CreateNode(Type type, Vector2 pos, string title, string guid)
+        {
+            if (type != null && Activator.CreateInstance(type) is BaseNode node)
+            {
+                node.onSelected += OnNodeSelected;
+                if (string.IsNullOrEmpty(title))
+                {
+                    title = type.Name;
+                    Debug.LogError($"CreateNode Error: title is Empty.");
+                }
+
+                node.name = title;
+                node.SetTitle(title);
+                node.SetGuid(guid);
+                // 屏幕坐标转本地坐标
+                node.SetPosition(new Rect(pos, node.GetPosition().size));
+
+                node.RefreshExpandedState();
+                node.RefreshPorts();
+                this.AddElement(node);
+                return node;
+            }
+
+            return null;
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -62,61 +121,10 @@ namespace GraphEditor.GraphViews
             if (evt.button == 1)
             {
                 // 右键按下 缓存当前鼠标相对窗体的坐标点
-                Vector2 localPos = evt.localMousePosition;
-                GenericMenu menu = new GenericMenu();
-                menu.AddItem(new GUIContent("SceneNode"), false, () => { CreateNode<SceneNode>(localPos); });
-                menu.AddItem(new GUIContent("GroundNode"), false, () => { CreateNode<GroundNode>(localPos); });
-                menu.AddItem(new GUIContent("ObstacleNode"), false, () => { CreateNode<ObstacleNode>(localPos); });
-                menu.AddItem(new GUIContent("WallNode"), false, () => { CreateNode<WallNode>(localPos); });
-                menu.AddItem(new GUIContent("GameObjectNode"), false, () =>
-                {
-                    GameObjectNode node = CreateNode<GameObjectNode>(localPos);
-                    node.RefreshTempleGo(window);
-                });
-
-                menu.ShowAsContext();
-                Event.current.Use();
+                curMousePos = evt.localMousePosition;
             }
         }
-
-        private void OnMouseUpCallback(MouseUpEvent evt)
-        {
-            //Debug.Log($"OnMouseUpCallback:{evt.button}");
-        }
-
-        public T CreateNode<T>(Vector2 pos) where T : BaseNode, new()
-        {
-            Type type = typeof(T);
-            string title = type.Name;
-            string guid = System.Guid.NewGuid().ToString();
-            return CreateNode<T>(pos, title, guid);
-        }
-
-        public T CreateNode<T>(Vector2 pos, string title, string guid) where T : BaseNode, new()
-        {
-            T node = new T();
-            //添加Component，关联节点
-            node.onSelected += OnNodeSelected;
-            if (string.IsNullOrEmpty(title))
-            {
-                Type type = typeof(T);
-                title = type.Name;
-                Debug.LogError($"CreateNode Error: title is Empty.");
-            }
-
-            node.name = title;
-            node.SetTitle(title);
-            node.SetGuid(guid);
-            // 屏幕坐标转本地坐标
-            node.SetPosition(new Rect(pos, node.GetPosition().size));
-
-            node.RefreshExpandedState();
-            node.RefreshPorts();
-            this.AddElement(node);
-
-            return node;
-        }
-
+        
         private void OnNodeSelected(BaseNode node, bool selected)
         {
             onNodeSelected?.Invoke(node, selected);

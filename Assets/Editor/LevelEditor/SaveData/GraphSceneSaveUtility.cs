@@ -124,51 +124,65 @@ namespace GraphEditor
             foreach (SceneScriptable sceneData in container.NodeSceneDatas)
             {
                 Vector2 pos = GetPosition(sceneData.Guid, container);
-                SceneNode node = _sceneGraphView.CreateNode<SceneNode>(pos, sceneData.Title, sceneData.Guid);
-                if (node.State is SceneScriptable data)
+                BaseNode node = _sceneGraphView.CreateNode(typeof(SceneNode), pos, sceneData.Title, sceneData.Guid);
+                if (node is SceneNode sceneNode)
                 {
-                    data.SceneScale = sceneData.SceneScale;
-                    data.ScenePosition = sceneData.ScenePosition;
+                    if (node.State is SceneScriptable data)
+                    {
+                        data.SceneScale = sceneData.SceneScale;
+                        data.ScenePosition = sceneData.ScenePosition;
+                    }
+                    list.Add(sceneNode);
                 }
-
-                list.Add(node);
             }
 
             foreach (GroundScriptable groundData in container.NodeGroundDatas)
             {
                 Vector2 pos = GetPosition(groundData.Guid, container);
-                GroundNode node = _sceneGraphView.CreateNode<GroundNode>(pos, groundData.Title, groundData.Guid);
-                list.Add(node);
+                BaseNode node = _sceneGraphView.CreateNode(typeof(GroundNode), pos, groundData.Title, groundData.Guid);
+                if (node is GroundNode groundNode)
+                {
+                    list.Add(groundNode);
+                }
             }
             foreach (ObstacleScriptable obstacle in container.NodeObstacleDatas)
             {
                 Vector2 pos = GetPosition(obstacle.Guid, container);
-                ObstacleNode node = _sceneGraphView.CreateNode<ObstacleNode>(pos, obstacle.Title, obstacle.Guid);
-                list.Add(node);
+                BaseNode node = _sceneGraphView.CreateNode(typeof(ObstacleNode), pos, obstacle.Title, obstacle.Guid);
+                if (node is ObstacleNode obstacleNode)
+                {
+                    list.Add(obstacleNode);
+                }
             }
             foreach (WallScriptable wall in container.NodeWallDatas)
             {
                 Vector2 pos = GetPosition(wall.Guid, container);
-                WallNode node = _sceneGraphView.CreateNode<WallNode>(pos, wall.Title, wall.Guid);
-                list.Add(node);
+                BaseNode node = _sceneGraphView.CreateNode(typeof(WallNode), pos, wall.Title, wall.Guid);
+                if (node is WallNode wallNode)
+                {
+                    list.Add(wallNode);
+                }
             }
 
             foreach (GameObjectScriptable objectData in container.NodeGameObjectDatas)
             {
                 Vector2 pos = GetPosition(objectData.Guid, container);
-                GameObjectNode node = _sceneGraphView.CreateNode<GameObjectNode>(pos, objectData.Title, objectData.Guid);
-                if (node.State is GameObjectScriptable data)
+                BaseNode node = _sceneGraphView.CreateNode(typeof(GameObjectNode), pos, objectData.Title, objectData.Guid);
+                if (node is GameObjectNode goNode)
                 {
-                    data.Position = objectData.Position;
-                    data.Rotation = objectData.Rotation;
-                    data.Scale = objectData.Scale;
-                    data.TemplateGo = objectData.TemplateGo;
-                    data.Probability = objectData.Probability;
-                    data.ForceStatic = objectData.ForceStatic;
-                }
+                    if (goNode.State is GameObjectScriptable data)
+                    {
+                        data.Position = objectData.Position;
+                        data.Rotation = objectData.Rotation;
+                        data.Scale = objectData.Scale;
+                        data.TemplateGo = objectData.TemplateGo;
+                        data.Probability = objectData.Probability;
+                        data.ForceStatic = objectData.ForceStatic;
+                    }
 
-                node.RefreshTempleGo(_sceneGraphView.window);
-                list.Add(node);
+                    goNode.RefreshTempleGo(_sceneGraphView.window);
+                    list.Add(goNode);
+                }
             }
 
             // 2. 连线
