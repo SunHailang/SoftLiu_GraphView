@@ -82,7 +82,7 @@ namespace GraphEditor.GraphViews
 
         private void OnNodeSelected(BaseNode node, bool select)
         {
-            _inspectorGraphView.UpdateSelection(node, select);
+            _inspectorGraphView.OnInspectorGUI(node, select);
         }
 
     }

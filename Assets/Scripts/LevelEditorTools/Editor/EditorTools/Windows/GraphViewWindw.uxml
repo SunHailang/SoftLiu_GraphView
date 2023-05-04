@@ -5,7 +5,7 @@
         xmlns:editor="UnityEditor.UIElements" xmlns:ui="UnityEditor.UIElements"
         xsi:noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd"
         xsi:schemaLocation="UnityEditor.UIElements file:///E:/StudyGit/SoftLiu_GraphView/UIElementsSchema/UnityEditor.UIElements.xsd">
-    <editor:Toolbar name="TopToolBal" style="height: 30px;" class="graph_view_toolbar">
+    <editor:Toolbar name="TopToolBal" class="graph_view_toolbar">
         <engine:Label text="Input:" style="-unity-text-align: middle-center;"/>
         <engine:TextField name="InputPath" style="width: 320px"/>
         <engine:Button name="SaveScene" text="Save" style="width: 50px; height: 25px; margin-top: 2px; position: Absolute; top: 0px; right: 2px;"/>

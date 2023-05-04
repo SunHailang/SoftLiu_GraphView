@@ -53,7 +53,7 @@ namespace LevelEditorTools.Editor.Nodes
             _state.Title = _title;
         }
 
-        public void SetGuid(string _guid)
+        public void SetGuid(string _guid = "")
         {
             if (string.IsNullOrEmpty(_guid))
             {

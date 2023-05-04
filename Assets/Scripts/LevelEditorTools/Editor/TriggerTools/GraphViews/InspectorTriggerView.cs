@@ -1,3 +1,4 @@
+using LevelEditorTools.Editor.Nodes;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -11,21 +12,27 @@ namespace LevelEditorTools.GraphViews
         public new class UxmlFactory : UxmlFactory<InspectorTriggerView, UxmlTraits>
         {
         }
-        
+
         public InspectorTriggerView()
         {
-            
         }
-        
 
-        public void OnInspectorGUI(bool ongui)
+
+        public void OnInspectorGUI(BaseNode nodeView, bool selected)
         {
             this.Clear();
-            ScrollView scrollView = new ScrollView();
-            IMGUIContainer container = new IMGUIContainer(() =>
+            if (!selected)
             {
-                
-            });
+                return;
+            }
+
+            if (nodeView == null || nodeView.State == null)
+            {
+                return;
+            }
+
+            ScrollView scrollView = new ScrollView();
+            IMGUIContainer container = new IMGUIContainer(nodeView.DrawInspectorGUI);
             scrollView.Add(container);
             this.Add(scrollView);
         }

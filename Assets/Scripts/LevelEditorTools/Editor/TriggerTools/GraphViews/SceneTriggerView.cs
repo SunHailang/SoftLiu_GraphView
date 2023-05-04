@@ -13,6 +13,8 @@ namespace LevelEditorTools.GraphViews
         public new class UxmlFactory : UxmlFactory<SceneTriggerView, UxmlTraits>
         {
         }
+        
+        public event Action<BaseNode, bool> onNodeSelected;
 
         private Vector2 curMousePos = Vector2.zero;
 
@@ -69,27 +71,44 @@ namespace LevelEditorTools.GraphViews
         {
             if (searchTreeEntry.userData is Type type)
             {
-                BaseTriggerNode node = CreateNode(type, curMousePos);
+                BaseNode node = CreateNode(type, curMousePos);
                 return node != null;
             }
 
             return false;
         }
 
-        public BaseTriggerNode CreateNode(Type type, Vector2 pos)
+        public BaseNode CreateNode(Type type, Vector2 pos)
         {
             if (type != null)
             {
-                if (Activator.CreateInstance(type) is BaseTriggerNode node)
+                return CreateNode(type, pos, type.Name, "");
+            }
+
+            return null;
+        }
+        
+        public BaseNode CreateNode(Type type, Vector2 pos, string title, string guid)
+        {
+            if (type != null)
+            {
+                if (Activator.CreateInstance(type) is BaseNode node)
                 {
-                    node.title = type.Name;
+                    node.SetTitle(title);
+                    node.SetGuid(guid);
                     node.SetPosition(new Rect(pos, node.GetPosition().size));
                     this.AddElement(node);
+                    node.onSelected += OnNodeSelected;
                     return node;
                 }
             }
 
             return null;
+        }
+        
+        private void OnNodeSelected(BaseNode node, bool selected)
+        {
+            onNodeSelected?.Invoke(node, selected);
         }
     }
 }

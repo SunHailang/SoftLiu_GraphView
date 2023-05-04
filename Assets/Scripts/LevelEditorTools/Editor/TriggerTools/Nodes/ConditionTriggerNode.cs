@@ -1,8 +1,9 @@
+using LevelEditorTools.Nodes;
 using UnityEditor.Experimental.GraphView;
 
 namespace LevelEditorTools.Editor.Nodes
 {
-    public class ConditionTriggerNode : BaseTriggerNode
+    public class ConditionTriggerNode : BaseNode
     {
         public ConditionTriggerNode()
         {
@@ -11,6 +12,8 @@ namespace LevelEditorTools.Editor.Nodes
             
             this.RefreshExpandedState();
             this.RefreshPorts();
+
+            State = new ConditionTriggerScriptable();
         }
     }
 }

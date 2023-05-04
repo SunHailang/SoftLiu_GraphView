@@ -1,3 +1,6 @@
+using LevelEditorTools.Editor.Nodes;
+using LevelEditorTools.GraphViews;
+using LevelEditorTools.Save;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -14,6 +17,28 @@ namespace GraphEditor.LevelTrigger
             wnd.titleContent = new GUIContent("关卡触发器");
             wnd.minSize = new Vector2(600, 300);
         }
+        
+        [UnityEditor.Callbacks.OnOpenAsset(1)]
+        public static bool OpenGraphViewWindow(int instanceID, int line)
+        {
+            Object activeObject = EditorUtility.InstanceIDToObject(instanceID);
+            string path = AssetDatabase.GetAssetPath(instanceID);
+            if (activeObject is LevelTriggerContainer container)
+            {
+                LevelTriggerWindow wnd = GetWindow<LevelTriggerWindow>();
+                wnd.titleContent = new GUIContent("关卡触发器");
+                wnd.LoadSceneView(path, container);
+                return true;
+            }
+
+            return false;
+        }
+        
+        private SceneTriggerView _sceneTrigger;
+        private InspectorTriggerView _inspectorTrigger;
+        private HierarchyTriggerView _hierarchyTrigger;
+
+        private TextField _textField;
 
         public void CreateGUI()
         {
@@ -47,9 +72,33 @@ namespace GraphEditor.LevelTrigger
             splitRightCountView.Add(rightView);
 
             #endregion
+
+            _textField = root.Q<TextField>("InputPath");
             
+            Button btnSave = root.Q<Button>("BtnSave");
+            btnSave.clicked += BtnSave_OnClick;
             
+            _sceneTrigger = root.Q<SceneTriggerView>("SceneTriggerView");
+            _sceneTrigger.onNodeSelected += OnNodeSelected;
             
+            _inspectorTrigger = root.Q<InspectorTriggerView>("InspectorTriggerView");
+            _hierarchyTrigger = root.Q<HierarchyTriggerView>("HierarchyTriggerView");
+        }
+
+        private void LoadSceneView(string path, LevelTriggerContainer container)
+        {
+            _textField.value = path;
+            LevelTriggerSaveUtility.GetInstance(_sceneTrigger).Load(container);
+        }
+
+        private void BtnSave_OnClick()
+        {
+            _textField.value = LevelTriggerSaveUtility.GetInstance(_sceneTrigger).Save(_textField.value);
+        }
+        
+        private void OnNodeSelected(BaseNode node, bool select)
+        {
+            _inspectorTrigger.OnInspectorGUI(node, select);
         }
     }
 }

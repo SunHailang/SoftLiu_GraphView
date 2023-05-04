@@ -21,6 +21,7 @@ namespace LevelEditorTools.Editor.Nodes
             //entries.Add(new SearchTreeGroupEntry(new GUIContent("Example")) {level = 1});
             entries.Add(new SearchTreeEntry(new GUIContent("BoxTrigger Node")) {level = 1, userData = typeof(BoxTriggerNode)});
             entries.Add(new SearchTreeEntry(new GUIContent("ConditionTrigger Node")) {level = 1, userData = typeof(ConditionTriggerNode)});
+            entries.Add(new SearchTreeEntry(new GUIContent("LevelData Node")){level = 1, userData = typeof(LevelDataNode)});
             return entries;
         }
 

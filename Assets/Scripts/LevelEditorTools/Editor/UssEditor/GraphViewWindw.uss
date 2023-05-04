@@ -1,10 +1,12 @@
 .graph_view_toolbar {
+    height: 30px;
     flex-direction: row;
     padding-left: 6px;
     padding-right: 6px;
     padding-top: 2px;
     padding-bottom: 2px;
     overflow: hidden;
+    background-color: #3c3c3c;
 }
 
 .inspector_graph_view {
