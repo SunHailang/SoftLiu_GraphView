@@ -110,28 +110,25 @@ public class QuadTree
         return false;
     }
 
-    public void query(Rectangle range, Queue<Point> found = null)
+    public void query(Rectangle range, LinkedList<Point> found = null)
     {
-        if (found == null) found = new Queue<Point>();
+        if (found == null) found = new LinkedList<Point>();
         if (this.boundary.intersects(range))
         {
             IEnumerator ie = this.points.GetEnumerator();
             while (ie.MoveNext())
             {
-                Point p = ie.Current as Point;
-                if (p != null && range.contains(p))
+                if (ie.Current is Point p && range.contains(p))
                 {
-                    found.Enqueue(p);
+                    found.AddLast(p);
                 }
             }
 
-            if (this.divided)
-            {
-                this.northwest.query(range, found);
-                this.northeast.query(range, found);
-                this.southwest.query(range, found);
-                this.southeast.query(range, found);
-            }
+            if (!this.divided) return;
+            this.northwest.query(range, found);
+            this.northeast.query(range, found);
+            this.southwest.query(range, found);
+            this.southeast.query(range, found);
         }
     }
 
@@ -179,6 +176,8 @@ public class Point
 
     public float h = 0;
 
+    public bool IsOnce = false;
+
     public Point(Transform _trans, float _w, float _h)
     {
         this.trans = _trans;
@@ -186,34 +185,6 @@ public class Point
         this.w = _w;
         this.h = _h;
     }
-
-    enum TriggerState
-    {
-        None,
-        Enter,
-        Stay,
-        Exist,
-    }
-
-    private TriggerState state = TriggerState.None;
-
-    public void TriggerRect(Rectangle rect, bool exist = false)
-    {
-        if (state == TriggerState.None)
-        {
-            state = TriggerState.Enter;
-        }
-        else if (state == TriggerState.Enter)
-        {
-            state = TriggerState.Stay;
-        }
-
-        if (exist && state != TriggerState.None)
-        {
-            state = TriggerState.None;
-        }
-    }
-
     public void DrawGizmos()
     {
         Gizmos.color = Color.green;
@@ -248,7 +219,12 @@ public class Rectangle
         this.w = w;
         this.h = h;
 
-        UpdatePosition(x, y);
+        this.x = x;
+        this.y = y;
+        this.leftDown = new Vector3(this.x - w / 2, 0, this.y - h / 2);
+        this.leftUp = new Vector3(this.x - w / 2, 0, this.y + h / 2);
+        this.rightDown = new Vector3(this.x + w / 2, 0, this.y - h / 2);
+        this.rightUp = new Vector3(this.x + w / 2, 0, this.y + h / 2);
     }
 
     public void UpdatePosition(float x, float y)
@@ -260,7 +236,7 @@ public class Rectangle
         this.rightDown = new Vector3(this.x + w / 2, 0, this.y - h / 2);
         this.rightUp = new Vector3(this.x + w / 2, 0, this.y + h / 2);
     }
-
+    
     /// <summary>
     /// 带BoxCollider的大小  假设 BoxCollider的中心点和物体本身重合
     /// </summary>
@@ -268,6 +244,7 @@ public class Rectangle
     /// <returns></returns>
     public bool contains(Point point, int isXZ = 0)
     {
+        if (point == null || point.trans == null) return false;
         if (isXZ == 0)
         {
             return ((point.trans.position.x + point.w / 2) >= (this.x - this.w / 2) &&
