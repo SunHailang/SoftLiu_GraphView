@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3564f030722146719ce24604557c670f, type: 3}
+  m_Name: LevelTriggerContainer
+  m_EditorClassIdentifier: 
+  NodeDatas:
+  - NodeGuid: cf8b9ecc-498b-47e0-bd3a-30322a94efe8
+    NodePosition: {x: 264, y: 70}
+  - NodeGuid: 7b896b32-d235-43bb-a7f0-b908703d1617
+    NodePosition: {x: 457, y: 60}
+  - NodeGuid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
+    NodePosition: {x: 351, y: 208}
+  NodeLinkDatas:
+  - OutputNodeGuid: cf8b9ecc-498b-47e0-bd3a-30322a94efe8
+    InputNodeGuid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
+  - OutputNodeGuid: 7b896b32-d235-43bb-a7f0-b908703d1617
+    InputNodeGuid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
+  LevelDatas:
+  - Title: LevelDataNode
+    Guid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
+    LevelName: Demo
+  BoxTriggerDatas:
+  - Title: BoxTriggerNode
+    Guid: cf8b9ecc-498b-47e0-bd3a-30322a94efe8
+    Position: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TriggerState: 1
+  - Title: BoxTriggerNode
+    Guid: 7b896b32-d235-43bb-a7f0-b908703d1617
+    Position: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TriggerState: 1

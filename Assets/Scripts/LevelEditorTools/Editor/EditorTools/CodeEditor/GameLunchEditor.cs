@@ -27,6 +27,7 @@ public class GameLunchEditor : UnityEditor.Editor
 
     public override void OnInspectorGUI()
     {
+        base.OnInspectorGUI();
         serializedObject.Update();
         _sceneContainer = EditorGUILayout.ObjectField("SceneContainer", _sceneContainer, typeof(SceneContainer), false) as SceneContainer;
         int newId = _sceneContainer == null ? 0 : _sceneContainer.GetInstanceID();

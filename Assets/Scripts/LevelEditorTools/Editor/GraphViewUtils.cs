@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using LevelEditorTools.Editor.Nodes;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -15,6 +17,39 @@ namespace LevelEditorTools
             port.portName = direction.ToString();
             port.portColor = direction == Direction.Input ? Color.blue : Color.green;
             return port;
+        }
+
+
+        public static bool GetEdgeNode(SceneNodeLinkData data, List<BaseNode> list, out BaseNode outputNode, out BaseNode inputNode)
+        {
+            outputNode = null;
+            inputNode = null;
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].State.Guid == data.OutputNodeGuid)
+                {
+                    outputNode = list[i];
+                }
+
+                if (list[i].State.Guid == data.InputNodeGuid)
+                {
+                    inputNode = list[i];
+                }
+            }
+
+            return outputNode != null && inputNode != null;
+        }
+
+        public static void AddEdgeByPorts(GraphView graphView, Port outputPort, Port inputPort)
+        {
+            Edge tempEdge = new Edge()
+            {
+                output = outputPort,
+                input = inputPort
+            };
+            tempEdge.input.Connect(tempEdge);
+            tempEdge.output.Connect(tempEdge);
+            graphView.Add(tempEdge);
         }
 
         public static Vector3 GetPostion(Matrix4x4 matrix)

@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace LevelEditorTools.Nodes
 {
+    
     public enum TriggerStateEnum
     {
         None = 0,
@@ -11,6 +12,7 @@ namespace LevelEditorTools.Nodes
         EntryAndExist = Enter | Exist,
     }
     
+    [System.Serializable]
     public class BoxTriggerScriptable : BaseScriptable
     {
         public Vector3 Position = Vector3.zero;

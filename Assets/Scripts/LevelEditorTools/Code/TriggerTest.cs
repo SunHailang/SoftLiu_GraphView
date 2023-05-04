@@ -25,12 +25,6 @@ public class TriggerTest : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-        // 更新玩家框体的位置
-        mainPlayerRect.UpdatePosition(mainPlayer.position.x, mainPlayer.position.z);
-    }
-
     private LinkedList<Point> queryList = new LinkedList<Point>();
     private HashSet<Point> perQueryList = new HashSet<Point>();
 
@@ -38,6 +32,9 @@ public class TriggerTest : MonoBehaviour
 
     private void Update()
     {
+        // 更新玩家框体的位置
+        mainPlayerRect.UpdatePosition(mainPlayer.position.x, mainPlayer.position.z);
+        
         queryList.Clear();
         // 判断玩家框是否在 Tree内
         triggerTree.query(mainPlayerRect, queryList);

@@ -188,48 +188,48 @@ namespace LevelEditorTools.Save
             // 2. 连线
             foreach (SceneNodeLinkData data in container.NodeLinkDatas)
             {
-                bool ret = GetEdgeNode(data, list, out BaseNode outputNode, out BaseNode inputNode);
+                bool ret = GraphViewUtils.GetEdgeNode(data, list, out BaseNode outputNode, out BaseNode inputNode);
                 if (ret)
                 {
                     Port inputPort = inputNode.inputContainer.Query<Port>().ToList().FirstOrDefault();
                     Port outputPort = outputNode.outputContainer.Query<Port>().ToList().FirstOrDefault();
                     if (inputPort == null || outputPort == null) continue;
-                    AddEdgeByPorts(outputPort, inputPort);
+                    GraphViewUtils.AddEdgeByPorts(_sceneGraphView, outputPort, inputPort);
                 }
             }
         }
 
-        private bool GetEdgeNode(SceneNodeLinkData data, List<BaseNode> list, out BaseNode outputNode, out BaseNode inputNode)
-        {
-            outputNode = null;
-            inputNode = null;
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (list[i].State.Guid == data.OutputNodeGuid)
-                {
-                    outputNode = list[i];
-                }
+        // private bool GetEdgeNode(SceneNodeLinkData data, List<BaseNode> list, out BaseNode outputNode, out BaseNode inputNode)
+        // {
+        //     outputNode = null;
+        //     inputNode = null;
+        //     for (int i = 0; i < list.Count; i++)
+        //     {
+        //         if (list[i].State.Guid == data.OutputNodeGuid)
+        //         {
+        //             outputNode = list[i];
+        //         }
+        //
+        //         if (list[i].State.Guid == data.InputNodeGuid)
+        //         {
+        //             inputNode = list[i];
+        //         }
+        //     }
+        //
+        //     return outputNode != null && inputNode != null;
+        // }
 
-                if (list[i].State.Guid == data.InputNodeGuid)
-                {
-                    inputNode = list[i];
-                }
-            }
-
-            return outputNode != null && inputNode != null;
-        }
-
-        private void AddEdgeByPorts(Port outputPort, Port inputPort)
-        {
-            Edge tempEdge = new Edge()
-            {
-                output = outputPort,
-                input = inputPort
-            };
-            tempEdge.input.Connect(tempEdge);
-            tempEdge.output.Connect(tempEdge);
-            _sceneGraphView.Add(tempEdge);
-        }
+        // private void AddEdgeByPorts(Port outputPort, Port inputPort)
+        // {
+        //     Edge tempEdge = new Edge()
+        //     {
+        //         output = outputPort,
+        //         input = inputPort
+        //     };
+        //     tempEdge.input.Connect(tempEdge);
+        //     tempEdge.output.Connect(tempEdge);
+        //     _sceneGraphView.Add(tempEdge);
+        // }
 
         private Vector2 GetPosition(string guid, SceneContainer container)
         {
