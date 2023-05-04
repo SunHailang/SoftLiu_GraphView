@@ -4,8 +4,9 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
+using LevelEditorTools.Editor.Nodes;
 
-namespace GraphEditor.LevelTrigger
+namespace LevelEditorTools.GraphViews
 {
     public class SceneTriggerView : GraphView
     {

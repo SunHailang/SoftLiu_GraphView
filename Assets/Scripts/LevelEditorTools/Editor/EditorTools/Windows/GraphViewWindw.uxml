@@ -3,7 +3,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:engine="UnityEngine.UIElements"
         xmlns:editor="UnityEditor.UIElements" xmlns:ui="UnityEditor.UIElements"
-        xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+        xsi:noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd"
         xsi:schemaLocation="UnityEditor.UIElements file:///E:/StudyGit/SoftLiu_GraphView/UIElementsSchema/UnityEditor.UIElements.xsd">
     <editor:Toolbar name="TopToolBal" style="height: 30px;" class="graph_view_toolbar">
         <engine:Label text="Input:" style="-unity-text-align: middle-center;"/>
@@ -13,10 +13,10 @@
     <engine:VisualElement name="LeftView" style="height: 100%; width: 30%; min-width: 200px" class="inspector_graph_view">
         <engine:Label text="Inspector" class="title_graph_view_label"/>
         <engine:Box style="height: 1px; width: 100%; background-color: rgb(111, 111, 111);"/>
-        <GraphEditor.GraphViews.InspectorGraphView name="InspectorGraphView" style="height: 100%; width: 100%;"/>
+        <LevelEditorTools.GraphViews.InspectorGraphView name="InspectorGraphView" style="height: 100%; width: 100%;"/>
     </engine:VisualElement>
     <engine:VisualElement name="RightView" style="height: 100%; width: 70%; min-width: 200px">
         <engine:Label text="Scene" class="title_graph_view_label"/>
-        <GraphEditor.GraphViews.SceneGraphView name="SceneGraphView" style="height: 100%; width: 100%;"/>
+        <LevelEditorTools.GraphViews.SceneGraphView name="SceneGraphView" style="height: 100%; width: 100%;"/>
     </engine:VisualElement>
 </engine:UXML>

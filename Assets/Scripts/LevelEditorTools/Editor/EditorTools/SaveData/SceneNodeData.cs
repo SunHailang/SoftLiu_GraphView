@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace GraphEditor
+namespace LevelEditorTools
 {
     [System.Serializable]
     public class SceneNodeData

@@ -2,8 +2,9 @@ using System;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using LevelEditorTools.Nodes;
 
-namespace GraphEditor.Nodes
+namespace LevelEditorTools.Editor.Nodes
 {
     public class BaseNode : Node
     {

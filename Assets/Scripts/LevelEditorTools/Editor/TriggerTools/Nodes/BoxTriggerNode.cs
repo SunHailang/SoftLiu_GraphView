@@ -1,6 +1,6 @@
 using UnityEditor.Experimental.GraphView;
 
-namespace GraphEditor.LevelTrigger
+namespace LevelEditorTools.Editor.Nodes
 {
     public class BoxTriggerNode : BaseTriggerNode
     {

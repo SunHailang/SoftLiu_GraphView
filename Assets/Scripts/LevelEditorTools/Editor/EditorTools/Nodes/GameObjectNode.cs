@@ -5,8 +5,9 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+using LevelEditorTools.Nodes;
 
-namespace GraphEditor.Nodes
+namespace LevelEditorTools.Editor.Nodes
 {
     public class GameObjectNode : BaseNode
     {

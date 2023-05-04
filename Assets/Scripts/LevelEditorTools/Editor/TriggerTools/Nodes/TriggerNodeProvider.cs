@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace GraphEditor.LevelTrigger
+namespace LevelEditorTools.Editor.Nodes
 {
     public class TriggerNodeProvider : ScriptableObject, ISearchWindowProvider
     {

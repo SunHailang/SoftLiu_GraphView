@@ -1,4 +1,4 @@
-namespace GraphEditor.Nodes
+namespace LevelEditorTools.Nodes
 {
     [System.Serializable]
     public class GroundScriptable : BaseScriptable

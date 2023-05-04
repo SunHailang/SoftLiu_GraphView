@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace GraphEditor.Nodes
+namespace LevelEditorTools.Nodes
 {
     [System.Serializable]
     public class GameObjectScriptable : BaseScriptable

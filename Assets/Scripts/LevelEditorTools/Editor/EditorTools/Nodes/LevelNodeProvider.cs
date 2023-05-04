@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using GraphEditor.Nodes;
 using UnityEngine;
 using UnityEditor.Experimental.GraphView;
 
-namespace GraphEditor.GraphViews
+namespace LevelEditorTools.Editor.Nodes
 {
     public class LevelNodeProvider : ScriptableObject, ISearchWindowProvider
     {

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace GraphEditor.Nodes
+namespace LevelEditorTools.Nodes
 {
     [System.Serializable]
     public class SceneScriptable : BaseScriptable

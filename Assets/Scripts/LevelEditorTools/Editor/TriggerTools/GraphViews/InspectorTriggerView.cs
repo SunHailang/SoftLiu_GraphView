@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 
-namespace GraphEditor.LevelTrigger
+namespace LevelEditorTools.GraphViews
 {
     public class InspectorTriggerView : GraphView
     {

@@ -1,9 +1,9 @@
-using GraphEditor.Nodes;
+using LevelEditorTools.Editor.Nodes;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
-namespace GraphEditor.GraphViews
+namespace LevelEditorTools.GraphViews
 {
     public class InspectorGraphView : GraphView
     {

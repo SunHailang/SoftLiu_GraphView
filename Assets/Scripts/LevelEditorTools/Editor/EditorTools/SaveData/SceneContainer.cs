@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using GraphEditor.Nodes;
+using LevelEditorTools.Nodes;
 using UnityEngine;
 
-namespace GraphEditor
+namespace LevelEditorTools
 {
     [System.Serializable]
     public class SceneContainer : ScriptableObject

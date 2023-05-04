@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using GraphEditor;
-using GraphEditor.Nodes;
+using LevelEditorTools;
+using LevelEditorTools.Nodes;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(GameLunch), true)]
+[CustomEditor(typeof(GameDemoLunch), true)]
 public class GameLunchEditor : UnityEditor.Editor
 {
     private SceneContainer _sceneContainer;
@@ -295,7 +295,7 @@ public class GameLunchEditor : UnityEditor.Editor
                     continue;
                 }
                 GameObject go = Instantiate<GameObject>(goList[index], parent);
-                go.transform.position = new Vector3(i * widthStep, 0, j * widthStep);
+                go.transform.position = GetTransPosition(new Vector3(i * widthStep, 0, j * widthStep));
                 go.transform.localScale = baseList[index].Scale;
                 go.transform.Rotate(Vector3.up, baseList[index].Rotation.y);
                 go.isStatic = baseList[index].ForceStatic;
