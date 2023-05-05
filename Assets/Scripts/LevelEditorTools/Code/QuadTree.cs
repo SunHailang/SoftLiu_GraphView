@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using LevelEditorTools.Nodes;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -176,7 +177,37 @@ public class Point
 
     public float h = 0;
 
-    public bool IsOnce = false;
+    private TriggerStateEnum m_TriggerState = TriggerStateEnum.None;
+
+    /// <summary>
+    /// 支持的触发类型
+    /// </summary>
+    public void SetTriggerState(TriggerStateEnum state, bool isOnce)
+    {
+        m_TriggerState = state;
+        if (isOnce && (state & TriggerStateEnum.EntryAndExist) > 0)
+        {
+            triggerCount = (state == TriggerStateEnum.Enter || state == TriggerStateEnum.Exist) ? 1 : 2;
+        }
+    }
+
+    private int triggerCount = -1;
+
+    public bool CanTrigger(TriggerStateEnum stateEnum)
+    {
+        if ((stateEnum & m_TriggerState) > 0)
+        {
+            if (triggerCount < 0) return true;
+            if (triggerCount > 0)
+            {
+                triggerCount--;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     public Point(Transform _trans, float _w, float _h)
     {
@@ -185,6 +216,7 @@ public class Point
         this.w = _w;
         this.h = _h;
     }
+
     public void DrawGizmos()
     {
         Gizmos.color = Color.green;
@@ -236,7 +268,7 @@ public class Rectangle
         this.rightDown = new Vector3(this.x + w / 2, 0, this.y - h / 2);
         this.rightUp = new Vector3(this.x + w / 2, 0, this.y + h / 2);
     }
-    
+
     /// <summary>
     /// 带BoxCollider的大小  假设 BoxCollider的中心点和物体本身重合
     /// </summary>

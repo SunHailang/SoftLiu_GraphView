@@ -25,9 +25,14 @@ namespace LevelEditorTools.Editor.Nodes
         {
             base.DrawInspectorGUI();
 
+            _scriptable.EventID = EditorGUILayout.IntField("EventID", _scriptable.EventID);
             _scriptable.Position = EditorGUILayout.Vector3Field("Position", _scriptable.Position, GUILayout.ExpandWidth(true));
             _scriptable.Scale = EditorGUILayout.Vector3Field("Scale", _scriptable.Scale, GUILayout.ExpandWidth(true));
             _scriptable.TriggerState = (TriggerStateEnum) EditorGUILayout.EnumPopup("TriggerState", _scriptable.TriggerState);
+            if ((_scriptable.TriggerState & TriggerStateEnum.EntryAndExist) > 0)
+            {
+                _scriptable.IsOnce = EditorGUILayout.Toggle("IsOnce", _scriptable.IsOnce);
+            }
         }
     }
 }

@@ -27,6 +27,8 @@ namespace LevelEditorTools.Editor.Nodes
         {
             base.DrawInspectorGUI();
             _scriptable.LevelName = EditorGUILayout.TextField("LevelName", _scriptable.LevelName, GUILayout.ExpandWidth(true));
+            _scriptable.LevelPosition = EditorGUILayout.Vector3Field("LevelPosition", _scriptable.LevelPosition);
+            _scriptable.LevelScale = EditorGUILayout.Vector3Field("LevelScale", _scriptable.LevelScale);
         }
     }
 }

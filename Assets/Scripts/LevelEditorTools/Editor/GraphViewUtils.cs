@@ -19,7 +19,16 @@ namespace LevelEditorTools
             return port;
         }
 
+        public static Vector2 GetNodePosition(string guid, List<SceneNodeData> list)
+        {
+            foreach (SceneNodeData data in list)
+            {
+                if (data.NodeGuid == guid) return data.NodePosition;
+            }
 
+            return Vector2.zero;
+        }
+        
         public static bool GetEdgeNode(SceneNodeLinkData data, List<BaseNode> list, out BaseNode outputNode, out BaseNode inputNode)
         {
             outputNode = null;

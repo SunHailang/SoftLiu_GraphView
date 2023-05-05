@@ -39,13 +39,15 @@ namespace LevelEditorTools.Save
             // 1. 遍历生成 Node 节点
             foreach (LevelDataScriptable levelData in container.LevelDatas)
             {
-                Vector2 pos = GetPosition(levelData.Guid, container);
+                Vector2 pos = GraphViewUtils.GetNodePosition(levelData.Guid, container.NodeDatas);
                 BaseNode node = _sceneGraphView.CreateNode(typeof(LevelDataNode), pos, levelData.Title, levelData.Guid);
                 if (node is LevelDataNode groundNode)
                 {
                     if (node.State is LevelDataScriptable levelDataScriptable)
                     {
                         levelDataScriptable.LevelName = levelData.LevelName;
+                        levelDataScriptable.LevelPosition = levelData.LevelPosition;
+                        levelDataScriptable.LevelScale = levelData.LevelScale;
                     }
 
                     list.Add(groundNode);
@@ -54,12 +56,13 @@ namespace LevelEditorTools.Save
 
             foreach (BoxTriggerScriptable boxData in container.BoxTriggerDatas)
             {
-                Vector2 pos = GetPosition(boxData.Guid, container);
+                Vector2 pos = GraphViewUtils.GetNodePosition(boxData.Guid, container.NodeDatas);
                 BaseNode node = _sceneGraphView.CreateNode(typeof(BoxTriggerNode), pos, boxData.Title, boxData.Guid);
                 if (node is BoxTriggerNode boxTriggerNode)
                 {
                     if (node.State is BoxTriggerScriptable boxTriggerScriptable)
                     {
+                        boxTriggerScriptable.EventID = boxData.EventID;
                         boxTriggerScriptable.Position = boxData.Position;
                         boxTriggerScriptable.Scale = boxData.Scale;
                         boxTriggerScriptable.TriggerState = boxData.TriggerState;
@@ -81,16 +84,6 @@ namespace LevelEditorTools.Save
                     GraphViewUtils.AddEdgeByPorts(_sceneGraphView, outputPort, inputPort);
                 }
             }
-        }
-
-        private Vector2 GetPosition(string guid, LevelTriggerContainer container)
-        {
-            foreach (SceneNodeData data in container.NodeDatas)
-            {
-                if (data.NodeGuid == guid) return data.NodePosition;
-            }
-
-            return Vector2.zero;
         }
 
         public string Save(string path)

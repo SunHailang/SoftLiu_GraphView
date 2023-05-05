@@ -123,7 +123,7 @@ namespace LevelEditorTools.Save
             // 1. 遍历生成 Node 节点
             foreach (SceneScriptable sceneData in container.NodeSceneDatas)
             {
-                Vector2 pos = GetPosition(sceneData.Guid, container);
+                Vector2 pos = GraphViewUtils.GetNodePosition(sceneData.Guid, container.NodeDatas);
                 BaseNode node = _sceneGraphView.CreateNode(typeof(SceneNode), pos, sceneData.Title, sceneData.Guid);
                 if (node is SceneNode sceneNode)
                 {
@@ -138,7 +138,7 @@ namespace LevelEditorTools.Save
 
             foreach (GroundScriptable groundData in container.NodeGroundDatas)
             {
-                Vector2 pos = GetPosition(groundData.Guid, container);
+                Vector2 pos = GraphViewUtils.GetNodePosition(groundData.Guid, container.NodeDatas);
                 BaseNode node = _sceneGraphView.CreateNode(typeof(GroundNode), pos, groundData.Title, groundData.Guid);
                 if (node is GroundNode groundNode)
                 {
@@ -147,7 +147,7 @@ namespace LevelEditorTools.Save
             }
             foreach (ObstacleScriptable obstacle in container.NodeObstacleDatas)
             {
-                Vector2 pos = GetPosition(obstacle.Guid, container);
+                Vector2 pos = GraphViewUtils.GetNodePosition(obstacle.Guid, container.NodeDatas);
                 BaseNode node = _sceneGraphView.CreateNode(typeof(ObstacleNode), pos, obstacle.Title, obstacle.Guid);
                 if (node is ObstacleNode obstacleNode)
                 {
@@ -156,7 +156,7 @@ namespace LevelEditorTools.Save
             }
             foreach (WallScriptable wall in container.NodeWallDatas)
             {
-                Vector2 pos = GetPosition(wall.Guid, container);
+                Vector2 pos = GraphViewUtils.GetNodePosition(wall.Guid, container.NodeDatas);
                 BaseNode node = _sceneGraphView.CreateNode(typeof(WallNode), pos, wall.Title, wall.Guid);
                 if (node is WallNode wallNode)
                 {
@@ -166,7 +166,7 @@ namespace LevelEditorTools.Save
 
             foreach (GameObjectScriptable objectData in container.NodeGameObjectDatas)
             {
-                Vector2 pos = GetPosition(objectData.Guid, container);
+                Vector2 pos = GraphViewUtils.GetNodePosition(objectData.Guid, container.NodeDatas);
                 BaseNode node = _sceneGraphView.CreateNode(typeof(GameObjectNode), pos, objectData.Title, objectData.Guid);
                 if (node is GameObjectNode goNode)
                 {
@@ -198,47 +198,6 @@ namespace LevelEditorTools.Save
                 }
             }
         }
-
-        // private bool GetEdgeNode(SceneNodeLinkData data, List<BaseNode> list, out BaseNode outputNode, out BaseNode inputNode)
-        // {
-        //     outputNode = null;
-        //     inputNode = null;
-        //     for (int i = 0; i < list.Count; i++)
-        //     {
-        //         if (list[i].State.Guid == data.OutputNodeGuid)
-        //         {
-        //             outputNode = list[i];
-        //         }
-        //
-        //         if (list[i].State.Guid == data.InputNodeGuid)
-        //         {
-        //             inputNode = list[i];
-        //         }
-        //     }
-        //
-        //     return outputNode != null && inputNode != null;
-        // }
-
-        // private void AddEdgeByPorts(Port outputPort, Port inputPort)
-        // {
-        //     Edge tempEdge = new Edge()
-        //     {
-        //         output = outputPort,
-        //         input = inputPort
-        //     };
-        //     tempEdge.input.Connect(tempEdge);
-        //     tempEdge.output.Connect(tempEdge);
-        //     _sceneGraphView.Add(tempEdge);
-        // }
-
-        private Vector2 GetPosition(string guid, SceneContainer container)
-        {
-            foreach (SceneNodeData data in container.NodeDatas)
-            {
-                if (data.NodeGuid == guid) return data.NodePosition;
-            }
-
-            return Vector2.zero;
-        }
+        
     }
 }

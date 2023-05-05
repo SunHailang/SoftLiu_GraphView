@@ -28,14 +28,18 @@ MonoBehaviour:
   - Title: LevelDataNode
     Guid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
     LevelName: Demo
+    LevelPosition: {x: 25, y: 0, z: 100}
+    LevelScale: {x: 50, y: 1, z: 200}
   BoxTriggerDatas:
   - Title: BoxTriggerNode
     Guid: cf8b9ecc-498b-47e0-bd3a-30322a94efe8
-    Position: {x: 0, y: 0, z: 0}
-    Scale: {x: 1, y: 1, z: 1}
+    EventID: 10001
+    Position: {x: 25, y: 0, z: 60}
+    Scale: {x: 50, y: 1, z: 20}
     TriggerState: 1
   - Title: BoxTriggerNode
     Guid: 7b896b32-d235-43bb-a7f0-b908703d1617
-    Position: {x: 0, y: 0, z: 0}
-    Scale: {x: 1, y: 1, z: 1}
+    EventID: 10002
+    Position: {x: 25, y: 0, z: 85}
+    Scale: {x: 50, y: 1, z: 20}
     TriggerState: 1
