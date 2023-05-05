@@ -68,7 +68,7 @@ namespace LevelEditorTools.Editor.Nodes
 
         public virtual void DrawInspectorGUI()
         {
-            EditorGUILayout.TextField("Title", _state.Title, GUILayout.ExpandHeight(true));
+            _state.Title = EditorGUILayout.TextField("Title", _state.Title, GUILayout.ExpandHeight(true));
             EditorGUILayout.TextField("Guid:",_state.Guid, GUILayout.ExpandWidth(true));
         }
     }

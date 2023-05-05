@@ -16,7 +16,7 @@ namespace LevelEditorTools.GraphViews
         
         public event Action<BaseNode, bool> onNodeSelected;
 
-        private Vector2 curMousePos = Vector2.zero;
+        public EditorWindow window;
 
         public SceneTriggerView()
         {
@@ -41,7 +41,6 @@ namespace LevelEditorTools.GraphViews
             providerNode.OnSelectEntryHandler += OnMenuSelectEntry;
 
             nodeCreationRequest += context => { SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), providerNode); };
-            this.RegisterCallback<MouseDownEvent>(OnMouseDownEventCallback);
         }
         
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -61,17 +60,17 @@ namespace LevelEditorTools.GraphViews
             });
             return compatiblePorts;
         }
-
-        private void OnMouseDownEventCallback(MouseDownEvent evt)
-        {
-            curMousePos = evt.localMousePosition;
-        }
+        
 
         private bool OnMenuSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
         {
             if (searchTreeEntry.userData is Type type)
             {
-                BaseNode node = CreateNode(type, curMousePos);
+                //获取鼠标位置
+                var windowRoot = window.rootVisualElement;
+                var windowMousePosition = windowRoot.ChangeCoordinatesTo(windowRoot.parent, context.screenMousePosition - window.position.position);
+                var graphMousePosition = contentViewContainer.WorldToLocal(windowMousePosition);
+                BaseNode node = CreateNode(type, graphMousePosition);
                 return node != null;
             }
 

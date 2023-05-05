@@ -28,7 +28,11 @@ namespace LevelEditorTools.GraphViews
             if (nodeView == null || nodeView.State == null)
                 return;
             ScrollView scrollView = new ScrollView();
-            IMGUIContainer container = new IMGUIContainer(nodeView.DrawInspectorGUI);
+            IMGUIContainer container = new IMGUIContainer(() =>
+            {
+                nodeView.DrawInspectorGUI();
+                EditorGUILayout.Vector3Field("Node Position:", nodeView.GetPosition().position);
+            });
             scrollView.Add(container);
             this.Add(scrollView);
         }

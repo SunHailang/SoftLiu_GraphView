@@ -10,24 +10,25 @@ namespace LevelEditorTools.Editor.Nodes
     /// </summary>
     public class GroundNode : BaseNode
     {
-        private GroundScriptable _ground;
+        private readonly GroundScriptable _scriptable;
         public GroundNode()
         {
             // 创建输入
             Port input = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(int));
             this.inputContainer.Add(input);
 
-            Port output = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(int));
+            Port output = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(GameObjectNode));
             this.outputContainer.Add(output);
 
-            _ground = new GroundScriptable();
-            State = _ground;
+            _scriptable = new GroundScriptable();
+            State = _scriptable;
         }
 
         public override void DrawInspectorGUI()
         {
             base.DrawInspectorGUI();
-            _ground.Seed = EditorGUILayout.IntField("Seed", _ground.Seed, GUILayout.ExpandWidth(true));
+            _scriptable.GroundSize = EditorGUILayout.Vector3Field("GroundSize", _scriptable.GroundSize);
+            _scriptable.Seed = EditorGUILayout.IntField("Seed", _scriptable.Seed, GUILayout.ExpandWidth(true));
         }
     }
 }

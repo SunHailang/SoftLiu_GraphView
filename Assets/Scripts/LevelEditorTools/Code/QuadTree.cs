@@ -168,13 +168,38 @@ public class QuadTree
 /// </summary>
 public class Point
 {
-    public Transform trans;
+    private Transform trans;
 
+    private float m_x;
+    public float x
+    {
+        get
+        {
+            if (trans != null)
+            {
+                m_x = trans.position.x;
+            }
+            return m_x;
+        }
+    }
+
+    private float m_y;
+    public float y
+    {
+        get
+        {
+            if (trans != null)
+            {
+                m_y = trans.position.z;
+            }
+
+            return m_y;
+        }
+    }
     /// <summary>
     /// BoxCollider的大小
     /// </summary>
     public float w = 0;
-
     public float h = 0;
 
     private TriggerStateEnum m_TriggerState = TriggerStateEnum.None;
@@ -217,11 +242,18 @@ public class Point
         this.h = _h;
     }
 
+    public Point(float _x, float _y, float _w, float _h)
+    {
+        m_x = _x;
+        m_y = _y;
+        // 初始化为 0
+        this.w = _w;
+        this.h = _h;
+    }
+
     public void DrawGizmos()
     {
         Gizmos.color = Color.green;
-        float x = trans.position.x;
-        float y = trans.position.z;
         Vector3 leftDown = new Vector3(x - w / 2, 0, y - h / 2);
         Vector3 leftUp = new Vector3(x - w / 2, 0, y + h / 2);
         Vector3 rightDown = new Vector3(x + w / 2, 0, y - h / 2);
@@ -276,21 +308,21 @@ public class Rectangle
     /// <returns></returns>
     public bool contains(Point point, int isXZ = 0)
     {
-        if (point == null || point.trans == null) return false;
-        if (isXZ == 0)
+        if (point == null) return false;
+        //if (isXZ == 0)
         {
-            return ((point.trans.position.x + point.w / 2) >= (this.x - this.w / 2) &&
-                    (point.trans.position.x - point.w / 2) <= (this.x + this.w / 2) &&
-                    (point.trans.position.z + point.h / 2) >= (this.y - this.h / 2) &&
-                    (point.trans.position.z - point.h / 2) <= (this.y + this.h / 2));
+            return ((point.x + point.w / 2) >= (this.x - this.w / 2) &&
+                    (point.x - point.w / 2) <= (this.x + this.w / 2) &&
+                    (point.y + point.h / 2) >= (this.y - this.h / 2) &&
+                    (point.y - point.h / 2) <= (this.y + this.h / 2));
         }
-        else
-        {
-            return ((point.trans.position.x + point.w / 2) >= (this.x - this.w / 2) &&
-                    (point.trans.position.x - point.w / 2) <= (this.x + this.w / 2) &&
-                    (point.trans.position.y + point.h / 2) >= (this.y - this.h / 2) &&
-                    (point.trans.position.y - point.h / 2) <= (this.y + this.h / 2));
-        }
+        // else
+        // {
+        //     return ((point.trans.position.x + point.w / 2) >= (this.x - this.w / 2) &&
+        //             (point.trans.position.x - point.w / 2) <= (this.x + this.w / 2) &&
+        //             (point.trans.position.y + point.h / 2) >= (this.y - this.h / 2) &&
+        //             (point.trans.position.y - point.h / 2) <= (this.y + this.h / 2));
+        // }
     }
 
     public bool intersects(Rectangle range)
@@ -299,6 +331,36 @@ public class Rectangle
                  range.x + range.w / 2 < this.x - this.w / 2 ||
                  range.y - range.h / 2 > this.y + this.h / 2 ||
                  range.y + range.h / 2 < this.y - this.h / 2);
+    }
+
+    public bool RectIntersects(Rectangle rect, out Vector2 l, out Vector2 r)
+    {
+        l = Vector2.zero;
+        r = Vector2.zero;
+
+        float Xa1 = x - w / 2;
+        float Xa2 = x + w / 2;
+        float Ya1 = y - h / 2;
+        float Ya2 = y + h / 2;
+
+        float Xb1 = rect.x - rect.w / 2;
+        float Xb2 = rect.x + rect.w / 2;
+        float Yb1 = rect.y - rect.h / 2;
+        float Yb2 = rect.y + rect.h / 2;
+
+        if (Mathf.Abs(Xb2 + Xb1 - Xa2 - Xa1) <= Xa2 - Xa1 + Xb2 - Xb1 &&
+            Mathf.Abs(Yb2 + Yb1 - Ya2 - Ya1) <= Ya2 - Ya1 + Yb2 - Yb1)
+        {
+            float Xc1 = Mathf.Max(Xa1, Xb1);
+            float Yc1 = Mathf.Max(Ya1, Yb1);
+            l = new Vector2(Xc1, Yc1);
+            float Xc2 = Mathf.Min(Xa2, Xb2);
+            float Yc2 = Mathf.Min(Ya2, Yb2);
+            r = new Vector2(Xc2, Yc2);
+            return true;
+        }
+
+        return false;
     }
 
 

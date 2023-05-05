@@ -38,8 +38,6 @@ namespace LevelEditorTools.GraphViews
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath("73411fe8094701f49b6a65893deb79fa"));
             styleSheets.Add(styleSheet);
 
-            this.RegisterCallback<MouseDownEvent>(OnMouseDownCallback, TrickleDown.TrickleDown);
-
             LevelNodeProvider providerNode = ScriptableObject.CreateInstance<LevelNodeProvider>();
             providerNode.OnSelectEntryHandler += OnMenuSelectEntry;
 
@@ -50,7 +48,11 @@ namespace LevelEditorTools.GraphViews
         {
             if (searchTreeEntry.userData is Type type)
             {
-                BaseNode node = CreateNode(type, curMousePos);
+                //获取鼠标位置
+                var windowRoot = window.rootVisualElement;
+                var windowMousePosition = windowRoot.ChangeCoordinatesTo(windowRoot.parent, context.screenMousePosition - window.position.position);
+                var graphMousePosition = contentViewContainer.WorldToLocal(windowMousePosition);
+                BaseNode node = CreateNode(type, graphMousePosition);
                 if (node is GameObjectNode goNode)
                 {
                     goNode.RefreshTempleGo(window);
@@ -115,15 +117,7 @@ namespace LevelEditorTools.GraphViews
             });
             return compatiblePorts;
         }
-
-        private void OnMouseDownCallback(MouseDownEvent evt)
-        {
-            if (evt.button == 1)
-            {
-                // 右键按下 缓存当前鼠标相对窗体的坐标点
-                curMousePos = evt.localMousePosition;
-            }
-        }
+        
         
         private void OnNodeSelected(BaseNode node, bool selected)
         {

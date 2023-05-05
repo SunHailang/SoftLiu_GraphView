@@ -74,7 +74,7 @@ public class TriggerCreateMono : MonoBehaviour
             // exist rect
             if (point.CanTrigger(TriggerStateEnum.Exist))
             {
-                Debug.Log($"{point.trans.name}: Exist");
+                //Debug.Log($"{point.trans.name}: Exist");
             }
 
             curPoints.Remove(point);
@@ -90,7 +90,7 @@ public class TriggerCreateMono : MonoBehaviour
                     if (point.CanTrigger(TriggerStateEnum.Stay))
                     {
                         // stay
-                        Debug.Log($"{point.trans.name}: Stay");
+                        //Debug.Log($"{point.trans.name}: Stay");
                     }
                 }
                 else
@@ -98,7 +98,7 @@ public class TriggerCreateMono : MonoBehaviour
                     if (point.CanTrigger(TriggerStateEnum.Enter))
                     {
                         // enter
-                        Debug.Log($"{point.trans.name}: Enter");
+                        //Debug.Log($"{point.trans.name}: Enter");
                     }
 
                     curPoints.Add(point);

@@ -73,6 +73,10 @@ namespace LevelEditorTools.Save
                 else if (node.State is GroundScriptable groundState)
                 {
                     container.NodeGroundDatas.Add(groundState);
+                } 
+                else if (node.State is DoorScriptable doorState)
+                {
+                    container.NodeDoorDatas.Add(doorState);
                 }
                 else if (node.State is ObstacleScriptable obstacle)
                 {
@@ -142,7 +146,25 @@ namespace LevelEditorTools.Save
                 BaseNode node = _sceneGraphView.CreateNode(typeof(GroundNode), pos, groundData.Title, groundData.Guid);
                 if (node is GroundNode groundNode)
                 {
+                    if (groundNode.State is GroundScriptable groundScriptable)
+                    {
+                        groundScriptable.Seed = groundData.Seed;
+                        groundScriptable.GroundSize = groundData.GroundSize;
+                    }
                     list.Add(groundNode);
+                }
+            }
+            foreach (DoorScriptable door in container.NodeDoorDatas)
+            {
+                Vector2 pos = GraphViewUtils.GetNodePosition(door.Guid, container.NodeDatas);
+                BaseNode node = _sceneGraphView.CreateNode(typeof(DoorNode), pos, door.Title, door.Guid);
+                if (node is DoorNode doorNode)
+                {
+                    if (doorNode.State is DoorScriptable doorScriptable)
+                    {
+                        doorScriptable.DoorSize = door.DoorSize;
+                    }
+                    list.Add(doorNode);
                 }
             }
             foreach (ObstacleScriptable obstacle in container.NodeObstacleDatas)
@@ -151,6 +173,10 @@ namespace LevelEditorTools.Save
                 BaseNode node = _sceneGraphView.CreateNode(typeof(ObstacleNode), pos, obstacle.Title, obstacle.Guid);
                 if (node is ObstacleNode obstacleNode)
                 {
+                    if (obstacleNode.State is ObstacleScriptable obstacleScriptable)
+                    {
+                        obstacleScriptable.Seed = obstacle.Seed;
+                    }
                     list.Add(obstacleNode);
                 }
             }
@@ -160,6 +186,11 @@ namespace LevelEditorTools.Save
                 BaseNode node = _sceneGraphView.CreateNode(typeof(WallNode), pos, wall.Title, wall.Guid);
                 if (node is WallNode wallNode)
                 {
+                    if (wallNode.State is WallScriptable wallScriptable)
+                    {
+                        wallScriptable.Seed = wall.Seed;
+                        wallScriptable.WallSize = wall.WallSize;
+                    }
                     list.Add(wallNode);
                 }
             }

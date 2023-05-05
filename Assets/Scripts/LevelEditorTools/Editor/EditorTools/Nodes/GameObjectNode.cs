@@ -11,12 +11,12 @@ namespace LevelEditorTools.Editor.Nodes
 {
     public class GameObjectNode : BaseNode
     {
-        private GameObjectScriptable _scriptable;
+        private readonly GameObjectScriptable _scriptable;
 
         public GameObjectNode()
         {
             // 添加一个 input
-            Port input = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(int));
+            Port input = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(GameObjectNode));
             this.inputContainer.Add(input);
 
             _scriptable = new GameObjectScriptable();

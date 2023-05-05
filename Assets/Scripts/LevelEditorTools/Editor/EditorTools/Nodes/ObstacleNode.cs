@@ -7,12 +7,12 @@ namespace LevelEditorTools.Editor.Nodes
 {
     public class ObstacleNode : BaseNode
     {
-        private ObstacleScriptable _obstacle;
+        private readonly ObstacleScriptable _obstacle;
         public ObstacleNode()
         {
            Port input = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(int));
            this.inputContainer.Add(input);
-           Port output = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(int));
+           Port output = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(GameObjectNode));
            this.outputContainer.Add(output);
 
            _obstacle = new ObstacleScriptable();

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using LevelEditorTools;
+using LevelEditorTools.Editor.Nodes;
 using LevelEditorTools.Nodes;
 using UnityEditor;
 using UnityEngine;
@@ -11,11 +12,14 @@ public class GameLunchEditor : UnityEditor.Editor
 
     private GameObject _selectTarget;
 
+    private GameDemoLunch _lunch;
+
     private void OnEnable()
     {
         _selectTarget = Selection.activeObject as GameObject;
+        _lunch = _selectTarget.GetComponent<GameDemoLunch>();
 
-        string guid = EditorPrefs.GetString("SceneContainer");
+        var guid = EditorPrefs.GetString("SceneContainer");
         if (!string.IsNullOrEmpty(guid))
         {
             _sceneContainer = AssetDatabase.LoadAssetAtPath<SceneContainer>(AssetDatabase.GUIDToAssetPath(guid));
@@ -35,11 +39,12 @@ public class GameLunchEditor : UnityEditor.Editor
         {
             instanceID = newId;
             string guid = "";
-            if (instanceID != 0 &&_sceneContainer != null)
+            if (instanceID != 0 && _sceneContainer != null)
             {
                 string path = AssetDatabase.GetAssetPath(_sceneContainer.GetInstanceID());
                 guid = AssetDatabase.AssetPathToGUID(path);
             }
+
             EditorPrefs.SetString("SceneContainer", guid);
         }
 
@@ -68,6 +73,42 @@ public class GameLunchEditor : UnityEditor.Editor
 
         DestroyScene();
         Transform parent = _selectTarget.transform;
+        for (int i = 0; i < _sceneContainer.NodeSceneDatas.Count; i++)
+        {
+            // 获取任意房间之间墙体重叠的位置
+            for (int j = i + 1; j < _sceneContainer.NodeSceneDatas.Count; j++)
+            {
+                SceneScriptable leftNode = _sceneContainer.NodeSceneDatas[i];
+                Vector3 leftPos = new Vector3(leftNode.ScenePosition.x + leftNode.SceneScale.x / 2, leftNode.ScenePosition.y, leftNode.ScenePosition.z + leftNode.SceneScale.z / 2);
+                Rectangle leftRect = new Rectangle(leftPos.x, leftPos.z, leftNode.SceneScale.x, leftNode.SceneScale.z);
+                SceneScriptable rightNode = _sceneContainer.NodeSceneDatas[j];
+                Vector3 rightPos = new Vector3(rightNode.ScenePosition.x + rightNode.SceneScale.x / 2, rightNode.ScenePosition.y,
+                    rightNode.ScenePosition.z + rightNode.SceneScale.z / 2);
+                Rectangle rightRect = new Rectangle(rightPos.x, rightPos.z, rightNode.SceneScale.x, rightNode.SceneScale.z);
+
+                bool intersects = leftRect.RectIntersects(rightRect, out Vector2 l, out Vector2 r);
+                if (intersects)
+                {
+                    float w = r.x - l.x >= 5 ? r.x - l.x : 5;
+                    float h = r.y - l.y >= 5 ? r.y - l.y : 5;
+
+                    if (w < h)
+                    {
+                        h -= 10;
+                    }
+                    else
+                    {
+                        w -= 10;
+                    }
+
+                    float rectX = (l.x + r.x) / 2 - 2;
+                    float rectY = (l.y + r.y) / 2 - 2;
+                    Debug.Log($"{rectX}, {rectY}, {w}, {h}");
+                    Rectangle rect = new Rectangle(rectX, rectY, w, h);
+                    _lunch.sceneNodeDatas.Add(rect);
+                }
+            }
+        }
 
         foreach (SceneScriptable data in _sceneContainer.NodeSceneDatas)
         {
@@ -90,11 +131,19 @@ public class GameLunchEditor : UnityEditor.Editor
         {
             if (linkData.OutputNodeGuid == scene.Guid)
             {
-                foreach (GroundScriptable groundData in _sceneContainer.NodeGroundDatas)
+                foreach (var groundData in _sceneContainer.NodeGroundDatas)
                 {
                     if (groundData.Guid == linkData.InputNodeGuid)
                     {
                         list.Add(groundData);
+                    }
+                }
+
+                foreach (DoorScriptable doorData in _sceneContainer.NodeDoorDatas)
+                {
+                    if (doorData.Guid == linkData.InputNodeGuid)
+                    {
+                        list.Add(doorData);
                     }
                 }
 
@@ -145,35 +194,57 @@ public class GameLunchEditor : UnityEditor.Editor
         {
             if (scriptable is GroundScriptable groundScriptable)
             {
-                GameObject go = new GameObject(groundScriptable.Title);
-                go.transform.parent = parent;
+                var go = new GameObject(groundScriptable.Title)
+                {
+                    transform =
+                    {
+                        parent = parent
+                    }
+                };
                 List<GameObjectScriptable> list = GetGoScriptable(groundScriptable);
-                CreateGroundGo(go.transform, groundScriptable.Seed, list);
+                CreateGroundGo(go.transform, groundScriptable.Seed, groundScriptable.GroundSize, list);
+            }
+            else if (scriptable is DoorScriptable doorScriptable)
+            {
+                var go = new GameObject(doorScriptable.Title)
+                {
+                    transform =
+                    {
+                        parent = parent
+                    }
+                };
+                CreateDoorGo(go.transform, doorScriptable.DoorSize, GetGoScriptable(doorScriptable));
             }
             else if (scriptable is WallScriptable wallScriptable)
             {
-                GameObject go = new GameObject(wallScriptable.Title);
-                go.transform.parent = parent;
-                List<GameObjectScriptable> list = GetGoScriptable(wallScriptable);
-                CreateWallGo(go.transform, wallScriptable.Seed, list);
+                var go = new GameObject(wallScriptable.Title)
+                {
+                    transform =
+                    {
+                        parent = parent
+                    }
+                };
+                CreateWallGo(go.transform, wallScriptable.Seed, wallScriptable.WallSize, GetGoScriptable(wallScriptable));
             }
             else if (scriptable is ObstacleScriptable obstacleScriptable)
             {
-                GameObject go = new GameObject(obstacleScriptable.Title);
-                go.transform.parent = parent;
+                GameObject go = new GameObject(obstacleScriptable.Title)
+                {
+                    transform =
+                    {
+                        parent = parent
+                    }
+                };
                 List<GameObjectScriptable> list = GetGoScriptable(obstacleScriptable);
                 CreateObstacleGo(go.transform, obstacleScriptable.Seed, list);
             }
         }
     }
 
-    private void CreateGroundGo(Transform parent, int seed, List<GameObjectScriptable> baseList)
+    private void CreateGroundGo(Transform parent, int seed, Vector3 size, List<GameObjectScriptable> baseList)
     {
-        float widthStep = 4;
-        float lenStep = 4;
-
-        int xCount = (int) (_curSceneScale.x / widthStep);
-        int zCount = (int) (_curSceneScale.z / lenStep);
+        int xCount = (int) (_curSceneScale.x / size.x);
+        int zCount = (int) (_curSceneScale.z / size.z);
 
         if (!GetGoList(baseList, out List<KeyValuePair<float, float>> list, out List<GameObject> goList))
         {
@@ -186,13 +257,14 @@ public class GameLunchEditor : UnityEditor.Editor
         {
             for (int j = 0; j < zCount; j++)
             {
-                float value = UnityEngine.Random.Range(0f, 1.0f);
-                if (!GetRandomIndex(value, list, out int index))
+                var value = Random.Range(0f, 1.0f);
+                if (!GetRandomIndex(value, list, out var index))
                 {
                     continue;
                 }
-                GameObject go = Instantiate<GameObject>(goList[index], parent);
-                go.transform.position =GetTransPosition(new Vector3(i * widthStep, 0, j * lenStep));
+
+                GameObject go = Instantiate(goList[index], parent);
+                go.transform.position = GetTransPosition(new Vector3(i * size.x, 0, j * size.z));
                 go.transform.localScale = baseList[index].Scale;
                 go.isStatic = baseList[index].ForceStatic;
             }
@@ -221,11 +293,29 @@ public class GameLunchEditor : UnityEditor.Editor
         return goList.Count > 0;
     }
 
-    private void CreateWallGo(Transform parent, int seed, List<GameObjectScriptable> baseList)
+    private void CreateDoorGo(Transform parent, Vector3 size, List<GameObjectScriptable> baseList)
     {
-        float lenStep = 4;
-        int xCount = (int) (_curSceneScale.x / lenStep);
-        int zCount = (int) (_curSceneScale.z / lenStep);
+        if (!GetGoList(baseList, out List<KeyValuePair<float, float>> list, out List<GameObject> goList))
+        {
+            Debug.LogError($"CreateDoorGo Error:");
+            return;
+        }
+
+        int index = 0;
+        Vector3 pos = baseList[index].Position;
+        var go = Instantiate(goList[index], parent);
+        go.transform.position = pos;
+        go.transform.localScale = baseList[index].Scale;
+        go.transform.Rotate(Vector3.up, baseList[index].Rotation.x);
+        go.isStatic = baseList[index].ForceStatic;
+
+        _lunch.sceneDoorDatas.Add(new Rectangle(pos.x, pos.z, size.x, size.z));
+    }
+
+    private void CreateWallGo(Transform parent, int seed, Vector3 size, List<GameObjectScriptable> baseList)
+    {
+        int xCount = (int) (_curSceneScale.x / size.x);
+        int zCount = (int) (_curSceneScale.z / size.z);
 
         if (!GetGoList(baseList, out List<KeyValuePair<float, float>> list, out List<GameObject> goList))
         {
@@ -233,21 +323,51 @@ public class GameLunchEditor : UnityEditor.Editor
             return;
         }
 
-        List<float> xList = new List<float>() {0, _curSceneScale.x - lenStep};
-        List<float> zList = new List<float>() {0, _curSceneScale.z - lenStep};
+        List<float> xList = new List<float>() {0, _curSceneScale.x - size.x};
+        List<float> zList = new List<float>() {0, _curSceneScale.z - size.z};
         UnityEngine.Random.InitState(seed);
+
+        HashSet<int> rectIndexs = new HashSet<int>();
+
         for (int i = 0; i < xCount; i++)
         {
             for (int j = 0; j < zList.Count; j++)
             {
+                Vector3 pos = GetTransPosition(new Vector3(i * size.x, 0, zList[j]));
+
+                Point point = new Point(pos.x, pos.z, 1, 1);
+                bool isContinue = false;
+                foreach (Rectangle doorData in _lunch.sceneDoorDatas)
+                {
+                    if (doorData.contains(point))
+                    {
+                        isContinue = true;
+                        break;
+                    }
+                }
+
+                if (isContinue) continue;
+
+                for (int k = 0; k < _lunch.sceneNodeDatas.Count; k++)
+                {
+                    if (_lunch.sceneNodeDatas[k].contains(point))
+                    {
+                        isContinue = true;
+                        rectIndexs.Add(k);
+                        break;
+                    }
+                }
+
+                if (isContinue) continue;
+
                 float value = UnityEngine.Random.Range(0f, 1.0f);
                 if (!GetRandomIndex(value, list, out int index))
                 {
                     continue;
                 }
 
-                GameObject go = Instantiate<GameObject>(goList[index], parent);
-                go.transform.position = new Vector3(i * lenStep, 0, zList[j]);
+                var go = Instantiate(goList[index], parent);
+                go.transform.position = GetTransPosition(new Vector3(i * size.x, 0, zList[j]));
                 go.transform.localScale = baseList[index].Scale;
                 go.transform.Rotate(Vector3.up, baseList[index].Rotation.x);
                 go.isStatic = baseList[index].ForceStatic;
@@ -258,6 +378,34 @@ public class GameLunchEditor : UnityEditor.Editor
         {
             for (int j = 0; j < xList.Count; j++)
             {
+                Vector3 pos = GetTransPosition(new Vector3(xList[j], 0, i * size.z));
+
+                Point point = new Point(pos.x, pos.z, 1, 1);
+
+                bool isContinue = false;
+                foreach (Rectangle doorData in _lunch.sceneDoorDatas)
+                {
+                    if (doorData.contains(point))
+                    {
+                        isContinue = true;
+                        break;
+                    }
+                }
+
+                if (isContinue) continue;
+
+                for (int k = 0; k < _lunch.sceneNodeDatas.Count; k++)
+                {
+                    if (_lunch.sceneNodeDatas[k].contains(point))
+                    {
+                        isContinue = true;
+                        rectIndexs.Add(k);
+                        break;
+                    }
+                }
+
+                if (isContinue) continue;
+
                 float value = UnityEngine.Random.Range(0f, 1.0f);
                 if (!GetRandomIndex(value, list, out int index))
                 {
@@ -265,11 +413,16 @@ public class GameLunchEditor : UnityEditor.Editor
                 }
 
                 GameObject go = Instantiate<GameObject>(goList[index], parent);
-                go.transform.position = new Vector3(xList[j], 0, i * lenStep);
+                go.transform.position = pos;
                 go.transform.localScale = baseList[index].Scale;
                 go.transform.Rotate(Vector3.up, baseList[index].Rotation.z);
                 go.isStatic = baseList[index].ForceStatic;
             }
+        }
+
+        foreach (int i in rectIndexs)
+        {
+            _lunch.sceneNodeDatas.RemoveAt(i);
         }
     }
 
@@ -295,6 +448,7 @@ public class GameLunchEditor : UnityEditor.Editor
                 {
                     continue;
                 }
+
                 GameObject go = Instantiate<GameObject>(goList[index], parent);
                 go.transform.position = GetTransPosition(new Vector3(i * widthStep, 0, j * widthStep));
                 go.transform.localScale = baseList[index].Scale;
@@ -321,9 +475,11 @@ public class GameLunchEditor : UnityEditor.Editor
 
     private void DestroyScene()
     {
-        if (_selectTarget == null) return;
-        int childCount = _selectTarget.transform.childCount;
-        for (int i = childCount - 1; i >= 0; i--)
+        if (_selectTarget == null || _lunch == null) return;
+        _lunch.sceneDoorDatas.Clear();
+        _lunch.sceneNodeDatas.Clear();
+        var childCount = _selectTarget.transform.childCount;
+        for (var i = childCount - 1; i >= 0; i--)
         {
             DestroyImmediate(_selectTarget.transform.GetChild(i).gameObject);
         }
