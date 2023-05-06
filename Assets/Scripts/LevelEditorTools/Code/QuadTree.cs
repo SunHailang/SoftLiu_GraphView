@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using LevelEditorTools.Nodes;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -137,7 +138,6 @@ public class QuadTree
 #if UNITY_EDITOR
     public void Show()
     {
-        Gizmos.color = Color.red;
         IEnumerator ie = this.points.GetEnumerator();
         while (ie.MoveNext())
         {
@@ -147,7 +147,7 @@ public class QuadTree
                 p.DrawGizmos();
             }
         }
-
+        Gizmos.color = Color.red;
         Gizmos.DrawLine(this.boundary.leftDown, this.boundary.leftUp);
         Gizmos.DrawLine(this.boundary.leftDown, this.boundary.rightDown);
         Gizmos.DrawLine(this.boundary.leftUp, this.boundary.rightUp);
@@ -171,6 +171,7 @@ public class Point
     private Transform trans;
 
     private float m_x;
+
     public float x
     {
         get
@@ -179,11 +180,13 @@ public class Point
             {
                 m_x = trans.position.x;
             }
+
             return m_x;
         }
     }
 
     private float m_y;
+
     public float y
     {
         get
@@ -196,12 +199,15 @@ public class Point
             return m_y;
         }
     }
+
     /// <summary>
     /// BoxCollider的大小
     /// </summary>
     public float w = 0;
+
     public float h = 0;
 
+    public int TriggerEventID = 0;
     private TriggerStateEnum m_TriggerState = TriggerStateEnum.None;
 
     /// <summary>
@@ -250,7 +256,7 @@ public class Point
         this.w = _w;
         this.h = _h;
     }
-
+#if UNITY_EDITOR
     public void DrawGizmos()
     {
         Gizmos.color = Color.green;
@@ -262,7 +268,12 @@ public class Point
         Gizmos.DrawLine(leftDown, rightDown);
         Gizmos.DrawLine(leftUp, rightUp);
         Gizmos.DrawLine(rightDown, rightUp);
+        //version 2
+        GUIStyle style = new GUIStyle();
+        style.normal.textColor = Color.black;
+        Handles.Label(new Vector3(x, 0, y), $"{TriggerEventID}", style);
     }
+#endif
 }
 
 public class Rectangle
@@ -363,7 +374,7 @@ public class Rectangle
         return false;
     }
 
-
+#if UNITY_EDITOR
     public void DrawGizmos()
     {
         Gizmos.color = Color.blue;
@@ -372,4 +383,5 @@ public class Rectangle
         Gizmos.DrawLine(leftUp, rightUp);
         Gizmos.DrawLine(rightDown, rightUp);
     }
+#endif
 }

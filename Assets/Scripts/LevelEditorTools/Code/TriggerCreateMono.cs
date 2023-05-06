@@ -7,6 +7,7 @@ using LevelEditorTools.Nodes;
 using LevelEditorTools.Save;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class TriggerCreateMono : MonoBehaviour
 {
     public Transform mainPlayer;
@@ -16,8 +17,9 @@ public class TriggerCreateMono : MonoBehaviour
     public LevelTriggerContainer m_triggerContainer = null;
 
     private List<QuadTree> triggerTreeList;
-
-    private void Start()
+    
+    
+    private void OnEnable()
     {
         triggerTreeList = new List<QuadTree>(m_triggerContainer.LevelDatas.Count);
         // 1. 获取玩家的碰撞框大小
@@ -44,6 +46,7 @@ public class TriggerCreateMono : MonoBehaviour
                     go.transform.localScale = Vector3.one;
                     go.transform.position = boxTriggerScriptable.Position;
                     Point point = new Point(go.transform, boxTriggerScriptable.Scale.x, boxTriggerScriptable.Scale.z);
+                    point.TriggerEventID = boxTriggerScriptable.EventID;
                     point.SetTriggerState(boxTriggerScriptable.TriggerState, boxTriggerScriptable.IsOnce);
                     quadTree.insert(point);
                 }
@@ -74,7 +77,7 @@ public class TriggerCreateMono : MonoBehaviour
             // exist rect
             if (point.CanTrigger(TriggerStateEnum.Exist))
             {
-                //Debug.Log($"{point.trans.name}: Exist");
+                Debug.Log($"{point.TriggerEventID}: Exist");
             }
 
             curPoints.Remove(point);
@@ -90,7 +93,7 @@ public class TriggerCreateMono : MonoBehaviour
                     if (point.CanTrigger(TriggerStateEnum.Stay))
                     {
                         // stay
-                        //Debug.Log($"{point.trans.name}: Stay");
+                        Debug.Log($"{point.TriggerEventID}: Stay");
                     }
                 }
                 else
@@ -98,7 +101,7 @@ public class TriggerCreateMono : MonoBehaviour
                     if (point.CanTrigger(TriggerStateEnum.Enter))
                     {
                         // enter
-                        //Debug.Log($"{point.trans.name}: Enter");
+                        Debug.Log($"{point.TriggerEventID}: Enter");
                     }
 
                     curPoints.Add(point);
@@ -112,14 +115,15 @@ public class TriggerCreateMono : MonoBehaviour
     private void Update()
     {
         // 更新玩家框体的位置
-        mainPlayerRect.UpdatePosition(mainPlayer.position.x, mainPlayer.position.z);
+        var position = mainPlayer.position;
+        mainPlayerRect.UpdatePosition(position.x, position.z);
 
         foreach (QuadTree quadTree in triggerTreeList)
         {
             QueryPointList(quadTree);
         }
     }
-
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (mainPlayerRect != null)
@@ -135,4 +139,5 @@ public class TriggerCreateMono : MonoBehaviour
             }
         }
     }
+#endif
 }

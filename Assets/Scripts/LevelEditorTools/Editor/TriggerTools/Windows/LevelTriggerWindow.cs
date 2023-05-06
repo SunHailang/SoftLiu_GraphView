@@ -79,6 +79,7 @@ namespace GraphEditor.LevelTrigger
             btnSave.clicked += BtnSave_OnClick;
             
             _sceneTrigger = root.Q<SceneTriggerView>("SceneTriggerView");
+            _sceneTrigger.window = this;
             _sceneTrigger.onNodeSelected += OnNodeSelected;
             
             _inspectorTrigger = root.Q<InspectorTriggerView>("InspectorTriggerView");

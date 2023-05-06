@@ -16,6 +16,7 @@ public class GameLunchEditor : UnityEditor.Editor
 
     private void OnEnable()
     {
+        instanceID = 0;
         _selectTarget = Selection.activeObject as GameObject;
         _lunch = _selectTarget.GetComponent<GameDemoLunch>();
 
@@ -23,7 +24,10 @@ public class GameLunchEditor : UnityEditor.Editor
         if (!string.IsNullOrEmpty(guid))
         {
             _sceneContainer = AssetDatabase.LoadAssetAtPath<SceneContainer>(AssetDatabase.GUIDToAssetPath(guid));
-            instanceID = _sceneContainer.GetInstanceID();
+            if (_sceneContainer != null)
+            {
+                instanceID = _sceneContainer.GetInstanceID();
+            }
         }
     }
 
@@ -110,8 +114,9 @@ public class GameLunchEditor : UnityEditor.Editor
             }
         }
 
-        foreach (SceneScriptable data in _sceneContainer.NodeSceneDatas)
+        for (int i = 0; i < _sceneContainer.NodeSceneDatas.Count; i++)
         {
+            SceneScriptable data = _sceneContainer.NodeSceneDatas[i];
             // 1. 创建Scene节点
             GameObject go = new GameObject(data.Title);
             go.transform.parent = parent;
@@ -127,6 +132,7 @@ public class GameLunchEditor : UnityEditor.Editor
     private List<BaseScriptable> GetSceneChild(SceneScriptable scene)
     {
         List<BaseScriptable> list = new List<BaseScriptable>();
+        
         foreach (SceneNodeLinkData linkData in _sceneContainer.NodeLinkDatas)
         {
             if (linkData.OutputNodeGuid == scene.Guid)
@@ -192,6 +198,21 @@ public class GameLunchEditor : UnityEditor.Editor
     {
         foreach (BaseScriptable scriptable in baseList)
         {
+            if (scriptable is DoorScriptable doorScriptable)
+            {
+                var go = new GameObject(doorScriptable.Title)
+                {
+                    transform =
+                    {
+                        parent = parent
+                    }
+                };
+                CreateDoorGo(go.transform, doorScriptable.DoorSize, GetGoScriptable(doorScriptable));
+            }
+        }
+
+        foreach (BaseScriptable scriptable in baseList)
+        {
             if (scriptable is GroundScriptable groundScriptable)
             {
                 var go = new GameObject(groundScriptable.Title)
@@ -203,17 +224,6 @@ public class GameLunchEditor : UnityEditor.Editor
                 };
                 List<GameObjectScriptable> list = GetGoScriptable(groundScriptable);
                 CreateGroundGo(go.transform, groundScriptable.Seed, groundScriptable.GroundSize, list);
-            }
-            else if (scriptable is DoorScriptable doorScriptable)
-            {
-                var go = new GameObject(doorScriptable.Title)
-                {
-                    transform =
-                    {
-                        parent = parent
-                    }
-                };
-                CreateDoorGo(go.transform, doorScriptable.DoorSize, GetGoScriptable(doorScriptable));
             }
             else if (scriptable is WallScriptable wallScriptable)
             {
@@ -327,7 +337,7 @@ public class GameLunchEditor : UnityEditor.Editor
         List<float> zList = new List<float>() {0, _curSceneScale.z - size.z};
         UnityEngine.Random.InitState(seed);
 
-        HashSet<int> rectIndexs = new HashSet<int>();
+        HashSet<Rectangle> rectIndexs = new HashSet<Rectangle>();
 
         for (int i = 0; i < xCount; i++)
         {
@@ -350,10 +360,11 @@ public class GameLunchEditor : UnityEditor.Editor
 
                 for (int k = 0; k < _lunch.sceneNodeDatas.Count; k++)
                 {
-                    if (_lunch.sceneNodeDatas[k].contains(point))
+                    Rectangle rectangle = _lunch.sceneNodeDatas[k];
+                    if (rectangle.contains(point))
                     {
                         isContinue = true;
-                        rectIndexs.Add(k);
+                        rectIndexs.Add(rectangle);
                         break;
                     }
                 }
@@ -396,10 +407,11 @@ public class GameLunchEditor : UnityEditor.Editor
 
                 for (int k = 0; k < _lunch.sceneNodeDatas.Count; k++)
                 {
-                    if (_lunch.sceneNodeDatas[k].contains(point))
+                    Rectangle rectangle = _lunch.sceneNodeDatas[k];
+                    if (rectangle.contains(point))
                     {
                         isContinue = true;
-                        rectIndexs.Add(k);
+                        rectIndexs.Add(rectangle);
                         break;
                     }
                 }
@@ -420,9 +432,9 @@ public class GameLunchEditor : UnityEditor.Editor
             }
         }
 
-        foreach (int i in rectIndexs)
+        foreach (Rectangle i in rectIndexs)
         {
-            _lunch.sceneNodeDatas.RemoveAt(i);
+            _lunch.sceneNodeDatas.Remove(i);
         }
     }
 

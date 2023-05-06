@@ -13,33 +13,68 @@ MonoBehaviour:
   m_Name: LevelTriggerContainer
   m_EditorClassIdentifier: 
   NodeDatas:
+  - NodeGuid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
+    NodePosition: {x: 351, y: 208}
   - NodeGuid: cf8b9ecc-498b-47e0-bd3a-30322a94efe8
     NodePosition: {x: 264, y: 70}
   - NodeGuid: 7b896b32-d235-43bb-a7f0-b908703d1617
     NodePosition: {x: 457, y: 60}
-  - NodeGuid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
-    NodePosition: {x: 351, y: 208}
+  - NodeGuid: d422f7ca-555f-46ae-8b5c-bef45f35ed3e
+    NodePosition: {x: 789, y: 70}
+  - NodeGuid: 877b36e6-73b1-401a-a150-9b00c7cdb1ba
+    NodePosition: {x: 621, y: 60}
+  - NodeGuid: d1b4c9f2-225a-418c-9e0b-a9c88dda45c3
+    NodePosition: {x: 146, y: 208}
   NodeLinkDatas:
   - OutputNodeGuid: cf8b9ecc-498b-47e0-bd3a-30322a94efe8
     InputNodeGuid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
   - OutputNodeGuid: 7b896b32-d235-43bb-a7f0-b908703d1617
     InputNodeGuid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
+  - OutputNodeGuid: 877b36e6-73b1-401a-a150-9b00c7cdb1ba
+    InputNodeGuid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
+  - OutputNodeGuid: d422f7ca-555f-46ae-8b5c-bef45f35ed3e
+    InputNodeGuid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
+  - OutputNodeGuid: d1b4c9f2-225a-418c-9e0b-a9c88dda45c3
+    InputNodeGuid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
   LevelDatas:
   - Title: LevelDataNode
     Guid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
     LevelName: Demo
-    LevelPosition: {x: 25, y: 0, z: 100}
-    LevelScale: {x: 50, y: 1, z: 200}
+    LevelPosition: {x: 36, y: 0, z: 80}
+    LevelScale: {x: 168, y: 1, z: 160}
   BoxTriggerDatas:
   - Title: BoxTriggerNode
     Guid: cf8b9ecc-498b-47e0-bd3a-30322a94efe8
     EventID: 10001
-    Position: {x: 25, y: 0, z: 60}
-    Scale: {x: 50, y: 1, z: 20}
-    TriggerState: 1
+    Position: {x: 28, y: 0, z: 60}
+    Scale: {x: 60, y: 1, z: 20}
+    TriggerState: 5
+    IsOnce: 1
   - Title: BoxTriggerNode
     Guid: 7b896b32-d235-43bb-a7f0-b908703d1617
     EventID: 10002
-    Position: {x: 25, y: 0, z: 85}
-    Scale: {x: 50, y: 1, z: 20}
-    TriggerState: 1
+    Position: {x: 28, y: 0, z: 100}
+    Scale: {x: 60, y: 1, z: 20}
+    TriggerState: 5
+    IsOnce: 1
+  - Title: BoxTriggerNode
+    Guid: d422f7ca-555f-46ae-8b5c-bef45f35ed3e
+    EventID: 10004
+    Position: {x: 82, y: 0, z: 128}
+    Scale: {x: 40, y: 1, z: 52}
+    TriggerState: 0
+    IsOnce: 1
+  - Title: BoxTriggerNode
+    Guid: 877b36e6-73b1-401a-a150-9b00c7cdb1ba
+    EventID: 10003
+    Position: {x: -26, y: 0, z: 128}
+    Scale: {x: 40, y: 1, z: 52}
+    TriggerState: 0
+    IsOnce: 1
+  - Title: BoxTriggerNode
+    Guid: d1b4c9f2-225a-418c-9e0b-a9c88dda45c3
+    EventID: 10005
+    Position: {x: 88, y: 0, z: 16}
+    Scale: {x: 52, y: 1, z: 28}
+    TriggerState: 0
+    IsOnce: 1

@@ -8,7 +8,7 @@ public class GameDemoLunch : MonoBehaviour
 
     public List<Rectangle> sceneDoorDatas = new List<Rectangle>();
 
-
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (sceneNodeDatas != null && sceneNodeDatas.Count > 0)
@@ -26,4 +26,5 @@ public class GameDemoLunch : MonoBehaviour
             }
         }
     }
+#endif
 }
