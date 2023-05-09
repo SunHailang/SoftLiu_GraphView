@@ -23,12 +23,28 @@ namespace LevelEditorTools.Editor.Nodes
         }
 
 
-        public override void DrawInspectorGUI()
+        public override bool DrawInspectorGUI()
         {
-            base.DrawInspectorGUI();
-            _scriptable.LevelName = EditorGUILayout.TextField("LevelName", _scriptable.LevelName, GUILayout.ExpandWidth(true));
-            _scriptable.LevelPosition = EditorGUILayout.Vector3Field("LevelPosition", _scriptable.LevelPosition);
-            _scriptable.LevelScale = EditorGUILayout.Vector3Field("LevelScale", _scriptable.LevelScale);
+            bool hasChange = base.DrawInspectorGUI();
+            string name = EditorGUILayout.TextField("LevelName", _scriptable.LevelName, GUILayout.ExpandWidth(true));
+            if (_scriptable.LevelName != name)
+            {
+                _scriptable.LevelName = name;
+                hasChange = true;
+            }
+            Vector3 pos= EditorGUILayout.Vector3Field("LevelPosition", _scriptable.LevelPosition);
+            if (_scriptable.LevelPosition != pos)
+            {
+                _scriptable.LevelPosition = pos;
+                hasChange = true;
+            }
+             Vector3 scale = EditorGUILayout.Vector3Field("LevelScale", _scriptable.LevelScale);
+            if (_scriptable.LevelScale != scale)
+            {
+                _scriptable.LevelScale = scale;
+                hasChange = true;
+            }
+            return hasChange;
         }
     }
 }

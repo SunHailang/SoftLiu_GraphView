@@ -115,7 +115,7 @@ public class QuadTree
     public void query(Rectangle range, LinkedList<Point> found = null)
     {
         if (found == null) found = new LinkedList<Point>();
-        if (this.boundary.intersects(range))
+        //if (this.boundary.intersects(range))
         {
             IEnumerator ie = this.points.GetEnumerator();
             while (ie.MoveNext())
@@ -221,6 +221,8 @@ public class Point
             triggerCount = (state == TriggerStateEnum.Enter || state == TriggerStateEnum.Exist) ? 1 : 2;
         }
     }
+    
+    public Vector3 EnemyCreatePos = Vector3.zero;
 
     private int triggerCount = -1;
 

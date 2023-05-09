@@ -61,17 +61,45 @@ namespace LevelEditorTools.Editor.Nodes
         }
 
 
-        public override void DrawInspectorGUI()
+        public override bool DrawInspectorGUI()
         {
-            base.DrawInspectorGUI();
+            bool hasChange = base.DrawInspectorGUI();
             EditorGUILayout.LabelField("Offset", GUILayout.ExpandWidth(true));
-            _scriptable.Position = EditorGUILayout.Vector3Field("Position", _scriptable.Position, GUILayout.ExpandWidth(true));
-            _scriptable.Rotation = EditorGUILayout.Vector3Field("Rotation", _scriptable.Rotation, GUILayout.ExpandWidth(true));
-            _scriptable.Scale = EditorGUILayout.Vector3Field("Scale", _scriptable.Scale, GUILayout.ExpandWidth(true));
+            Vector3 pos = EditorGUILayout.Vector3Field("Position", _scriptable.Position, GUILayout.ExpandWidth(true));
+            if (_scriptable.Position != pos)
+            {
+                _scriptable.Position = pos;
+                hasChange = true;
+            }
+
+            Vector3 rot = EditorGUILayout.Vector3Field("Rotation", _scriptable.Rotation, GUILayout.ExpandWidth(true));
+            if (_scriptable.Rotation != rot)
+            {
+                _scriptable.Rotation = rot;
+                hasChange = true;
+            }
+
+            Vector3 scale = EditorGUILayout.Vector3Field("Scale", _scriptable.Scale, GUILayout.ExpandWidth(true));
+            if (_scriptable.Scale != scale)
+            {
+                _scriptable.Scale = scale;
+                hasChange = true;
+            }
             GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
             EditorGUILayout.LabelField("Attachment", GUILayout.ExpandWidth(true));
-            _scriptable.Probability = EditorGUILayout.Slider("Probability", _scriptable.Probability, 0, 1, GUILayout.ExpandWidth(true));
-            _scriptable.ForceStatic = EditorGUILayout.Toggle("ForceStatic", _scriptable.ForceStatic);
+            float prob = EditorGUILayout.Slider("Probability", _scriptable.Probability, 0, 1, GUILayout.ExpandWidth(true));
+            if (_scriptable.Probability != prob)
+            {
+                _scriptable.Probability = prob;
+                hasChange = true;
+            }
+            bool isStatic = EditorGUILayout.Toggle("ForceStatic", _scriptable.ForceStatic);
+            if (_scriptable.ForceStatic != isStatic)
+            {
+                _scriptable.ForceStatic = isStatic;
+                hasChange = true;
+            }
+            return hasChange;
         }
     }
 }

@@ -1,6 +1,8 @@
+using GraphEditor.GraphViews;
 using LevelEditorTools.Editor.Nodes;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace LevelEditorTools.GraphViews
@@ -11,6 +13,8 @@ namespace LevelEditorTools.GraphViews
         {
         }
 
+        public GraphViewWindw window;
+        
         public InspectorGraphView()
         {
             // Inport USS
@@ -30,7 +34,11 @@ namespace LevelEditorTools.GraphViews
             ScrollView scrollView = new ScrollView();
             IMGUIContainer container = new IMGUIContainer(() =>
             {
-                nodeView.DrawInspectorGUI();
+                bool hasChange = nodeView.DrawInspectorGUI();
+                if (hasChange && !window.hasUnsavedChanges)
+                {
+                    window.SetUnsaveChange(true);
+                }
                 EditorGUILayout.Vector3Field("Node Position:", nodeView.GetPosition().position);
             });
             scrollView.Add(container);

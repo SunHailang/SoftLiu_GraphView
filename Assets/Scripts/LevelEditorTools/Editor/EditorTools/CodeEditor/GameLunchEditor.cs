@@ -18,7 +18,10 @@ public class GameLunchEditor : UnityEditor.Editor
     {
         instanceID = 0;
         _selectTarget = Selection.activeObject as GameObject;
-        _lunch = _selectTarget.GetComponent<GameDemoLunch>();
+        if (_selectTarget != null)
+        {
+            _lunch = _selectTarget.GetComponent<GameDemoLunch>();
+        }
 
         var guid = EditorPrefs.GetString("SceneContainer");
         if (!string.IsNullOrEmpty(guid))
@@ -274,6 +277,7 @@ public class GameLunchEditor : UnityEditor.Editor
                 }
 
                 GameObject go = Instantiate(goList[index], parent);
+                go.name = goList[index].name;
                 go.transform.position = GetTransPosition(new Vector3(i * size.x, 0, j * size.z));
                 go.transform.localScale = baseList[index].Scale;
                 go.isStatic = baseList[index].ForceStatic;
@@ -314,6 +318,7 @@ public class GameLunchEditor : UnityEditor.Editor
         int index = 0;
         Vector3 pos = baseList[index].Position;
         var go = Instantiate(goList[index], parent);
+        go.name = goList[index].name;
         go.transform.position = pos;
         go.transform.localScale = baseList[index].Scale;
         go.transform.Rotate(Vector3.up, baseList[index].Rotation.x);
@@ -378,6 +383,7 @@ public class GameLunchEditor : UnityEditor.Editor
                 }
 
                 var go = Instantiate(goList[index], parent);
+                go.name = goList[index].name;
                 go.transform.position = GetTransPosition(new Vector3(i * size.x, 0, zList[j]));
                 go.transform.localScale = baseList[index].Scale;
                 go.transform.Rotate(Vector3.up, baseList[index].Rotation.x);
@@ -425,6 +431,7 @@ public class GameLunchEditor : UnityEditor.Editor
                 }
 
                 GameObject go = Instantiate<GameObject>(goList[index], parent);
+                go.name = goList[index].name;
                 go.transform.position = pos;
                 go.transform.localScale = baseList[index].Scale;
                 go.transform.Rotate(Vector3.up, baseList[index].Rotation.z);
@@ -462,6 +469,7 @@ public class GameLunchEditor : UnityEditor.Editor
                 }
 
                 GameObject go = Instantiate<GameObject>(goList[index], parent);
+                go.name = goList[index].name;
                 go.transform.position = GetTransPosition(new Vector3(i * widthStep, 0, j * widthStep));
                 go.transform.localScale = baseList[index].Scale;
                 go.transform.Rotate(Vector3.up, baseList[index].Rotation.y);

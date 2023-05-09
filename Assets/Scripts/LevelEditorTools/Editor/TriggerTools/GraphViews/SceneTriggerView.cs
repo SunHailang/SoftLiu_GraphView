@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GraphEditor.LevelTrigger;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -13,10 +14,10 @@ namespace LevelEditorTools.GraphViews
         public new class UxmlFactory : UxmlFactory<SceneTriggerView, UxmlTraits>
         {
         }
-        
+
         public event Action<BaseNode, bool> onNodeSelected;
 
-        public EditorWindow window;
+        public LevelTriggerWindow window;
 
         public SceneTriggerView()
         {
@@ -37,12 +38,34 @@ namespace LevelEditorTools.GraphViews
             StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(path);
             this.styleSheets.Add(styleSheet);
 
+            graphViewChanged = OnGraphViewChanged;
+
             TriggerNodeProvider providerNode = ScriptableObject.CreateInstance<TriggerNodeProvider>();
             providerNode.OnSelectEntryHandler += OnMenuSelectEntry;
 
             nodeCreationRequest += context => { SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), providerNode); };
         }
-        
+
+        private GraphViewChange OnGraphViewChanged(GraphViewChange change)
+        {
+            if (change.edgesToCreate != null)
+            {
+                window.SetUnsaveChange(true);
+            }
+
+            if (change.elementsToRemove != null)
+            {
+                window.SetUnsaveChange(true);
+            }
+
+            if (change.movedElements != null)
+            {
+                window.SetUnsaveChange(true);
+            }
+
+            return change;
+        }
+
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
             List<Port> compatiblePorts = new List<Port>();
@@ -60,7 +83,7 @@ namespace LevelEditorTools.GraphViews
             });
             return compatiblePorts;
         }
-        
+
 
         private bool OnMenuSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
         {
@@ -71,7 +94,12 @@ namespace LevelEditorTools.GraphViews
                 var windowMousePosition = windowRoot.ChangeCoordinatesTo(windowRoot.parent, context.screenMousePosition - window.position.position);
                 var graphMousePosition = contentViewContainer.WorldToLocal(windowMousePosition);
                 BaseNode node = CreateNode(type, graphMousePosition);
-                return node != null;
+                bool active = node != null;
+                if (active)
+                {
+                    window.SetUnsaveChange(true);
+                }
+                return active;
             }
 
             return false;
@@ -86,7 +114,7 @@ namespace LevelEditorTools.GraphViews
 
             return null;
         }
-        
+
         public BaseNode CreateNode(Type type, Vector2 pos, string title, string guid)
         {
             if (type != null)
@@ -104,7 +132,7 @@ namespace LevelEditorTools.GraphViews
 
             return null;
         }
-        
+
         private void OnNodeSelected(BaseNode node, bool selected)
         {
             onNodeSelected?.Invoke(node, selected);

@@ -22,10 +22,16 @@ namespace LevelEditorTools.Editor.Nodes
             this.RefreshExpandedState();
         }
 
-        public override void DrawInspectorGUI()
+        public override bool DrawInspectorGUI()
         {
-            base.DrawInspectorGUI();
-            _scriptable.DoorSize = EditorGUILayout.Vector3Field("DoorSize", _scriptable.DoorSize);
+            bool hasChange = base.DrawInspectorGUI();
+            Vector3 size = EditorGUILayout.Vector3Field("DoorSize", _scriptable.DoorSize);
+            if (_scriptable.DoorSize != size)
+            {
+                _scriptable.DoorSize = size;
+                hasChange = true;
+            }
+            return hasChange;
         }
     }
 }

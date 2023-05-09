@@ -1,3 +1,4 @@
+using System.IO;
 using LevelEditorTools;
 using LevelEditorTools.GraphViews;
 using LevelEditorTools.Save;
@@ -67,6 +68,18 @@ namespace GraphEditor.GraphViews
             _sceneGraphView.window = this;
 
             _inspectorGraphView = root.Q<InspectorGraphView>("InspectorGraphView");
+            _inspectorGraphView.window = this;
+        }
+
+        public void SetUnsaveChange(bool change)
+        {
+            hasUnsavedChanges = change;
+        }
+        
+        public override void SaveChanges()
+        {
+            GraphSceneSaveUtility.GetInstance(_sceneGraphView).Save(_inputPath.value);
+            base.SaveChanges();
         }
 
         private void LoadSceneView(string path, SceneContainer container)
@@ -78,6 +91,10 @@ namespace GraphEditor.GraphViews
         private void BtnSaveScene_OnClick()
         {
             _inputPath.value = GraphSceneSaveUtility.GetInstance(_sceneGraphView).Save(_inputPath.value);
+            if (File.Exists(_inputPath.value))
+            {
+                SetUnsaveChange(false);
+            }
         }
 
         private void OnNodeSelected(BaseNode node, bool select)

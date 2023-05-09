@@ -66,6 +66,22 @@ namespace LevelEditorTools.Save
                         boxTriggerScriptable.Position = boxData.Position;
                         boxTriggerScriptable.Scale = boxData.Scale;
                         boxTriggerScriptable.TriggerState = boxData.TriggerState;
+                        boxTriggerScriptable.IsOnce = boxData.IsOnce;
+                        boxTriggerScriptable.EnemyPosition = boxData.EnemyPosition;
+                    }
+
+                    list.Add(boxTriggerNode);
+                }
+            }
+
+            foreach (ConditionTriggerScriptable conditionTriggerData in container.ConditionTriggerDatas)
+            {
+                Vector2 pos = GraphViewUtils.GetNodePosition(conditionTriggerData.Guid, container.NodeDatas);
+                BaseNode node = _sceneGraphView.CreateNode(typeof(ConditionTriggerNode), pos, conditionTriggerData.Title, conditionTriggerData.Guid);
+                if (node is ConditionTriggerNode boxTriggerNode)
+                {
+                    if (node.State is ConditionTriggerScriptable conditionTrigger)
+                    {
                     }
 
                     list.Add(boxTriggerNode);
@@ -88,12 +104,16 @@ namespace LevelEditorTools.Save
 
         public string Save(string path)
         {
-            if (!edges.Any()) return path;
+            // 单个节点也可以保存
+            //if (!edges.Any()) return path;
 
-            LevelTriggerContainer container = ScriptableObject.CreateInstance<LevelTriggerContainer>();
+            LevelTriggerContainer container = AssetDatabase.LoadAssetAtPath<LevelTriggerContainer>(path);
+            bool newFile = container == null;
+            container ??= ScriptableObject.CreateInstance<LevelTriggerContainer>();
 
             Edge[] hasInputEdges = edges.Where(x => x.input != null).ToArray();
 
+            container.NodeLinkDatas.Clear();
             foreach (Edge edge in hasInputEdges)
             {
                 SceneNodeLinkData linkData = new SceneNodeLinkData();
@@ -110,6 +130,10 @@ namespace LevelEditorTools.Save
                 container.NodeLinkDatas.Add(linkData);
             }
 
+            container.NodeDatas.Clear();
+            container.LevelDatas.Clear();
+            container.BoxTriggerDatas.Clear();
+            container.ConditionTriggerDatas.Clear();
             foreach (BaseNode node in nodes)
             {
                 SceneNodeData nodeData = new SceneNodeData()
@@ -127,37 +151,28 @@ namespace LevelEditorTools.Save
                 {
                     container.BoxTriggerDatas.Add(boxTriggerScriptable);
                 }
+                else if (node.State is ConditionTriggerScriptable conditionTriggerScriptable)
+                {
+                    container.ConditionTriggerDatas.Add(conditionTriggerScriptable);
+                }
             }
 
-            string savePath = path;
-            if (string.IsNullOrEmpty(savePath))
+            if (newFile)
             {
                 string filePath = EditorUtility.SaveFilePanel("选择文件", Application.dataPath, "LevelTriggerContainer", "asset");
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    savePath = filePath.Substring(Application.dataPath.Length - 6);
+                    path = filePath.Substring(Application.dataPath.Length - 6);
+                    AssetDatabase.CreateAsset(container, path);
                 }
             }
-
-            FileExistAndDelete(savePath);
-            AssetDatabase.CreateAsset(container, savePath);
+            else
+            {
+                EditorUtility.SetDirty(container);
+            }
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            return savePath;
-        }
-
-        private void FileExistAndDelete(string path)
-        {
-            if (!string.IsNullOrEmpty(path) && File.Exists(path))
-            {
-                File.Delete(path);
-                if (File.Exists($"{path}.meta"))
-                {
-                    File.Delete($"{path}.meta");
-                }
-
-                AssetDatabase.Refresh();
-            }
+            return path;
         }
     }
 }

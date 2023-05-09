@@ -20,10 +20,16 @@ namespace LevelEditorTools.Editor.Nodes
         }
 
 
-        public override void DrawInspectorGUI()
+        public override bool DrawInspectorGUI()
         {
-            base.DrawInspectorGUI();
-            _obstacle.Seed = EditorGUILayout.IntField("Seed", _obstacle.Seed, GUILayout.ExpandWidth(true));
+            bool hasChange = base.DrawInspectorGUI();
+            int seed = EditorGUILayout.IntField("Seed", _obstacle.Seed, GUILayout.ExpandWidth(true));
+            if (_obstacle.Seed != seed)
+            {
+                _obstacle.Seed = seed;
+                hasChange = true;
+            }
+            return hasChange;
         }
     }
 }

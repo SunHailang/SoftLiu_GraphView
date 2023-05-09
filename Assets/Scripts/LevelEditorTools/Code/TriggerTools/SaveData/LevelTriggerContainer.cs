@@ -10,6 +10,7 @@ namespace LevelEditorTools.Save
         public List<SceneNodeLinkData> NodeLinkDatas = new List<SceneNodeLinkData>();
 
         public List<LevelDataScriptable> LevelDatas = new List<LevelDataScriptable>();
+        public List<ConditionTriggerScriptable> ConditionTriggerDatas = new List<ConditionTriggerScriptable>();
         public List<BoxTriggerScriptable> BoxTriggerDatas = new List<BoxTriggerScriptable>();
     }
 }

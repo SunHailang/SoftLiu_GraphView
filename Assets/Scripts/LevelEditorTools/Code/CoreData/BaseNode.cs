@@ -66,10 +66,17 @@ namespace LevelEditorTools.Editor.Nodes
             _state.Guid = _guidValue;
         }
 
-        public virtual void DrawInspectorGUI()
+        public virtual bool DrawInspectorGUI()
         {
-            _state.Title = EditorGUILayout.TextField("Title", _state.Title, GUILayout.ExpandHeight(true));
+            bool hasChange = false;
+            string title = EditorGUILayout.TextField("Title", _state.Title, GUILayout.ExpandHeight(true));
+            if (_state.Title != title)
+            {
+                _state.Title = title;
+                hasChange = true;
+            }
             EditorGUILayout.TextField("Guid:",_state.Guid, GUILayout.ExpandWidth(true));
+            return hasChange;
         }
     }
 }

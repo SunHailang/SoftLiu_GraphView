@@ -8,7 +8,7 @@ namespace LevelEditorTools.Editor.Nodes
     public class WallNode : BaseNode
     {
         private readonly WallScriptable _scriptable;
-        
+
         public WallNode()
         {
             Port input = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(int));
@@ -21,11 +21,24 @@ namespace LevelEditorTools.Editor.Nodes
             State = _scriptable;
         }
 
-        public override void DrawInspectorGUI()
+        public override bool DrawInspectorGUI()
         {
-            base.DrawInspectorGUI();
-            _scriptable.WallSize = EditorGUILayout.Vector3Field("WallSize", _scriptable.WallSize);
-            _scriptable.Seed = EditorGUILayout.IntField("Seed", _scriptable.Seed, GUILayout.ExpandWidth(true));
+            bool hasChange = base.DrawInspectorGUI();
+            Vector3 size = EditorGUILayout.Vector3Field("WallSize", _scriptable.WallSize);
+            if (_scriptable.WallSize != size)
+            {
+                _scriptable.WallSize = size;
+                hasChange = true;
+            }
+
+            int seed = EditorGUILayout.IntField("Seed", _scriptable.Seed, GUILayout.ExpandWidth(true));
+            if (_scriptable.Seed != seed)
+            {
+                _scriptable.Seed = seed;
+                hasChange = true;
+            }
+
+            return hasChange;
         }
     }
 }

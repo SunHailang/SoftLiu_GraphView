@@ -1,3 +1,4 @@
+using System.IO;
 using LevelEditorTools.Editor.Nodes;
 using LevelEditorTools.GraphViews;
 using LevelEditorTools.Save;
@@ -83,7 +84,20 @@ namespace GraphEditor.LevelTrigger
             _sceneTrigger.onNodeSelected += OnNodeSelected;
             
             _inspectorTrigger = root.Q<InspectorTriggerView>("InspectorTriggerView");
+            _inspectorTrigger.window = this;
             _hierarchyTrigger = root.Q<HierarchyTriggerView>("HierarchyTriggerView");
+            _hierarchyTrigger.window = this;
+        }
+        
+        public void SetUnsaveChange(bool change)
+        {
+            hasUnsavedChanges = change;
+        }
+
+        public override void SaveChanges()
+        {
+            LevelTriggerSaveUtility.GetInstance(_sceneTrigger).Save(_textField.value);
+            base.SaveChanges();
         }
 
         private void LoadSceneView(string path, LevelTriggerContainer container)
@@ -95,6 +109,10 @@ namespace GraphEditor.LevelTrigger
         private void BtnSave_OnClick()
         {
             _textField.value = LevelTriggerSaveUtility.GetInstance(_sceneTrigger).Save(_textField.value);
+            if (File.Exists(_textField.value))
+            {
+                SetUnsaveChange(false);
+            }
         }
         
         private void OnNodeSelected(BaseNode node, bool select)

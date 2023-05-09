@@ -7,23 +7,44 @@ using LevelEditorTools.Nodes;
 using LevelEditorTools.Save;
 using UnityEngine;
 
-[ExecuteInEditMode]
 public class TriggerCreateMono : MonoBehaviour
 {
     public Transform mainPlayer;
     public Vector3 mainPlayerSize = Vector3.one;
+    public Transform EnemyParent = null;
+    public GameObject enemyPrefab = null;
+    
     private Rectangle mainPlayerRect;
 
     public LevelTriggerContainer m_triggerContainer = null;
 
     private List<QuadTree> triggerTreeList;
-    
-    
-    private void OnEnable()
+
+    private List<GameObject> enemys = new List<GameObject>();
+
+    private void DestroyGo()
     {
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            DestroyImmediate(transform.GetChild(i).gameObject);
+        }
+    }
+    
+    private void Start()
+    {
+        UpdateTrigger();
+    }
+
+    public void UpdateTrigger()
+    {
+        if (mainPlayer != null)
+        {
+            // 1. 获取玩家的碰撞框大小
+            mainPlayerRect = new Rectangle(mainPlayer.position.x, mainPlayer.position.z, mainPlayerSize.x, mainPlayerSize.z);
+        }
+        
+        DestroyGo();
         triggerTreeList = new List<QuadTree>(m_triggerContainer.LevelDatas.Count);
-        // 1. 获取玩家的碰撞框大小
-        mainPlayerRect = new Rectangle(mainPlayer.position.x, mainPlayer.position.z, mainPlayerSize.x, mainPlayerSize.z);
         foreach (LevelDataScriptable levelData in m_triggerContainer.LevelDatas)
         {
             QuadTree quadTree = new QuadTree(new Rectangle(levelData.LevelPosition.x, levelData.LevelPosition.z, levelData.LevelScale.x, levelData.LevelScale.z), 4);
@@ -48,6 +69,7 @@ public class TriggerCreateMono : MonoBehaviour
                     Point point = new Point(go.transform, boxTriggerScriptable.Scale.x, boxTriggerScriptable.Scale.z);
                     point.TriggerEventID = boxTriggerScriptable.EventID;
                     point.SetTriggerState(boxTriggerScriptable.TriggerState, boxTriggerScriptable.IsOnce);
+                    point.EnemyCreatePos = boxTriggerScriptable.EnemyPosition;
                     quadTree.insert(point);
                 }
             }
@@ -55,7 +77,7 @@ public class TriggerCreateMono : MonoBehaviour
             triggerTreeList.Add(quadTree);
         }
     }
-
+    
     private LinkedList<Point> queryList = new LinkedList<Point>();
     private HashSet<Point> perQueryList = new HashSet<Point>();
 
@@ -101,7 +123,8 @@ public class TriggerCreateMono : MonoBehaviour
                     if (point.CanTrigger(TriggerStateEnum.Enter))
                     {
                         // enter
-                        Debug.Log($"{point.TriggerEventID}: Enter");
+                        Debug.Log($"{point.TriggerEventID}: Enter, {point.EnemyCreatePos}");
+                        CreateEnemy(EnemyParent, point.EnemyCreatePos);
                     }
 
                     curPoints.Add(point);
@@ -114,15 +137,25 @@ public class TriggerCreateMono : MonoBehaviour
 
     private void Update()
     {
-        // 更新玩家框体的位置
-        var position = mainPlayer.position;
-        mainPlayerRect.UpdatePosition(position.x, position.z);
-
-        foreach (QuadTree quadTree in triggerTreeList)
+        if (mainPlayer != null && mainPlayerRect != null)
         {
-            QueryPointList(quadTree);
+            // 更新玩家框体的位置
+            var position = mainPlayer.position;
+            mainPlayerRect.UpdatePosition(position.x, position.z);
+
+            foreach (QuadTree quadTree in triggerTreeList)
+            {
+                QueryPointList(quadTree);
+            }
         }
     }
+
+    private void CreateEnemy(Transform parent, Vector3 pos)
+    {
+        GameObject go = Instantiate(enemyPrefab, pos, Quaternion.identity, parent);
+    }
+    
+    
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {

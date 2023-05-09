@@ -24,11 +24,22 @@ namespace LevelEditorTools.Editor.Nodes
             State = _scriptable;
         }
 
-        public override void DrawInspectorGUI()
+        public override bool DrawInspectorGUI()
         {
-            base.DrawInspectorGUI();
-            _scriptable.GroundSize = EditorGUILayout.Vector3Field("GroundSize", _scriptable.GroundSize);
-            _scriptable.Seed = EditorGUILayout.IntField("Seed", _scriptable.Seed, GUILayout.ExpandWidth(true));
+            bool hasChange = base.DrawInspectorGUI();
+            Vector3 size = EditorGUILayout.Vector3Field("GroundSize", _scriptable.GroundSize);
+            if (_scriptable.GroundSize != size)
+            {
+                _scriptable.GroundSize = size;
+                hasChange = true;
+            }
+            int seed = EditorGUILayout.IntField("Seed", _scriptable.Seed, GUILayout.ExpandWidth(true));
+            if (_scriptable.Seed != seed)
+            {
+                _scriptable.Seed = seed;
+                hasChange = true;
+            }
+            return hasChange;
         }
     }
 }

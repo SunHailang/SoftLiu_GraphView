@@ -7,7 +7,7 @@ namespace LevelEditorTools.Editor.Nodes
     {
         public ConditionTriggerNode()
         {
-            Port output = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(int));
+            Port output = GraphViewUtils.GetInstantiatePort(this, Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(ConditionTriggerNode));
             this.outputContainer.Add(output);
             
             this.RefreshExpandedState();

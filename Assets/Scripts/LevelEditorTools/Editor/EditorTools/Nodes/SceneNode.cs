@@ -8,6 +8,7 @@ namespace LevelEditorTools.Editor.Nodes
     public class SceneNode : BaseNode
     {
         private readonly SceneScriptable _scriptable;
+
         public SceneNode()
         {
             Port output = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(int));
@@ -17,11 +18,24 @@ namespace LevelEditorTools.Editor.Nodes
             State = _scriptable;
         }
 
-        public override void DrawInspectorGUI()
+        public override bool DrawInspectorGUI()
         {
-            base.DrawInspectorGUI();
-            _scriptable.SceneScale = EditorGUILayout.Vector3Field("SceneScale", _scriptable.SceneScale, GUILayout.ExpandWidth(true));
-            _scriptable.ScenePosition = EditorGUILayout.Vector3Field("ScenePosition", _scriptable.ScenePosition, GUILayout.ExpandWidth(true));
+            bool hasChange = base.DrawInspectorGUI();
+            Vector3 scale = EditorGUILayout.Vector3Field("SceneScale", _scriptable.SceneScale, GUILayout.ExpandWidth(true));
+            if (_scriptable.SceneScale != scale)
+            {
+                _scriptable.SceneScale = scale;
+                hasChange = true;
+            }
+
+            Vector3 pos = EditorGUILayout.Vector3Field("ScenePosition", _scriptable.ScenePosition, GUILayout.ExpandWidth(true));
+            if (_scriptable.ScenePosition != pos)
+            {
+                _scriptable.ScenePosition = pos;
+                hasChange = true;
+            }
+
+            return hasChange;
         }
     }
 }

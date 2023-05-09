@@ -1,6 +1,7 @@
 using System;
 using LevelEditorTools.Editor.Nodes;
 using System.Collections.Generic;
+using GraphEditor.GraphViews;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -15,9 +16,7 @@ namespace LevelEditorTools.GraphViews
         }
 
         public event Action<BaseNode, bool> onNodeSelected;
-        public EditorWindow window;
-
-        private Vector2 curMousePos = Vector2.zero;
+        public GraphViewWindw window;
 
         public SceneGraphView()
         {
@@ -38,10 +37,34 @@ namespace LevelEditorTools.GraphViews
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath("73411fe8094701f49b6a65893deb79fa"));
             styleSheets.Add(styleSheet);
 
+            graphViewChanged = OnGraphViewChanged;
+
             LevelNodeProvider providerNode = ScriptableObject.CreateInstance<LevelNodeProvider>();
             providerNode.OnSelectEntryHandler += OnMenuSelectEntry;
-
             nodeCreationRequest += context => { SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), providerNode); };
+        }
+
+        private GraphViewChange OnGraphViewChanged(GraphViewChange change)
+        {
+            if (change.edgesToCreate != null)
+            {
+                // 有 edge 创建
+                window.SetUnsaveChange(true);
+            }
+
+            if (change.elementsToRemove != null)
+            {
+                // 有元素被移除
+                window.SetUnsaveChange(true);
+            }
+
+            if (change.movedElements != null)
+            {
+                // 有元素被移动
+                window.SetUnsaveChange(true);
+            }
+
+            return change;
         }
 
         private bool OnMenuSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
@@ -57,7 +80,14 @@ namespace LevelEditorTools.GraphViews
                 {
                     goNode.RefreshTempleGo(window);
                 }
-                return node != null;
+
+                bool active = node != null;
+                if (active)
+                {
+                    window.SetUnsaveChange(true);
+                }
+
+                return active;
             }
 
             return false;
@@ -117,8 +147,8 @@ namespace LevelEditorTools.GraphViews
             });
             return compatiblePorts;
         }
-        
-        
+
+
         private void OnNodeSelected(BaseNode node, bool selected)
         {
             onNodeSelected?.Invoke(node, selected);

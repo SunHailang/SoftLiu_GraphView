@@ -24,5 +24,7 @@ namespace LevelEditorTools.Nodes
 
         public TriggerStateEnum TriggerState = TriggerStateEnum.None;
         public bool IsOnce = true;
+        
+        public Vector3 EnemyPosition = Vector3.zero;
     }
 }

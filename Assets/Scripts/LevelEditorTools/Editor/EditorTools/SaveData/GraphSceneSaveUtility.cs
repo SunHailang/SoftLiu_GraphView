@@ -35,12 +35,13 @@ namespace LevelEditorTools.Save
 
         public string Save(string path)
         {
-            if (!edges.Any()) return path;
-
-            SceneContainer container = ScriptableObject.CreateInstance<SceneContainer>();
+            //if (!edges.Any()) return path;
+            SceneContainer container = AssetDatabase.LoadAssetAtPath<SceneContainer>(path);
+            bool newFile = container == null;
+            container ??= ScriptableObject.CreateInstance<SceneContainer>();
 
             Edge[] hasInputEdges = edges.Where(x => x.input != null).ToArray();
-
+            container.NodeLinkDatas.Clear();
             foreach (Edge edge in hasInputEdges)
             {
                 SceneNodeLinkData linkData = new SceneNodeLinkData();
@@ -57,6 +58,13 @@ namespace LevelEditorTools.Save
                 container.NodeLinkDatas.Add(linkData);
             }
 
+            container.NodeDatas.Clear();
+            container.NodeSceneDatas.Clear();
+            container.NodeGroundDatas.Clear();
+            container.NodeDoorDatas.Clear();
+            container.NodeObstacleDatas.Clear();
+            container.NodeWallDatas.Clear();
+            container.NodeGameObjectDatas.Clear();
             foreach (BaseNode node in nodes)
             {
                 SceneNodeData nodeData = new SceneNodeData()
@@ -73,7 +81,7 @@ namespace LevelEditorTools.Save
                 else if (node.State is GroundScriptable groundState)
                 {
                     container.NodeGroundDatas.Add(groundState);
-                } 
+                }
                 else if (node.State is DoorScriptable doorState)
                 {
                     container.NodeDoorDatas.Add(doorState);
@@ -91,33 +99,19 @@ namespace LevelEditorTools.Save
                     container.NodeGameObjectDatas.Add(goState);
                 }
             }
-            string savePath = path;
-            if (string.IsNullOrEmpty(savePath))
+
+            if (newFile)
             {
-                string filePath = EditorUtility.SaveFilePanel("选择文件", Application.dataPath,  "SceneContainer","asset");
+                string filePath = EditorUtility.SaveFilePanel("选择文件", Application.dataPath, "SceneContainer", "asset");
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    savePath = filePath.Substring(Application.dataPath.Length - 6);
+                    path = filePath.Substring(Application.dataPath.Length - 6);
+                    AssetDatabase.CreateAsset(container, path);
                 }
             }
-            FileExistAndDelete(savePath);
-            AssetDatabase.CreateAsset(container, savePath);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            return savePath;
-        }
-
-        private void FileExistAndDelete(string path)
-        {
-            if (!string.IsNullOrEmpty(path) && File.Exists(path))
-            {
-                File.Delete(path);
-                if (File.Exists($"{path}.meta"))
-                {
-                    File.Delete($"{path}.meta");
-                }
-                AssetDatabase.Refresh();
-            }
+            return path;
         }
 
         public void Load(SceneContainer container)
@@ -136,6 +130,7 @@ namespace LevelEditorTools.Save
                         data.SceneScale = sceneData.SceneScale;
                         data.ScenePosition = sceneData.ScenePosition;
                     }
+
                     list.Add(sceneNode);
                 }
             }
@@ -151,9 +146,11 @@ namespace LevelEditorTools.Save
                         groundScriptable.Seed = groundData.Seed;
                         groundScriptable.GroundSize = groundData.GroundSize;
                     }
+
                     list.Add(groundNode);
                 }
             }
+
             foreach (DoorScriptable door in container.NodeDoorDatas)
             {
                 Vector2 pos = GraphViewUtils.GetNodePosition(door.Guid, container.NodeDatas);
@@ -164,9 +161,11 @@ namespace LevelEditorTools.Save
                     {
                         doorScriptable.DoorSize = door.DoorSize;
                     }
+
                     list.Add(doorNode);
                 }
             }
+
             foreach (ObstacleScriptable obstacle in container.NodeObstacleDatas)
             {
                 Vector2 pos = GraphViewUtils.GetNodePosition(obstacle.Guid, container.NodeDatas);
@@ -177,9 +176,11 @@ namespace LevelEditorTools.Save
                     {
                         obstacleScriptable.Seed = obstacle.Seed;
                     }
+
                     list.Add(obstacleNode);
                 }
             }
+
             foreach (WallScriptable wall in container.NodeWallDatas)
             {
                 Vector2 pos = GraphViewUtils.GetNodePosition(wall.Guid, container.NodeDatas);
@@ -191,6 +192,7 @@ namespace LevelEditorTools.Save
                         wallScriptable.Seed = wall.Seed;
                         wallScriptable.WallSize = wall.WallSize;
                     }
+
                     list.Add(wallNode);
                 }
             }
@@ -229,6 +231,5 @@ namespace LevelEditorTools.Save
                 }
             }
         }
-        
     }
 }
