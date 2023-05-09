@@ -11,44 +11,44 @@ namespace LevelEditorTools.Editor.Nodes
 {
     public class GameObjectNode : BaseNode
     {
-        private readonly GameObjectScriptable _scriptable;
-
         public GameObjectNode()
         {
             // 添加一个 input
             Port input = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(GameObjectNode));
             this.inputContainer.Add(input);
 
-            _scriptable = new GameObjectScriptable();
-            State = _scriptable;
+            _state = new GameObjectScriptable();
         }
 
         public void RefreshTempleGo(EditorWindow window)
         {
-            GameObject valueGo = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(_scriptable.TemplateGo));
-            var objField = new ObjectField()
+            if (_state is GameObjectScriptable scriptable)
             {
-                objectType = typeof(GameObject),
-                allowSceneObjects = false,
-                value = valueGo
-            };
+                GameObject valueGo = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(scriptable.TemplateGo));
+                var objField = new ObjectField()
+                {
+                    objectType = typeof(GameObject),
+                    allowSceneObjects = false,
+                    value = valueGo
+                };
 
-            Image image = new Image();
-            window.StartCoroutine(LoadPreview(valueGo, image));
-            objField.RegisterValueChangedCallback(v =>
-            {
-                GameObject go = v.newValue as GameObject;
-                window.StartCoroutine(LoadPreview(go, image));
-            });
-            this.Add(objField);
-            this.Add(image);
+                Image image = new Image();
+                window.StartCoroutine(LoadPreview(valueGo, image));
+                objField.RegisterValueChangedCallback(v =>
+                {
+                    GameObject go = v.newValue as GameObject;
+                    window.StartCoroutine(LoadPreview(go, image));
+                });
+                this.Add(objField);
+                this.Add(image);
+            }
         }
 
         private IEnumerator LoadPreview(GameObject go, Image image)
         {
-            if (go != null && image != null)
+            if (_state is GameObjectScriptable scriptable && go != null && image != null)
             {
-                _scriptable.TemplateGo = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(go));
+                scriptable.TemplateGo = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(go));
                 Texture2D preview = AssetPreview.GetAssetPreview(go);
                 while (preview == null)
                 {
@@ -64,41 +64,47 @@ namespace LevelEditorTools.Editor.Nodes
         public override bool DrawInspectorGUI()
         {
             bool hasChange = base.DrawInspectorGUI();
-            EditorGUILayout.LabelField("Offset", GUILayout.ExpandWidth(true));
-            Vector3 pos = EditorGUILayout.Vector3Field("Position", _scriptable.Position, GUILayout.ExpandWidth(true));
-            if (_scriptable.Position != pos)
+            if (_state is GameObjectScriptable scriptable)
             {
-                _scriptable.Position = pos;
-                hasChange = true;
+                EditorGUILayout.LabelField("Offset", GUILayout.ExpandWidth(true));
+                Vector3 pos = EditorGUILayout.Vector3Field("Position", scriptable.Position, GUILayout.ExpandWidth(true));
+                if (scriptable.Position != pos)
+                {
+                    scriptable.Position = pos;
+                    hasChange = true;
+                }
+
+                Vector3 rot = EditorGUILayout.Vector3Field("Rotation", scriptable.Rotation, GUILayout.ExpandWidth(true));
+                if (scriptable.Rotation != rot)
+                {
+                    scriptable.Rotation = rot;
+                    hasChange = true;
+                }
+
+                Vector3 scale = EditorGUILayout.Vector3Field("Scale", scriptable.Scale, GUILayout.ExpandWidth(true));
+                if (scriptable.Scale != scale)
+                {
+                    scriptable.Scale = scale;
+                    hasChange = true;
+                }
+
+                GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
+                EditorGUILayout.LabelField("Attachment", GUILayout.ExpandWidth(true));
+                float prob = EditorGUILayout.Slider("Probability", scriptable.Probability, 0, 1, GUILayout.ExpandWidth(true));
+                if (scriptable.Probability != prob)
+                {
+                    scriptable.Probability = prob;
+                    hasChange = true;
+                }
+
+                bool isStatic = EditorGUILayout.Toggle("ForceStatic", scriptable.ForceStatic);
+                if (scriptable.ForceStatic != isStatic)
+                {
+                    scriptable.ForceStatic = isStatic;
+                    hasChange = true;
+                }
             }
 
-            Vector3 rot = EditorGUILayout.Vector3Field("Rotation", _scriptable.Rotation, GUILayout.ExpandWidth(true));
-            if (_scriptable.Rotation != rot)
-            {
-                _scriptable.Rotation = rot;
-                hasChange = true;
-            }
-
-            Vector3 scale = EditorGUILayout.Vector3Field("Scale", _scriptable.Scale, GUILayout.ExpandWidth(true));
-            if (_scriptable.Scale != scale)
-            {
-                _scriptable.Scale = scale;
-                hasChange = true;
-            }
-            GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
-            EditorGUILayout.LabelField("Attachment", GUILayout.ExpandWidth(true));
-            float prob = EditorGUILayout.Slider("Probability", _scriptable.Probability, 0, 1, GUILayout.ExpandWidth(true));
-            if (_scriptable.Probability != prob)
-            {
-                _scriptable.Probability = prob;
-                hasChange = true;
-            }
-            bool isStatic = EditorGUILayout.Toggle("ForceStatic", _scriptable.ForceStatic);
-            if (_scriptable.ForceStatic != isStatic)
-            {
-                _scriptable.ForceStatic = isStatic;
-                hasChange = true;
-            }
             return hasChange;
         }
     }

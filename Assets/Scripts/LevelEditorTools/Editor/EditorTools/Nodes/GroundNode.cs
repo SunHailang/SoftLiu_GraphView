@@ -10,7 +10,6 @@ namespace LevelEditorTools.Editor.Nodes
     /// </summary>
     public class GroundNode : BaseNode
     {
-        private readonly GroundScriptable _scriptable;
         public GroundNode()
         {
             // 创建输入
@@ -20,25 +19,29 @@ namespace LevelEditorTools.Editor.Nodes
             Port output = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(GameObjectNode));
             this.outputContainer.Add(output);
 
-            _scriptable = new GroundScriptable();
-            State = _scriptable;
+            _state = new GroundScriptable();
         }
 
         public override bool DrawInspectorGUI()
         {
             bool hasChange = base.DrawInspectorGUI();
-            Vector3 size = EditorGUILayout.Vector3Field("GroundSize", _scriptable.GroundSize);
-            if (_scriptable.GroundSize != size)
+            if (_state is GroundScriptable scriptable)
             {
-                _scriptable.GroundSize = size;
-                hasChange = true;
+                Vector3 size = EditorGUILayout.Vector3Field("GroundSize", scriptable.GroundSize);
+                if (scriptable.GroundSize != size)
+                {
+                    scriptable.GroundSize = size;
+                    hasChange = true;
+                }
+
+                int seed = EditorGUILayout.IntField("Seed", scriptable.Seed, GUILayout.ExpandWidth(true));
+                if (scriptable.Seed != seed)
+                {
+                    scriptable.Seed = seed;
+                    hasChange = true;
+                }
             }
-            int seed = EditorGUILayout.IntField("Seed", _scriptable.Seed, GUILayout.ExpandWidth(true));
-            if (_scriptable.Seed != seed)
-            {
-                _scriptable.Seed = seed;
-                hasChange = true;
-            }
+
             return hasChange;
         }
     }

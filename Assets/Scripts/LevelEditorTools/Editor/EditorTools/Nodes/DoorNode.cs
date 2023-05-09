@@ -7,8 +7,6 @@ namespace LevelEditorTools.Editor.Nodes
 {
     public class DoorNode : BaseNode
     {
-        private readonly DoorScriptable _scriptable;
-
         public DoorNode()
         {
             Port input = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(int));
@@ -16,8 +14,7 @@ namespace LevelEditorTools.Editor.Nodes
             Port output = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(GameObjectNode));
             this.outputContainer.Add(output);
 
-            _scriptable = new DoorScriptable();
-            State = _scriptable;
+            _state = new DoorScriptable();
             this.RefreshPorts();
             this.RefreshExpandedState();
         }
@@ -25,12 +22,16 @@ namespace LevelEditorTools.Editor.Nodes
         public override bool DrawInspectorGUI()
         {
             bool hasChange = base.DrawInspectorGUI();
-            Vector3 size = EditorGUILayout.Vector3Field("DoorSize", _scriptable.DoorSize);
-            if (_scriptable.DoorSize != size)
+            if (_state is DoorScriptable scriptable)
             {
-                _scriptable.DoorSize = size;
-                hasChange = true;
+                Vector3 size = EditorGUILayout.Vector3Field("DoorSize", scriptable.DoorSize);
+                if (scriptable.DoorSize != size)
+                {
+                    scriptable.DoorSize = size;
+                    hasChange = true;
+                }
             }
+
             return hasChange;
         }
     }

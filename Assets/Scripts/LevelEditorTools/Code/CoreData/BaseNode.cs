@@ -14,16 +14,11 @@ namespace LevelEditorTools.Editor.Nodes
 
         private string _guidValue;
 
-        private BaseScriptable _state;
+        protected BaseScriptable _state;
 
         public BaseScriptable State
         {
             get => _state;
-            protected set
-            {
-                _state = value;
-                _state.Guid = _guidValue;
-            }
         }
 
         public override void OnSelected()

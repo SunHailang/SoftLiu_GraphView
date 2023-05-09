@@ -13,7 +13,7 @@ namespace LevelEditorTools.Editor.Nodes
             this.RefreshExpandedState();
             this.RefreshPorts();
 
-            State = new ConditionTriggerScriptable();
+            _state = new ConditionTriggerScriptable();
         }
     }
 }

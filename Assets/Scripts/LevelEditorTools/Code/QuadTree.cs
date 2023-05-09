@@ -207,6 +207,7 @@ public class Point
 
     public float h = 0;
 
+    public string TriggerGuid = "";
     public int TriggerEventID = 0;
     private TriggerStateEnum m_TriggerState = TriggerStateEnum.None;
 
@@ -221,8 +222,6 @@ public class Point
             triggerCount = (state == TriggerStateEnum.Enter || state == TriggerStateEnum.Exist) ? 1 : 2;
         }
     }
-    
-    public Vector3 EnemyCreatePos = Vector3.zero;
 
     private int triggerCount = -1;
 

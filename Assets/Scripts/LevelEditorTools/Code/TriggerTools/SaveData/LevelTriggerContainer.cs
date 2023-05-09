@@ -11,6 +11,7 @@ namespace LevelEditorTools.Save
 
         public List<LevelDataScriptable> LevelDatas = new List<LevelDataScriptable>();
         public List<ConditionTriggerScriptable> ConditionTriggerDatas = new List<ConditionTriggerScriptable>();
-        public List<BoxTriggerScriptable> BoxTriggerDatas = new List<BoxTriggerScriptable>();
+        public List<BaseTriggerScriptable> BoxTriggerDatas = new List<BaseTriggerScriptable>();
+        public List<CreateEnemyScriptable> CreateEnemyDatas = new List<CreateEnemyScriptable>();
     }
 }

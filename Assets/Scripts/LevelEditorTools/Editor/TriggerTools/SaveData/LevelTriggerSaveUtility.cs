@@ -54,23 +54,42 @@ namespace LevelEditorTools.Save
                 }
             }
 
-            foreach (BoxTriggerScriptable boxData in container.BoxTriggerDatas)
+            foreach (BaseTriggerScriptable boxData in container.BoxTriggerDatas)
             {
                 Vector2 pos = GraphViewUtils.GetNodePosition(boxData.Guid, container.NodeDatas);
-                BaseNode node = _sceneGraphView.CreateNode(typeof(BoxTriggerNode), pos, boxData.Title, boxData.Guid);
-                if (node is BoxTriggerNode boxTriggerNode)
+                BaseNode node = _sceneGraphView.CreateNode(typeof(BaseTriggerNode), pos, boxData.Title, boxData.Guid);
+                if (node is BaseTriggerNode baseNode)
                 {
-                    if (node.State is BoxTriggerScriptable boxTriggerScriptable)
+                    if (node.State is BaseTriggerScriptable boxTriggerScriptable)
                     {
                         boxTriggerScriptable.EventID = boxData.EventID;
                         boxTriggerScriptable.Position = boxData.Position;
                         boxTriggerScriptable.Scale = boxData.Scale;
                         boxTriggerScriptable.TriggerState = boxData.TriggerState;
                         boxTriggerScriptable.IsOnce = boxData.IsOnce;
-                        boxTriggerScriptable.EnemyPosition = boxData.EnemyPosition;
                     }
 
-                    list.Add(boxTriggerNode);
+                    list.Add(baseNode);
+                }
+            }
+
+            foreach (CreateEnemyScriptable createEnemyData in container.CreateEnemyDatas)
+            {
+                Vector2 pos = GraphViewUtils.GetNodePosition(createEnemyData.Guid, container.NodeDatas);
+                BaseNode node = _sceneGraphView.CreateNode(typeof(CreateEnemyNode), pos, createEnemyData.Title, createEnemyData.Guid);
+                if (node is CreateEnemyNode enemyNode)
+                {
+                    if (node.State is CreateEnemyScriptable createEnemy)
+                    {
+                        createEnemy.EventID = createEnemyData.EventID;
+                        createEnemy.Position = createEnemyData.Position;
+                        createEnemy.Scale = createEnemyData.Scale;
+                        createEnemy.TriggerState = createEnemyData.TriggerState;
+                        createEnemy.IsOnce = createEnemyData.IsOnce;
+                        createEnemy.EnemyPosition = createEnemyData.EnemyPosition;
+                    }
+
+                    list.Add(enemyNode);
                 }
             }
 
@@ -133,6 +152,7 @@ namespace LevelEditorTools.Save
             container.NodeDatas.Clear();
             container.LevelDatas.Clear();
             container.BoxTriggerDatas.Clear();
+            container.CreateEnemyDatas.Clear();
             container.ConditionTriggerDatas.Clear();
             foreach (BaseNode node in nodes)
             {
@@ -147,7 +167,11 @@ namespace LevelEditorTools.Save
                 {
                     container.LevelDatas.Add(levelDataNodeState);
                 }
-                else if (node.State is BoxTriggerScriptable boxTriggerScriptable)
+                else if (node.State is CreateEnemyScriptable createEnemyScriptable)
+                {
+                    container.CreateEnemyDatas.Add(createEnemyScriptable);
+                }
+                else if (node.State is BaseTriggerScriptable boxTriggerScriptable)
                 {
                     container.BoxTriggerDatas.Add(boxTriggerScriptable);
                 }
@@ -170,6 +194,7 @@ namespace LevelEditorTools.Save
             {
                 EditorUtility.SetDirty(container);
             }
+
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             return path;

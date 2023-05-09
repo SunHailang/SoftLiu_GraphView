@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LevelEditorTools;
+using LevelEditorTools.Action;
 using LevelEditorTools.Nodes;
 using LevelEditorTools.Save;
 using UnityEngine;
@@ -13,14 +14,14 @@ public class TriggerCreateMono : MonoBehaviour
     public Vector3 mainPlayerSize = Vector3.one;
     public Transform EnemyParent = null;
     public GameObject enemyPrefab = null;
-    
+
     private Rectangle mainPlayerRect;
 
     public LevelTriggerContainer m_triggerContainer = null;
 
     private List<QuadTree> triggerTreeList;
 
-    private List<GameObject> enemys = new List<GameObject>();
+    private Dictionary<string, BaseAction> actionDatas = null;
 
     private void DestroyGo()
     {
@@ -29,7 +30,7 @@ public class TriggerCreateMono : MonoBehaviour
             DestroyImmediate(transform.GetChild(i).gameObject);
         }
     }
-    
+
     private void Start()
     {
         UpdateTrigger();
@@ -42,9 +43,12 @@ public class TriggerCreateMono : MonoBehaviour
             // 1. 获取玩家的碰撞框大小
             mainPlayerRect = new Rectangle(mainPlayer.position.x, mainPlayer.position.z, mainPlayerSize.x, mainPlayerSize.z);
         }
-        
+
         DestroyGo();
-        triggerTreeList = new List<QuadTree>(m_triggerContainer.LevelDatas.Count);
+        int levelCount = m_triggerContainer.LevelDatas.Count;
+        triggerTreeList = new List<QuadTree>(levelCount);
+        int enemyDataCont = m_triggerContainer.CreateEnemyDatas.Count;
+        actionDatas = new Dictionary<string, BaseAction>(levelCount * enemyDataCont);
         foreach (LevelDataScriptable levelData in m_triggerContainer.LevelDatas)
         {
             QuadTree quadTree = new QuadTree(new Rectangle(levelData.LevelPosition.x, levelData.LevelPosition.z, levelData.LevelScale.x, levelData.LevelScale.z), 4);
@@ -57,27 +61,33 @@ public class TriggerCreateMono : MonoBehaviour
                 }
             }
 
-            foreach (BoxTriggerScriptable boxTriggerScriptable in m_triggerContainer.BoxTriggerDatas)
+            foreach (CreateEnemyScriptable enemyData in m_triggerContainer.CreateEnemyDatas)
             {
                 // 2. 添加可能触发的框体大小 位置
-                if (linkList.Contains(boxTriggerScriptable.Guid))
+                if (linkList.Contains(enemyData.Guid))
                 {
-                    GameObject go = new GameObject(boxTriggerScriptable.Guid);
+                    GameObject go = new GameObject(enemyData.Guid);
                     go.transform.parent = this.transform;
                     go.transform.localScale = Vector3.one;
-                    go.transform.position = boxTriggerScriptable.Position;
-                    Point point = new Point(go.transform, boxTriggerScriptable.Scale.x, boxTriggerScriptable.Scale.z);
-                    point.TriggerEventID = boxTriggerScriptable.EventID;
-                    point.SetTriggerState(boxTriggerScriptable.TriggerState, boxTriggerScriptable.IsOnce);
-                    point.EnemyCreatePos = boxTriggerScriptable.EnemyPosition;
+                    go.transform.position = enemyData.Position;
+                    Point point = new Point(go.transform, enemyData.Scale.x, enemyData.Scale.z);
+                    point.TriggerEventID = enemyData.EventID;
+                    point.SetTriggerState(enemyData.TriggerState, enemyData.IsOnce);
                     quadTree.insert(point);
+
+                    // 添加 Point 的触发事件
+                    CreateMonsterAction action = new CreateMonsterAction(enemyData.EventID, enemyData.TriggerState, 
+                        enemyData.TimingTrigger ? enemyData.TimeInterval : 0f,
+                        enemyData.EnemyPosition);
+                    action.SetPrefab(EnemyParent, enemyPrefab);
+                    actionDatas[enemyData.Guid] = action;
                 }
             }
 
             triggerTreeList.Add(quadTree);
         }
     }
-    
+
     private LinkedList<Point> queryList = new LinkedList<Point>();
     private HashSet<Point> perQueryList = new HashSet<Point>();
 
@@ -100,6 +110,10 @@ public class TriggerCreateMono : MonoBehaviour
             if (point.CanTrigger(TriggerStateEnum.Exist))
             {
                 Debug.Log($"{point.TriggerEventID}: Exist");
+                if(actionDatas.TryGetValue(point.TriggerGuid, out BaseAction action))
+                {
+                    action.Execute();
+                }
             }
 
             curPoints.Remove(point);
@@ -116,6 +130,10 @@ public class TriggerCreateMono : MonoBehaviour
                     {
                         // stay
                         Debug.Log($"{point.TriggerEventID}: Stay");
+                        if(actionDatas.TryGetValue(point.TriggerGuid, out BaseAction action))
+                        {
+                            action.Execute();
+                        }
                     }
                 }
                 else
@@ -123,10 +141,12 @@ public class TriggerCreateMono : MonoBehaviour
                     if (point.CanTrigger(TriggerStateEnum.Enter))
                     {
                         // enter
-                        Debug.Log($"{point.TriggerEventID}: Enter, {point.EnemyCreatePos}");
-                        CreateEnemy(EnemyParent, point.EnemyCreatePos);
+                        Debug.Log($"{point.TriggerEventID}: Enter");
+                        if(actionDatas.TryGetValue(point.TriggerGuid, out BaseAction action))
+                        {
+                            action.Execute();
+                        }
                     }
-
                     curPoints.Add(point);
                 }
 
@@ -150,12 +170,7 @@ public class TriggerCreateMono : MonoBehaviour
         }
     }
 
-    private void CreateEnemy(Transform parent, Vector3 pos)
-    {
-        GameObject go = Instantiate(enemyPrefab, pos, Quaternion.identity, parent);
-    }
-    
-    
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {

@@ -8,42 +8,45 @@ namespace LevelEditorTools.Editor.Nodes
 {
     public class LevelDataNode : BaseNode
     {
-        private LevelDataScriptable _scriptable;
-        
         public LevelDataNode()
         {
-            Port input = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Input, Port.Capacity.Multi, typeof(BoxTriggerNode));
+            Port input = GraphViewUtils.GetInstantiatePort(this, Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(BaseTriggerNode));
             this.inputContainer.Add(input);
             
             this.RefreshExpandedState();
             this.RefreshPorts();
 
-            _scriptable = new LevelDataScriptable();
-            State = _scriptable;
+            _state = new LevelDataScriptable();
         }
 
 
         public override bool DrawInspectorGUI()
         {
             bool hasChange = base.DrawInspectorGUI();
-            string name = EditorGUILayout.TextField("LevelName", _scriptable.LevelName, GUILayout.ExpandWidth(true));
-            if (_scriptable.LevelName != name)
+            if (_state is LevelDataScriptable scriptable)
             {
-                _scriptable.LevelName = name;
-                hasChange = true;
+                string name = EditorGUILayout.TextField("LevelName", scriptable.LevelName, GUILayout.ExpandWidth(true));
+                if (scriptable.LevelName != name)
+                {
+                    scriptable.LevelName = name;
+                    hasChange = true;
+                }
+
+                Vector3 pos = EditorGUILayout.Vector3Field("LevelPosition", scriptable.LevelPosition);
+                if (scriptable.LevelPosition != pos)
+                {
+                    scriptable.LevelPosition = pos;
+                    hasChange = true;
+                }
+
+                Vector3 scale = EditorGUILayout.Vector3Field("LevelScale", scriptable.LevelScale);
+                if (scriptable.LevelScale != scale)
+                {
+                    scriptable.LevelScale = scale;
+                    hasChange = true;
+                }
             }
-            Vector3 pos= EditorGUILayout.Vector3Field("LevelPosition", _scriptable.LevelPosition);
-            if (_scriptable.LevelPosition != pos)
-            {
-                _scriptable.LevelPosition = pos;
-                hasChange = true;
-            }
-             Vector3 scale = EditorGUILayout.Vector3Field("LevelScale", _scriptable.LevelScale);
-            if (_scriptable.LevelScale != scale)
-            {
-                _scriptable.LevelScale = scale;
-                hasChange = true;
-            }
+
             return hasChange;
         }
     }
