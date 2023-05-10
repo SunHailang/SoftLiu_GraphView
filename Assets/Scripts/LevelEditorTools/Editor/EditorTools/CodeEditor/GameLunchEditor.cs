@@ -86,32 +86,17 @@ public class GameLunchEditor : UnityEditor.Editor
             for (int j = i + 1; j < _sceneContainer.NodeSceneDatas.Count; j++)
             {
                 SceneScriptable leftNode = _sceneContainer.NodeSceneDatas[i];
+                if (leftNode.SceneType == SceneTypeEnum.Round) continue;
                 Vector3 leftPos = new Vector3(leftNode.ScenePosition.x + leftNode.SceneScale.x / 2, leftNode.ScenePosition.y, leftNode.ScenePosition.z + leftNode.SceneScale.z / 2);
                 Rectangle leftRect = new Rectangle(leftPos.x, leftPos.z, leftNode.SceneScale.x, leftNode.SceneScale.z);
                 SceneScriptable rightNode = _sceneContainer.NodeSceneDatas[j];
+                if (rightNode.SceneType == SceneTypeEnum.Round) continue;
                 Vector3 rightPos = new Vector3(rightNode.ScenePosition.x + rightNode.SceneScale.x / 2, rightNode.ScenePosition.y,
                     rightNode.ScenePosition.z + rightNode.SceneScale.z / 2);
                 Rectangle rightRect = new Rectangle(rightPos.x, rightPos.z, rightNode.SceneScale.x, rightNode.SceneScale.z);
 
-                bool intersects = leftRect.RectIntersects(rightRect, out Vector2 l, out Vector2 r);
-                if (intersects)
+                 if (leftRect.RectIntersects(rightRect, out Rectangle rect)) 
                 {
-                    float w = r.x - l.x >= 5 ? r.x - l.x : 5;
-                    float h = r.y - l.y >= 5 ? r.y - l.y : 5;
-
-                    if (w < h)
-                    {
-                        h -= 10;
-                    }
-                    else
-                    {
-                        w -= 10;
-                    }
-
-                    float rectX = (l.x + r.x) / 2 - 2;
-                    float rectY = (l.y + r.y) / 2 - 2;
-                    Debug.Log($"{rectX}, {rectY}, {w}, {h}");
-                    Rectangle rect = new Rectangle(rectX, rectY, w, h);
                     _lunch.sceneNodeDatas.Add(rect);
                 }
             }
@@ -128,14 +113,14 @@ public class GameLunchEditor : UnityEditor.Editor
             List<BaseScriptable> list = GetSceneChild(data);
             _curSceneScale = data.SceneScale;
             _curScenePosition = data.ScenePosition;
-            CreateGroundFramework(go.transform, list);
+            CreateGroundFramework(data, go.transform, list);
         }
     }
 
     private List<BaseScriptable> GetSceneChild(SceneScriptable scene)
     {
         List<BaseScriptable> list = new List<BaseScriptable>();
-        
+
         foreach (SceneNodeLinkData linkData in _sceneContainer.NodeLinkDatas)
         {
             if (linkData.OutputNodeGuid == scene.Guid)
@@ -197,7 +182,7 @@ public class GameLunchEditor : UnityEditor.Editor
         return list;
     }
 
-    private void CreateGroundFramework(Transform parent, List<BaseScriptable> baseList)
+    private void CreateGroundFramework(SceneScriptable sceneData, Transform parent, List<BaseScriptable> baseList)
     {
         foreach (BaseScriptable scriptable in baseList)
         {
@@ -226,7 +211,13 @@ public class GameLunchEditor : UnityEditor.Editor
                     }
                 };
                 List<GameObjectScriptable> list = GetGoScriptable(groundScriptable);
-                CreateGroundGo(go.transform, groundScriptable.Seed, groundScriptable.GroundSize, list);
+                if (!GetGoList(list, out List<KeyValuePair<float, float>> randomList, out List<GameObject> goList))
+                {
+                    Debug.LogError($"CreateGroundGo Error:");
+                    return;
+                }
+                groundScriptable.CreateGround(sceneData, go.transform, goList);
+                //CreateGroundGo(go.transform, groundScriptable.Seed, groundScriptable.GroundSize, list);
             }
             else if (scriptable is WallScriptable wallScriptable)
             {
@@ -349,7 +340,6 @@ public class GameLunchEditor : UnityEditor.Editor
             for (int j = 0; j < zList.Count; j++)
             {
                 Vector3 pos = GetTransPosition(new Vector3(i * size.x, 0, zList[j]));
-
                 Point point = new Point(pos.x, pos.z, 1, 1);
                 bool isContinue = false;
                 foreach (Rectangle doorData in _lunch.sceneDoorDatas)
@@ -384,7 +374,7 @@ public class GameLunchEditor : UnityEditor.Editor
 
                 var go = Instantiate(goList[index], parent);
                 go.name = goList[index].name;
-                go.transform.position = GetTransPosition(new Vector3(i * size.x, 0, zList[j]));
+                go.transform.position = GetTransPosition(new Vector3(i * size.x + 2, 0, zList[j] + 2));
                 go.transform.localScale = baseList[index].Scale;
                 go.transform.Rotate(Vector3.up, baseList[index].Rotation.x);
                 go.isStatic = baseList[index].ForceStatic;
@@ -395,7 +385,7 @@ public class GameLunchEditor : UnityEditor.Editor
         {
             for (int j = 0; j < xList.Count; j++)
             {
-                Vector3 pos = GetTransPosition(new Vector3(xList[j], 0, i * size.z));
+                Vector3 pos = GetTransPosition(new Vector3(xList[j] + 2, 0, i * size.z + 2));
 
                 Point point = new Point(pos.x, pos.z, 1, 1);
 

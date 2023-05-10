@@ -8,5 +8,6 @@ namespace LevelEditorTools.Nodes
         public int Seed = 0;
         // 墙体的长宽
         public Vector3 WallSize = Vector3.one;
+
     }
 }

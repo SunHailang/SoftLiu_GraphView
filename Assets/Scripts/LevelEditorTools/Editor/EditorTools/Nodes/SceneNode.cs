@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -20,11 +21,30 @@ namespace LevelEditorTools.Editor.Nodes
             bool hasChange = base.DrawInspectorGUI();
             if (_state is SceneScriptable scriptable)
             {
-                Vector3 scale = EditorGUILayout.Vector3Field("SceneScale", scriptable.SceneScale, GUILayout.ExpandWidth(true));
-                if (scriptable.SceneScale != scale)
+                SceneTypeEnum type = (SceneTypeEnum) EditorGUILayout.EnumPopup("SceneType", scriptable.SceneType);
+                if (type != scriptable.SceneType)
                 {
-                    scriptable.SceneScale = scale;
+                    scriptable.SceneType = type;
                     hasChange = true;
+                }
+
+                if (type == SceneTypeEnum.Rectangle)
+                {
+                    Vector3 scale = EditorGUILayout.Vector3Field("SceneScale", scriptable.SceneScale, GUILayout.ExpandWidth(true));
+                    if (scriptable.SceneScale != scale)
+                    {
+                        scriptable.SceneScale = scale;
+                        hasChange = true;
+                    }
+                }
+                else
+                {
+                    float radius = EditorGUILayout.FloatField("Radius", scriptable.Radius);
+                    if (Math.Abs(scriptable.Radius - radius) > 0)
+                    {
+                        scriptable.Radius = radius;
+                        hasChange = true;
+                    }
                 }
 
                 Vector3 pos = EditorGUILayout.Vector3Field("ScenePosition", scriptable.ScenePosition, GUILayout.ExpandWidth(true));

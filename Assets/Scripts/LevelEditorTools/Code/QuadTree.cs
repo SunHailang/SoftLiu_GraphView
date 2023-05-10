@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using LevelEditorTools.Nodes;
 using UnityEditor;
@@ -147,6 +148,7 @@ public class QuadTree
                 p.DrawGizmos();
             }
         }
+
         Gizmos.color = Color.red;
         Gizmos.DrawLine(this.boundary.leftDown, this.boundary.leftUp);
         Gizmos.DrawLine(this.boundary.leftDown, this.boundary.rightDown);
@@ -339,42 +341,39 @@ public class Rectangle
 
     public bool intersects(Rectangle range)
     {
-        return !(range.x - range.w / 2 > this.x + this.w / 2 ||
-                 range.x + range.w / 2 < this.x - this.w / 2 ||
-                 range.y - range.h / 2 > this.y + this.h / 2 ||
-                 range.y + range.h / 2 < this.y - this.h / 2);
+        return !(range.x - range.w / 2 >= this.x + this.w / 2 ||
+                 range.x + range.w / 2 <= this.x - this.w / 2 ||
+                 range.y - range.h / 2 >= this.y + this.h / 2 ||
+                 range.y + range.h / 2 <= this.y - this.h / 2);
     }
 
-    public bool RectIntersects(Rectangle rect, out Vector2 l, out Vector2 r)
+    public bool RectIntersects(Rectangle rect, out Rectangle rectangle)
     {
-        l = Vector2.zero;
-        r = Vector2.zero;
-
-        float Xa1 = x - w / 2;
-        float Xa2 = x + w / 2;
-        float Ya1 = y - h / 2;
-        float Ya2 = y + h / 2;
-
-        float Xb1 = rect.x - rect.w / 2;
-        float Xb2 = rect.x + rect.w / 2;
-        float Yb1 = rect.y - rect.h / 2;
-        float Yb2 = rect.y + rect.h / 2;
-
-        if (Mathf.Abs(Xb2 + Xb1 - Xa2 - Xa1) <= Xa2 - Xa1 + Xb2 - Xb1 &&
-            Mathf.Abs(Yb2 + Yb1 - Ya2 - Ya1) <= Ya2 - Ya1 + Yb2 - Yb1)
+        bool isIn = this.intersects(rect);
+        rectangle = null;
+        if (isIn)
         {
-            float Xc1 = Mathf.Max(Xa1, Xb1);
-            float Yc1 = Mathf.Max(Ya1, Yb1);
-            l = new Vector2(Xc1, Yc1);
-            float Xc2 = Mathf.Min(Xa2, Xb2);
-            float Yc2 = Mathf.Min(Ya2, Yb2);
-            r = new Vector2(Xc2, Yc2);
-            return true;
+            // 当前矩形框 a,  x,y 代表中心坐标， w,h 代表 宽、高
+            Vector2 aLeftUp = new Vector2(x - w / 2, y + h / 2);
+            Vector2 aRightBottom = new Vector2(x + w / 2, y - h / 2);
+
+            // rect矩形 b, 
+            Vector2 bLeftUp = new Vector2(rect.x - rect.w / 2, rect.y + rect.h / 2);
+            Vector2 bRightBottom = new Vector2(rect.x + rect.w / 2, rect.y - rect.h / 2);
+            // 只考虑相交，
+            Debug.Log($"{aLeftUp}, {aRightBottom}, {bLeftUp}, {bRightBottom}");
+            Vector2 inLeftUp = new Vector2(Mathf.Max(aLeftUp.x, bLeftUp.x), Mathf.Min(aLeftUp.y, bLeftUp.y));
+            Vector2 inRightBottom = new Vector2(Mathf.Min(aRightBottom.x, bRightBottom.x), Mathf.Max(aRightBottom.y, bRightBottom.y));
+            float inX = (inLeftUp.x + inRightBottom.x) / 2;
+            float inY = (inLeftUp.y + inRightBottom.y) / 2;
+            float inW = inRightBottom.x - inLeftUp.x;
+            float inH = inLeftUp.y - inRightBottom.y;
+            rectangle = new Rectangle(inX, inY, inW, inH);
         }
 
-        return false;
+        return isIn;
     }
-
+    
 #if UNITY_EDITOR
     public void DrawGizmos()
     {

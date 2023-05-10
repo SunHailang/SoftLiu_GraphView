@@ -109,6 +109,10 @@ namespace LevelEditorTools.Save
                     AssetDatabase.CreateAsset(container, path);
                 }
             }
+            else
+            {
+                EditorUtility.SetDirty(container);
+            }
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             return path;
@@ -127,6 +131,8 @@ namespace LevelEditorTools.Save
                 {
                     if (node.State is SceneScriptable data)
                     {
+                        data.SceneType = sceneData.SceneType;
+                        data.Radius = sceneData.Radius;
                         data.SceneScale = sceneData.SceneScale;
                         data.ScenePosition = sceneData.ScenePosition;
                     }
@@ -134,7 +140,7 @@ namespace LevelEditorTools.Save
                     list.Add(sceneNode);
                 }
             }
-
+            
             foreach (GroundScriptable groundData in container.NodeGroundDatas)
             {
                 Vector2 pos = GraphViewUtils.GetNodePosition(groundData.Guid, container.NodeDatas);

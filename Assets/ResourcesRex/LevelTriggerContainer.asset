@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: LevelTriggerContainer
   m_EditorClassIdentifier: 
   NodeDatas:
-  - NodeGuid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
-    NodePosition: {x: 351, y: 208}
   - NodeGuid: cf8b9ecc-498b-47e0-bd3a-30322a94efe8
     NodePosition: {x: 264, y: 70}
+  - NodeGuid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
+    NodePosition: {x: 994, y: 247}
   - NodeGuid: 7b896b32-d235-43bb-a7f0-b908703d1617
-    NodePosition: {x: 457, y: 60}
-  - NodeGuid: d422f7ca-555f-46ae-8b5c-bef45f35ed3e
-    NodePosition: {x: 789, y: 70}
+    NodePosition: {x: 334, y: 170}
   - NodeGuid: 877b36e6-73b1-401a-a150-9b00c7cdb1ba
-    NodePosition: {x: 621, y: 60}
+    NodePosition: {x: 370, y: 258}
+  - NodeGuid: d422f7ca-555f-46ae-8b5c-bef45f35ed3e
+    NodePosition: {x: 390, y: 356}
   - NodeGuid: d1b4c9f2-225a-418c-9e0b-a9c88dda45c3
-    NodePosition: {x: 146, y: 208}
+    NodePosition: {x: 356, y: 472}
   NodeLinkDatas:
   - OutputNodeGuid: cf8b9ecc-498b-47e0-bd3a-30322a94efe8
     InputNodeGuid: a4fd4a70-fa86-4895-9d0d-c1cff7b1b29c
@@ -42,6 +42,7 @@ MonoBehaviour:
     LevelName: Demo
     LevelPosition: {x: 36, y: 0, z: 80}
     LevelScale: {x: 168, y: 1, z: 160}
+  ConditionTriggerDatas: []
   BoxTriggerDatas:
   - Title: BoxTriggerNode
     Guid: cf8b9ecc-498b-47e0-bd3a-30322a94efe8
@@ -58,16 +59,16 @@ MonoBehaviour:
     TriggerState: 5
     IsOnce: 1
   - Title: BoxTriggerNode
-    Guid: d422f7ca-555f-46ae-8b5c-bef45f35ed3e
-    EventID: 10004
-    Position: {x: 82, y: 0, z: 128}
+    Guid: 877b36e6-73b1-401a-a150-9b00c7cdb1ba
+    EventID: 10003
+    Position: {x: -26, y: 0, z: 128}
     Scale: {x: 40, y: 1, z: 52}
     TriggerState: 0
     IsOnce: 1
   - Title: BoxTriggerNode
-    Guid: 877b36e6-73b1-401a-a150-9b00c7cdb1ba
-    EventID: 10003
-    Position: {x: -26, y: 0, z: 128}
+    Guid: d422f7ca-555f-46ae-8b5c-bef45f35ed3e
+    EventID: 10004
+    Position: {x: 82, y: 0, z: 128}
     Scale: {x: 40, y: 1, z: 52}
     TriggerState: 0
     IsOnce: 1
@@ -78,3 +79,4 @@ MonoBehaviour:
     Scale: {x: 52, y: 1, z: 28}
     TriggerState: 0
     IsOnce: 1
+  CreateEnemyDatas: []
