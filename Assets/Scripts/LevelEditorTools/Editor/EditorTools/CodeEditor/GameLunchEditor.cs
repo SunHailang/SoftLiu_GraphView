@@ -16,45 +16,27 @@ public class GameLunchEditor : UnityEditor.Editor
 
     private void OnEnable()
     {
-        instanceID = 0;
         _selectTarget = Selection.activeObject as GameObject;
         if (_selectTarget != null)
         {
             _lunch = _selectTarget.GetComponent<GameDemoLunch>();
-        }
-
-        var guid = EditorPrefs.GetString("SceneContainer");
-        if (!string.IsNullOrEmpty(guid))
-        {
-            _sceneContainer = AssetDatabase.LoadAssetAtPath<SceneContainer>(AssetDatabase.GUIDToAssetPath(guid));
-            if (_sceneContainer != null)
+            if (_lunch != null)
             {
-                instanceID = _sceneContainer.GetInstanceID();
+                _sceneContainer = _lunch.m_SceneContainer;
             }
         }
     }
 
-    private int instanceID = 0;
-
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-        serializedObject.Update();
-        _sceneContainer = EditorGUILayout.ObjectField("SceneContainer", _sceneContainer, typeof(SceneContainer), false) as SceneContainer;
-        int newId = _sceneContainer == null ? 0 : _sceneContainer.GetInstanceID();
-        if (instanceID != newId)
+        if (_lunch != null)
         {
-            instanceID = newId;
-            string guid = "";
-            if (instanceID != 0 && _sceneContainer != null)
-            {
-                string path = AssetDatabase.GetAssetPath(_sceneContainer.GetInstanceID());
-                guid = AssetDatabase.AssetPathToGUID(path);
-            }
-
-            EditorPrefs.SetString("SceneContainer", guid);
+            _sceneContainer = _lunch.m_SceneContainer;
         }
 
+        if (_sceneContainer == null) return;
+        serializedObject.Update();
         if (GUILayout.Button("Create Scene", GUI.skin.button, GUILayout.Height(25)))
         {
             CreateScene();
@@ -88,14 +70,14 @@ public class GameLunchEditor : UnityEditor.Editor
                 SceneScriptable leftNode = _sceneContainer.NodeSceneDatas[i];
                 if (leftNode.SceneType == SceneTypeEnum.Round) continue;
                 Vector3 leftPos = new Vector3(leftNode.ScenePosition.x + leftNode.SceneScale.x / 2, leftNode.ScenePosition.y, leftNode.ScenePosition.z + leftNode.SceneScale.z / 2);
-                Rectangle leftRect = new Rectangle(leftPos.x, leftPos.z, leftNode.SceneScale.x, leftNode.SceneScale.z);
+                QuadRectangle leftRect = new QuadRectangle(leftPos.x, leftPos.z, leftNode.SceneScale.x, leftNode.SceneScale.z);
                 SceneScriptable rightNode = _sceneContainer.NodeSceneDatas[j];
                 if (rightNode.SceneType == SceneTypeEnum.Round) continue;
                 Vector3 rightPos = new Vector3(rightNode.ScenePosition.x + rightNode.SceneScale.x / 2, rightNode.ScenePosition.y,
                     rightNode.ScenePosition.z + rightNode.SceneScale.z / 2);
-                Rectangle rightRect = new Rectangle(rightPos.x, rightPos.z, rightNode.SceneScale.x, rightNode.SceneScale.z);
+                QuadRectangle rightRect = new QuadRectangle(rightPos.x, rightPos.z, rightNode.SceneScale.x, rightNode.SceneScale.z);
 
-                 if (leftRect.RectIntersects(rightRect, out Rectangle rect)) 
+                if (leftRect.RectIntersects(rightRect, out QuadRectangle rect))
                 {
                     _lunch.sceneNodeDatas.Add(rect);
                 }
@@ -216,6 +198,7 @@ public class GameLunchEditor : UnityEditor.Editor
                     Debug.LogError($"CreateGroundGo Error:");
                     return;
                 }
+
                 groundScriptable.CreateGround(sceneData, go.transform, goList);
                 //CreateGroundGo(go.transform, groundScriptable.Seed, groundScriptable.GroundSize, list);
             }
@@ -315,7 +298,7 @@ public class GameLunchEditor : UnityEditor.Editor
         go.transform.Rotate(Vector3.up, baseList[index].Rotation.x);
         go.isStatic = baseList[index].ForceStatic;
 
-        _lunch.sceneDoorDatas.Add(new Rectangle(pos.x, pos.z, size.x, size.z));
+        _lunch.sceneDoorDatas.Add(new QuadRectangle(pos.x, pos.z, size.x, size.z));
     }
 
     private void CreateWallGo(Transform parent, int seed, Vector3 size, List<GameObjectScriptable> baseList)
@@ -333,7 +316,7 @@ public class GameLunchEditor : UnityEditor.Editor
         List<float> zList = new List<float>() {0, _curSceneScale.z - size.z};
         UnityEngine.Random.InitState(seed);
 
-        HashSet<Rectangle> rectIndexs = new HashSet<Rectangle>();
+        HashSet<QuadRectangle> rectIndexs = new HashSet<QuadRectangle>();
 
         for (int i = 0; i < xCount; i++)
         {
@@ -342,7 +325,7 @@ public class GameLunchEditor : UnityEditor.Editor
                 Vector3 pos = GetTransPosition(new Vector3(i * size.x, 0, zList[j]));
                 Point point = new Point(pos.x, pos.z, 1, 1);
                 bool isContinue = false;
-                foreach (Rectangle doorData in _lunch.sceneDoorDatas)
+                foreach (QuadRectangle doorData in _lunch.sceneDoorDatas)
                 {
                     if (doorData.contains(point))
                     {
@@ -355,7 +338,7 @@ public class GameLunchEditor : UnityEditor.Editor
 
                 for (int k = 0; k < _lunch.sceneNodeDatas.Count; k++)
                 {
-                    Rectangle rectangle = _lunch.sceneNodeDatas[k];
+                    QuadRectangle rectangle = _lunch.sceneNodeDatas[k];
                     if (rectangle.contains(point))
                     {
                         isContinue = true;
@@ -390,7 +373,7 @@ public class GameLunchEditor : UnityEditor.Editor
                 Point point = new Point(pos.x, pos.z, 1, 1);
 
                 bool isContinue = false;
-                foreach (Rectangle doorData in _lunch.sceneDoorDatas)
+                foreach (QuadRectangle doorData in _lunch.sceneDoorDatas)
                 {
                     if (doorData.contains(point))
                     {
@@ -403,7 +386,7 @@ public class GameLunchEditor : UnityEditor.Editor
 
                 for (int k = 0; k < _lunch.sceneNodeDatas.Count; k++)
                 {
-                    Rectangle rectangle = _lunch.sceneNodeDatas[k];
+                    QuadRectangle rectangle = _lunch.sceneNodeDatas[k];
                     if (rectangle.contains(point))
                     {
                         isContinue = true;
@@ -429,7 +412,7 @@ public class GameLunchEditor : UnityEditor.Editor
             }
         }
 
-        foreach (Rectangle i in rectIndexs)
+        foreach (QuadRectangle i in rectIndexs)
         {
             _lunch.sceneNodeDatas.Remove(i);
         }

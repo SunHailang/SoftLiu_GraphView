@@ -15,7 +15,7 @@ public class TriggerCreateMono : MonoBehaviour
     public Transform EnemyParent = null;
     public GameObject enemyPrefab = null;
 
-    private Rectangle mainPlayerRect;
+    private QuadRectangle mainPlayerRect;
 
     public LevelTriggerContainer m_triggerContainer = null;
 
@@ -41,7 +41,7 @@ public class TriggerCreateMono : MonoBehaviour
         if (mainPlayer != null)
         {
             // 1. 获取玩家的碰撞框大小
-            mainPlayerRect = new Rectangle(mainPlayer.position.x, mainPlayer.position.z, mainPlayerSize.x, mainPlayerSize.z);
+            mainPlayerRect = new QuadRectangle(mainPlayer.position.x, mainPlayer.position.z, mainPlayerSize.x, mainPlayerSize.z);
         }
 
         DestroyGo();
@@ -51,7 +51,7 @@ public class TriggerCreateMono : MonoBehaviour
         actionDatas = new Dictionary<string, BaseAction>(levelCount * enemyDataCont);
         foreach (LevelDataScriptable levelData in m_triggerContainer.LevelDatas)
         {
-            QuadTree quadTree = new QuadTree(new Rectangle(levelData.LevelPosition.x, levelData.LevelPosition.z, levelData.LevelScale.x, levelData.LevelScale.z), 4);
+            QuadTree quadTree = new QuadTree(new QuadRectangle(levelData.LevelPosition.x, levelData.LevelPosition.z, levelData.LevelScale.x, levelData.LevelScale.z), 4);
             HashSet<string> linkList = new HashSet<string>();
             foreach (SceneNodeLinkData sceneNodeLinkData in m_triggerContainer.NodeLinkDatas)
             {

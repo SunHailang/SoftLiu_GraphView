@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using LevelEditorTools.Nodes;
+using UnityEngine.UIElements;
 
 namespace LevelEditorTools.Editor.Nodes
 {
@@ -16,6 +17,19 @@ namespace LevelEditorTools.Editor.Nodes
 
         protected BaseScriptable _state;
 
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            base.BuildContextualMenu(evt);
+            evt.menu.AppendAction( "Editor Script", EditorScriptContextMenu);
+        }
+
+        protected virtual void  EditorScriptContextMenu(DropdownMenuAction obj)
+        {
+            
+        }
+
+        
+        
         public BaseScriptable State
         {
             get => _state;

@@ -60,6 +60,7 @@ namespace LevelEditorTools.Save
 
             container.NodeDatas.Clear();
             container.NodeSceneDatas.Clear();
+            container.NodeBezierDatas.Clear();
             container.NodeGroundDatas.Clear();
             container.NodeDoorDatas.Clear();
             container.NodeObstacleDatas.Clear();
@@ -77,6 +78,10 @@ namespace LevelEditorTools.Save
                 if (node.State is SceneScriptable sceneState)
                 {
                     container.NodeSceneDatas.Add(sceneState);
+                }
+                else if (node.State is SceneBezierScriptable bezierState)
+                {
+                    container.NodeBezierDatas.Add(bezierState);
                 }
                 else if (node.State is GroundScriptable groundState)
                 {
@@ -138,6 +143,23 @@ namespace LevelEditorTools.Save
                     }
 
                     list.Add(sceneNode);
+                }
+            }
+            
+            foreach (SceneBezierScriptable bezierData in container.NodeBezierDatas)
+            {
+                Vector2 pos = GraphViewUtils.GetNodePosition(bezierData.Guid, container.NodeDatas);
+                BaseNode node = _sceneGraphView.CreateNode(typeof(SceneBezierNode), pos, bezierData.Title, bezierData.Guid);
+                if (node is SceneBezierNode bezierNode)
+                {
+                    if (node.State is SceneBezierScriptable data)
+                    {
+                        data.StartPosition = bezierData.StartPosition;
+                        data.EndPosition = bezierData.EndPosition;
+                        data.Width = bezierData.Width;
+                    }
+
+                    list.Add(bezierNode);
                 }
             }
             

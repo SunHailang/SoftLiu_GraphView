@@ -1,26 +1,37 @@
 using System;
 using System.Collections.Generic;
+using LevelEditorTools;
+using UnityEditor;
 using UnityEngine;
 
 public class GameDemoLunch : MonoBehaviour
 {
-    public List<Rectangle> sceneNodeDatas = new List<Rectangle>();
+    public SceneContainer m_SceneContainer;
 
-    public List<Rectangle> sceneDoorDatas = new List<Rectangle>();
+    public List<QuadRectangle> sceneNodeDatas = new List<QuadRectangle>();
+
+    public List<QuadRectangle> sceneDoorDatas = new List<QuadRectangle>();
+
+    private QuadCircle _circle = null;
+    
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
+        _circle ??= new QuadCircle(Vector3.zero, 1);
+        _circle.DrawGizmos();
+
         if (sceneNodeDatas != null && sceneNodeDatas.Count > 0)
         {
-            foreach (Rectangle rectangle in sceneNodeDatas)
+            foreach (QuadRectangle rectangle in sceneNodeDatas)
             {
                 rectangle.DrawGizmos();
             }
         }
+
         if (sceneDoorDatas != null && sceneDoorDatas.Count > 0)
         {
-            foreach (Rectangle rectangle in sceneDoorDatas)
+            foreach (QuadRectangle rectangle in sceneDoorDatas)
             {
                 rectangle.DrawGizmos();
             }
