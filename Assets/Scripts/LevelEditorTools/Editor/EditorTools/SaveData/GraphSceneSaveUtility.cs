@@ -157,6 +157,8 @@ namespace LevelEditorTools.Save
                         data.StartPosition = bezierData.StartPosition;
                         data.EndPosition = bezierData.EndPosition;
                         data.Width = bezierData.Width;
+                        data.SegmentNumber = bezierData.SegmentNumber;
+                        data.ControlPositionList = bezierData.ControlPositionList;
                     }
 
                     list.Add(bezierNode);

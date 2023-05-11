@@ -19,6 +19,11 @@ namespace LevelEditorTools.Editor.Nodes
 
             _state = new GameObjectScriptable();
         }
+        
+        protected override void EditorScriptContextMenu(DropdownMenuAction obj)
+        {
+            GraphViewUtils.OpenCodeEditor("GameObjectNode");
+        }
 
         public void RefreshTempleGo(EditorWindow window)
         {

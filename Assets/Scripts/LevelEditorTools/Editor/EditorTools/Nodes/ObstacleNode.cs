@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using LevelEditorTools.Nodes;
+using UnityEngine.UIElements;
 
 namespace LevelEditorTools.Editor.Nodes
 {
@@ -17,6 +18,10 @@ namespace LevelEditorTools.Editor.Nodes
            _state = new ObstacleScriptable();
         }
 
+        protected override void EditorScriptContextMenu(DropdownMenuAction obj)
+        {
+            GraphViewUtils.OpenCodeEditor("ObstacleNode");
+        }
 
         public override bool DrawInspectorGUI()
         {

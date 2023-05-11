@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using LevelEditorTools.Editor.Nodes;
+using Unity.CodeEditor;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -28,7 +31,7 @@ namespace LevelEditorTools
 
             return Vector2.zero;
         }
-        
+
         public static bool GetEdgeNode(SceneNodeLinkData data, List<BaseNode> list, out BaseNode outputNode, out BaseNode inputNode)
         {
             outputNode = null;
@@ -59,6 +62,46 @@ namespace LevelEditorTools
             tempEdge.input.Connect(tempEdge);
             tempEdge.output.Connect(tempEdge);
             graphView.Add(tempEdge);
+        }
+
+        public static void OpenCodeEditor(string scriptName)
+        {
+            string[] paths = AssetDatabase.FindAssets($"t:Script {scriptName}");
+            if (paths.Length > 0)
+            {
+                Queue<string> scriptPaths = new Queue<string>();
+                foreach (string path in paths)
+                {
+                    string data = AssetDatabase.GUIDToAssetPath(path);
+                    string script = $"{scriptName}.cs";
+                    int index = data.LastIndexOf(script, StringComparison.Ordinal);
+                    if (index > 0)
+                    {
+                        string substring = data.Substring(index);
+                        if (script == substring)
+                        {
+                            scriptPaths.Enqueue(data);
+                        }
+                    }
+                }
+
+                if (scriptPaths.Count > 1)
+                {
+                    while(scriptPaths.TryDequeue(out string scriptPath))
+                    {
+                        Debug.Log($"Path: {scriptPath}");
+                    }
+                    Debug.LogError($"Error: EditorScriptContextMenu More One {scriptName} Script.");
+                }
+                else if (scriptPaths.TryDequeue(out string scriptPath))
+                {
+                    CodeEditor.CurrentEditor.OpenProject(scriptPath);
+                }
+            }
+            else
+            {
+                Debug.LogError("Error: EditorScriptContextMenu Not Found SceneBezierNode Script.");
+            }
         }
 
         public static Vector3 GetPostion(Matrix4x4 matrix)

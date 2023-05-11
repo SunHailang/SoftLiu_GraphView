@@ -29,12 +29,6 @@ MonoBehaviour:
     NodePosition: {x: 467, y: 248}
   - NodeGuid: e4500396-502f-465e-8bb5-fdc9e83846e2
     NodePosition: {x: 882, y: 248}
-  - NodeGuid: 7216f49f-7b54-4135-837a-227922769c82
-    NodePosition: {x: 116, y: -354}
-  - NodeGuid: b6e116ad-8f98-4888-bcc8-c85354b7cc49
-    NodePosition: {x: 306, y: -354}
-  - NodeGuid: 84e0bc2c-abf0-48b7-b8d2-0710b92e35b1
-    NodePosition: {x: 1267, y: 248}
   - NodeGuid: a6462740-7137-4705-966f-f3cf06049e54
     NodePosition: {x: -51, y: 209}
   - NodeGuid: c3b1e6f1-b239-4e62-83f9-b46603764153
@@ -83,10 +77,16 @@ MonoBehaviour:
     NodePosition: {x: 1078, y: 360}
   - NodeGuid: 1fa8ef4a-90e7-4096-9054-3959cf935702
     NodePosition: {x: 85, y: -181}
-  - NodeGuid: 511b2018-4385-40c9-9628-182430f6e1e6
-    NodePosition: {x: 286, y: -181}
   - NodeGuid: fdf86bf9-53e9-4a32-a82c-7f8a775a132c
     NodePosition: {x: 1281, y: 360}
+  - NodeGuid: 511b2018-4385-40c9-9628-182430f6e1e6
+    NodePosition: {x: 286, y: -181}
+  - NodeGuid: 7216f49f-7b54-4135-837a-227922769c82
+    NodePosition: {x: 116, y: -354}
+  - NodeGuid: b6e116ad-8f98-4888-bcc8-c85354b7cc49
+    NodePosition: {x: 306, y: -354}
+  - NodeGuid: 84e0bc2c-abf0-48b7-b8d2-0710b92e35b1
+    NodePosition: {x: 1267, y: 248}
   NodeLinkDatas:
   - OutputNodeGuid: 0177360e-1d06-466b-89e5-9e292cfa637d
     InputNodeGuid: 10721601-348f-408a-9e26-2afc6eb9cd41
@@ -157,20 +157,29 @@ MonoBehaviour:
   NodeSceneDatas:
   - Title: SceneMap_1
     Guid: 0177360e-1d06-466b-89e5-9e292cfa637d
+    SceneType: 0
+    Radius: 1
     SceneScale: {x: 60, y: 1, z: 140}
     ScenePosition: {x: 0, y: 0, z: 0}
   - Title: SceneMap_2
     Guid: 01b988db-5007-4a42-8bd8-362dd75dafbd
+    SceneType: 0
+    Radius: 1
     SceneScale: {x: 60, y: 1, z: 36}
     ScenePosition: {x: 60, y: 0, z: 0}
   - Title: SceneMap_3
     Guid: 819dd9aa-e566-48a6-956d-3435bd97a729
+    SceneType: 0
+    Radius: 1
     SceneScale: {x: 48, y: 1, z: 60}
     ScenePosition: {x: -48, y: 0, z: 100}
   - Title: SceneMap_4
     Guid: a250ad34-7b37-480d-9409-31fc98698413
+    SceneType: 0
+    Radius: 1
     SceneScale: {x: 48, y: 1, z: 60}
     ScenePosition: {x: 60, y: 0, z: 100}
+  NodeBezierDatas: []
   NodeGroundDatas:
   - Title: GroundNode
     Guid: 10721601-348f-408a-9e26-2afc6eb9cd41
@@ -191,13 +200,13 @@ MonoBehaviour:
   NodeDoorDatas:
   - Title: DoorNode
     Guid: 7216f49f-7b54-4135-837a-227922769c82
-    DoorSize: {x: 4, y: 1, z: 4}
+    DoorSize: {x: 5, y: 1, z: 5}
   - Title: DoorNode
     Guid: b6e116ad-8f98-4888-bcc8-c85354b7cc49
-    DoorSize: {x: 4, y: 1, z: 4}
+    DoorSize: {x: 5, y: 1, z: 5}
   - Title: DoorNode
     Guid: 84e0bc2c-abf0-48b7-b8d2-0710b92e35b1
-    DoorSize: {x: 4, y: 1, z: 4}
+    DoorSize: {x: 5, y: 1, z: 5}
   NodeObstacleDatas:
   - Title: ObstacleNode
     Guid: a6462740-7137-4705-966f-f3cf06049e54
@@ -361,25 +370,25 @@ MonoBehaviour:
     ForceStatic: 1
   - Title: GameObjectNode
     Guid: 1fa8ef4a-90e7-4096-9054-3959cf935702
-    Position: {x: 60, y: 0, z: 16}
+    Position: {x: 60, y: 0, z: 14}
     Rotation: {x: 90, y: 0, z: 0}
     Scale: {x: 1, y: 1, z: 1}
     TemplateGo: b6c8fb45f1e35c247bdc0ca91acf2478
     Probability: 1
     ForceStatic: 1
   - Title: GameObjectNode
-    Guid: 511b2018-4385-40c9-9628-182430f6e1e6
-    Position: {x: -4, y: 0, z: 120}
-    Rotation: {x: 90, y: 0, z: 0}
-    Scale: {x: 1, y: 1, z: 1}
-    TemplateGo: ca4488080a69ab84588dbac1838c27b9
-    Probability: 1
-    ForceStatic: 1
-  - Title: GameObjectNode
     Guid: fdf86bf9-53e9-4a32-a82c-7f8a775a132c
-    Position: {x: 60, y: 0, z: 120}
+    Position: {x: 60, y: 0, z: 118}
     Rotation: {x: 90, y: 0, z: 0}
     Scale: {x: 1, y: 1, z: 1}
     TemplateGo: bcb85d3fc05940c489f669d7f7f773b2
     Probability: 0.2
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 511b2018-4385-40c9-9628-182430f6e1e6
+    Position: {x: 0, y: 0, z: 118}
+    Rotation: {x: 90, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: ca4488080a69ab84588dbac1838c27b9
+    Probability: 1
     ForceStatic: 1

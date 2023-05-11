@@ -9,12 +9,14 @@ namespace LevelEditorTools.Editor.Nodes
 {
     public class SceneBezierNode : BaseNode
     {
+
         public SceneBezierNode()
         {
             Port output = GraphViewUtils.GetInstantiatePort(this, Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(int));
             this.outputContainer.Add(output);
 
-            _state = new SceneBezierScriptable();
+            SceneBezierScriptable scriptable = new SceneBezierScriptable();
+            _state = scriptable;
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -31,7 +33,7 @@ namespace LevelEditorTools.Editor.Nodes
 
         protected override void EditorScriptContextMenu(DropdownMenuAction obj)
         {
-            EditorUtility.OpenPropertyEditor(null);
+            GraphViewUtils.OpenCodeEditor("SceneBezierNode");
         }
 
         public override bool DrawInspectorGUI()
@@ -59,6 +61,14 @@ namespace LevelEditorTools.Editor.Nodes
                     scriptable.Width = width;
                     hasChange = true;
                 }
+                
+                int number = EditorGUILayout.IntField("SegmentNumber", scriptable.SegmentNumber);
+                if (scriptable.SegmentNumber != number)
+                {
+                    scriptable.SegmentNumber = number;
+                    hasChange = true;
+                }
+                
             }
 
 

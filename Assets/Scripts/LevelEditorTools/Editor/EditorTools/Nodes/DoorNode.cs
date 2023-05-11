@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using LevelEditorTools.Nodes;
+using UnityEngine.UIElements;
 
 namespace LevelEditorTools.Editor.Nodes
 {
@@ -17,6 +18,11 @@ namespace LevelEditorTools.Editor.Nodes
             _state = new DoorScriptable();
             this.RefreshPorts();
             this.RefreshExpandedState();
+        }
+        
+        protected override void EditorScriptContextMenu(DropdownMenuAction obj)
+        {
+            GraphViewUtils.OpenCodeEditor("DoorNode");
         }
 
         public override bool DrawInspectorGUI()

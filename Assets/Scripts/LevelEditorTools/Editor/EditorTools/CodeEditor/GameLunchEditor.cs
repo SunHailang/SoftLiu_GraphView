@@ -84,6 +84,18 @@ public class GameLunchEditor : UnityEditor.Editor
             }
         }
 
+        for (int i = 0; i < _sceneContainer.NodeBezierDatas.Count; i++)
+        {
+            SceneBezierScriptable data = _sceneContainer.NodeBezierDatas[i];
+            // 1. 创建Scene节点
+            GameObject go = new GameObject(data.Title);
+            go.transform.parent = parent;
+            go.transform.position = data.StartPosition;
+            // 2. 查找这个 Scene 的子节点
+            List<BaseScriptable> list = GetSceneChild(data);
+            CreateGroundFramework(data, go.transform, list);
+        }
+        
         for (int i = 0; i < _sceneContainer.NodeSceneDatas.Count; i++)
         {
             SceneScriptable data = _sceneContainer.NodeSceneDatas[i];
@@ -99,7 +111,32 @@ public class GameLunchEditor : UnityEditor.Editor
         }
     }
 
-    private List<BaseScriptable> GetSceneChild(SceneScriptable scene)
+    private void CreateGroundFramework(SceneBezierScriptable sceneData, Transform parent, List<BaseScriptable> baseList)
+    {
+        foreach (BaseScriptable scriptable in baseList)
+        {
+            if (scriptable is GroundScriptable groundScriptable)
+            {
+                var go = new GameObject(groundScriptable.Title)
+                {
+                    transform =
+                    {
+                        parent = parent
+                    }
+                };
+                List<GameObjectScriptable> list = GetGoScriptable(groundScriptable);
+                if (!GetGoList(list, out List<KeyValuePair<float, float>> randomList, out List<GameObject> goList))
+                {
+                    Debug.LogError($"CreateGroundGo Error:");
+                    return;
+                }
+
+                sceneData.CreateGround(go.transform, groundScriptable.GroundSize, goList);
+            }
+        }
+    }
+
+    private List<BaseScriptable> GetSceneChild(BaseScriptable scene)
     {
         List<BaseScriptable> list = new List<BaseScriptable>();
 
@@ -333,7 +370,6 @@ public class GameLunchEditor : UnityEditor.Editor
                         break;
                     }
                 }
-
                 if (isContinue) continue;
 
                 for (int k = 0; k < _lunch.sceneNodeDatas.Count; k++)
@@ -369,9 +405,7 @@ public class GameLunchEditor : UnityEditor.Editor
             for (int j = 0; j < xList.Count; j++)
             {
                 Vector3 pos = GetTransPosition(new Vector3(xList[j] + 2, 0, i * size.z + 2));
-
                 Point point = new Point(pos.x, pos.z, 1, 1);
-
                 bool isContinue = false;
                 foreach (QuadRectangle doorData in _lunch.sceneDoorDatas)
                 {
@@ -381,7 +415,6 @@ public class GameLunchEditor : UnityEditor.Editor
                         break;
                     }
                 }
-
                 if (isContinue) continue;
 
                 for (int k = 0; k < _lunch.sceneNodeDatas.Count; k++)
@@ -412,10 +445,10 @@ public class GameLunchEditor : UnityEditor.Editor
             }
         }
 
-        foreach (QuadRectangle i in rectIndexs)
-        {
-            _lunch.sceneNodeDatas.Remove(i);
-        }
+        // foreach (QuadRectangle i in rectIndexs)
+        // {
+        //     _lunch.sceneNodeDatas.Remove(i);
+        // }
     }
 
     private void CreateObstacleGo(Transform parent, int seed, List<GameObjectScriptable> baseList)

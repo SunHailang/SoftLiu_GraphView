@@ -23,6 +23,8 @@ MonoBehaviour:
     NodePosition: {x: 403, y: 159}
   - NodeGuid: 29017a35-44cb-49e2-800d-d19e71cfc91a
     NodePosition: {x: 573, y: 159}
+  - NodeGuid: 1988a1a6-046f-4279-8fe8-cdc4fbd227cc
+    NodePosition: {x: 413, y: -514}
   - NodeGuid: b1cdc4d1-afa6-45aa-8b64-00801c7382d3
     NodePosition: {x: 199, y: 236}
   - NodeGuid: 36de89e9-7984-4a47-933b-b050f17dd279
@@ -33,8 +35,6 @@ MonoBehaviour:
     NodePosition: {x: 797, y: 275}
   - NodeGuid: 602e352c-d89b-4c50-81e3-b484a25ea4bd
     NodePosition: {x: 1003, y: 269}
-  - NodeGuid: 50acaaf1-ac34-4c87-ad8f-9c604a1805d5
-    NodePosition: {x: 425, y: -391}
   - NodeGuid: e625666f-9384-443b-9a73-0786749e83b6
     NodePosition: {x: 187, y: 322}
   - NodeGuid: 4173954f-d12b-4d11-a28c-28dbd9c1eadf
@@ -47,8 +47,8 @@ MonoBehaviour:
     NodePosition: {x: 991, y: 383}
   - NodeGuid: 84d362fe-b956-472b-9613-68e9acf4af8c
     NodePosition: {x: 418, y: -243}
-  - NodeGuid: 1988a1a6-046f-4279-8fe8-cdc4fbd227cc
-    NodePosition: {x: 413, y: -514}
+  - NodeGuid: 50acaaf1-ac34-4c87-ad8f-9c604a1805d5
+    NodePosition: {x: 425, y: -391}
   NodeLinkDatas:
   - OutputNodeGuid: b1cdc4d1-afa6-45aa-8b64-00801c7382d3
     InputNodeGuid: e625666f-9384-443b-9a73-0786749e83b6
@@ -110,8 +110,19 @@ MonoBehaviour:
     Guid: 1988a1a6-046f-4279-8fe8-cdc4fbd227cc
     StartPosition: {x: 0, y: 0, z: 0}
     EndPosition: {x: 100, y: 0, z: 100}
-    Width: 16
-    ControlPosition: []
+    Width: 60
+    ControlPositionList:
+    - {x: 0, y: 0, z: -62}
+    - {x: 20, y: 0, z: -150}
+    - {x: 30, y: 0, z: -418}
+    - {x: 669, y: 0, z: -337}
+    - {x: 50, y: 0, z: -997}
+    - {x: 60, y: 0, z: -1306}
+    - {x: -26, y: 0, z: -1134}
+    - {x: -1663, y: 0, z: -826}
+    - {x: -1614, y: 0, z: -332}
+    - {x: -1047, y: 0, z: -151}
+    SegmentNumber: 500
   NodeGroundDatas:
   - Title: GroundNode
     Guid: b1cdc4d1-afa6-45aa-8b64-00801c7382d3
@@ -135,8 +146,8 @@ MonoBehaviour:
     GroundSize: {x: 4, y: 1, z: 4}
   - Title: GroundNode
     Guid: 50acaaf1-ac34-4c87-ad8f-9c604a1805d5
-    Seed: 2147483647
-    GroundSize: {x: 1, y: 1, z: 1}
+    Seed: 46
+    GroundSize: {x: 4, y: 1, z: 4}
   NodeDoorDatas: []
   NodeObstacleDatas: []
   NodeWallDatas: []
