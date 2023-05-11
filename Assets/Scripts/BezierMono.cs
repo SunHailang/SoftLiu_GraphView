@@ -4,10 +4,11 @@ using LevelEditorTools;
 using LevelEditorTools.Nodes;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class BezierMono : MonoBehaviour
 {
-    public string BezierName;
+    public string BezierGuidName;
     public SceneContainer SceneContainer;
 
     public int SegmentNum = 100;
@@ -21,19 +22,56 @@ public class BezierMono : MonoBehaviour
     public List<QuadRectangle> rectangles;
 
 #if UNITY_EDITOR
+
+    public void LoadPosition()
+    {
+        if (!string.IsNullOrEmpty(BezierGuidName) && SceneContainer != null)
+        {
+            list.Clear();
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                DestroyImmediate(transform.GetChild(i).gameObject);
+            }
+            
+            foreach (SceneBezierScriptable bezierData in SceneContainer.NodeBezierDatas)
+            {
+                if (bezierData.Guid == BezierGuidName)
+                {
+                    int index = 0;
+                    foreach (Vector3 vector3 in bezierData.ControlPositionList)
+                    {
+                        GameObject go = new GameObject($"Position_{++index}");
+                        go.transform.parent = transform;
+                        go.transform.position = vector3;
+                        list.Add(go.transform );
+                    }
+
+                    SegmentNum = bezierData.SegmentNumber;
+                    Width = bezierData.Width;
+                }
+            }
+        }
+    }
+
     public void SetPosition()
     {
-        if (!string.IsNullOrEmpty(BezierName) && SceneContainer != null)
+        if (list.Count <= 1) return;
+        if (!string.IsNullOrEmpty(BezierGuidName) && SceneContainer != null)
         {
             foreach (SceneBezierScriptable bezierData in SceneContainer.NodeBezierDatas)
             {
-                if (bezierData.Title == BezierName)
+                if (bezierData.Guid == BezierGuidName)
                 {
                     bezierData.ControlPositionList.Clear();
                     foreach (Transform trans in list)
                     {
                         bezierData.ControlPositionList.Add(trans.position);
                     }
+
+                    bezierData.SegmentNumber = SegmentNum;
+                    bezierData.Width = Width;
+                    bezierData.StartPosition = list[0].position;
+                    bezierData.EndPosition = list[^1].position;
                 }
             }
 
@@ -54,8 +92,10 @@ public class BezierMono : MonoBehaviour
         points.Clear();
         foreach (var t in list)
         {
+            if (t == null) continue;
             points.Add(t.position);
         }
+        if(points.Count <2) return;
 
         Vector3[] paths = BezierUtils.GetLineBeizerList(points, SegmentNum);
         for (int i = 0; i < paths.Length - 1; i++)
@@ -137,8 +177,8 @@ public class BezierMono : MonoBehaviour
         rectangle.DrawGizmos();
 
         Gizmos.color = Color.green;
-        Gizmos.DrawSphere(list[0].position, 2);
-        Gizmos.DrawSphere(list[^1].position, 2);
+        Gizmos.DrawSphere(points[0], 2);
+        Gizmos.DrawSphere(points[^1], 2);
     }
 #endif
 }

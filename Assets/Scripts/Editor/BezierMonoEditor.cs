@@ -19,7 +19,11 @@ public class BezierMonoEditor : Editor
     {
         base.OnInspectorGUI();
 
-        if (GUILayout.Button("刷新") && _mono != null)
+        if (GUILayout.Button("Load") && _mono != null)
+        {
+            _mono.LoadPosition();
+        }
+        if (GUILayout.Button("Save") && _mono != null)
         {
             _mono.SetPosition();
         }

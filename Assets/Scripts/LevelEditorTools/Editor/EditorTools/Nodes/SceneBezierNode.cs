@@ -45,6 +45,14 @@ namespace LevelEditorTools.Editor.Nodes
                 if (scriptable.StartPosition != start)
                 {
                     scriptable.StartPosition = start;
+                    if (scriptable.ControlPositionList.Count <= 0)
+                    {
+                        scriptable.ControlPositionList.Add(start);
+                    }
+                    else
+                    {
+                        scriptable.ControlPositionList[0] = start;
+                    }
                     hasChange = true;
                 }
 
@@ -52,6 +60,14 @@ namespace LevelEditorTools.Editor.Nodes
                 if (scriptable.EndPosition != end)
                 {
                     scriptable.EndPosition = end;
+                    if (scriptable.ControlPositionList.Count <= 0)
+                    {
+                        scriptable.ControlPositionList.Add(end);
+                    }
+                    else
+                    {
+                        scriptable.ControlPositionList[^1] = end;
+                    }
                     hasChange = true;
                 }
 
