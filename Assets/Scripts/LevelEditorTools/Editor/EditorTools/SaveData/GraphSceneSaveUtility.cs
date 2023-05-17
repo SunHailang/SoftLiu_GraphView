@@ -136,6 +136,7 @@ namespace LevelEditorTools.Save
                 {
                     if (node.State is SceneScriptable data)
                     {
+                        data.IsActive = sceneData.IsActive;
                         data.SceneType = sceneData.SceneType;
                         data.Radius = sceneData.Radius;
                         data.SceneScale = sceneData.SceneScale;
@@ -154,6 +155,7 @@ namespace LevelEditorTools.Save
                 {
                     if (node.State is SceneBezierScriptable data)
                     {
+                        data.IsActive = bezierData.IsActive;
                         data.StartPosition = bezierData.StartPosition;
                         data.EndPosition = bezierData.EndPosition;
                         data.Width = bezierData.Width;

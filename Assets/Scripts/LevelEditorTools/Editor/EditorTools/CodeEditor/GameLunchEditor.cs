@@ -64,9 +64,19 @@ public class GameLunchEditor : UnityEditor.Editor
         Transform parent = _selectTarget.transform;
         for (int i = 0; i < _sceneContainer.NodeSceneDatas.Count; i++)
         {
+            if (!_sceneContainer.NodeSceneDatas[i].IsActive)
+            {
+                continue;
+            }
+
             // 获取任意房间之间墙体重叠的位置
             for (int j = i + 1; j < _sceneContainer.NodeSceneDatas.Count; j++)
             {
+                if (!_sceneContainer.NodeSceneDatas[j].IsActive)
+                {
+                    continue;
+                }
+
                 SceneScriptable leftNode = _sceneContainer.NodeSceneDatas[i];
                 if (leftNode.SceneType == SceneTypeEnum.Round) continue;
                 Vector3 leftPos = new Vector3(leftNode.ScenePosition.x + leftNode.SceneScale.x / 2, leftNode.ScenePosition.y, leftNode.ScenePosition.z + leftNode.SceneScale.z / 2);
@@ -86,6 +96,11 @@ public class GameLunchEditor : UnityEditor.Editor
 
         for (int i = 0; i < _sceneContainer.NodeBezierDatas.Count; i++)
         {
+            if (!_sceneContainer.NodeBezierDatas[i].IsActive)
+            {
+                continue;
+            }
+
             SceneBezierScriptable data = _sceneContainer.NodeBezierDatas[i];
             // 1. 创建Scene节点
             GameObject go = new GameObject(data.Title);
@@ -95,9 +110,14 @@ public class GameLunchEditor : UnityEditor.Editor
             List<BaseScriptable> list = GetSceneChild(data);
             CreateGroundFramework(data, go.transform, list);
         }
-        
+
         for (int i = 0; i < _sceneContainer.NodeSceneDatas.Count; i++)
         {
+            if (!_sceneContainer.NodeSceneDatas[i].IsActive)
+            {
+                continue;
+            }
+
             SceneScriptable data = _sceneContainer.NodeSceneDatas[i];
             // 1. 创建Scene节点
             GameObject go = new GameObject(data.Title);
@@ -298,7 +318,8 @@ public class GameLunchEditor : UnityEditor.Editor
 
     private Vector3 GetTransPosition(Vector3 basePos)
     {
-        return _curScenePosition + basePos;
+        var pos = new Vector3(_curSceneScale.x / -2f, _curScenePosition.y, _curSceneScale.z / -2f);
+        return pos + _curScenePosition + basePos;
     }
 
     private bool GetGoList(List<GameObjectScriptable> baseList, out List<KeyValuePair<float, float>> list, out List<GameObject> goList)
@@ -312,7 +333,9 @@ public class GameLunchEditor : UnityEditor.Editor
             KeyValuePair<float, float> item = new KeyValuePair<float, float>(data, data + goScriptable.Probability);
             data += goScriptable.Probability;
             list.Add(item);
-            goList.Add(AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(goScriptable.TemplateGo)));
+            var go = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(goScriptable.TemplateGo));
+            //if (go != null) 
+            goList.Add(go);
         }
 
         return goList.Count > 0;
@@ -326,15 +349,18 @@ public class GameLunchEditor : UnityEditor.Editor
             return;
         }
 
+        // 默认一个 DoorNode 只能有一个 Door GameObject
         int index = 0;
-        Vector3 pos = baseList[index].Position;
-        var go = Instantiate(goList[index], parent);
-        go.name = goList[index].name;
-        go.transform.position = pos;
-        go.transform.localScale = baseList[index].Scale;
-        go.transform.Rotate(Vector3.up, baseList[index].Rotation.x);
-        go.isStatic = baseList[index].ForceStatic;
-
+        Vector3 pos = GetTransPosition(baseList[0].Position);
+        if (goList[index] != null)
+        {
+            var go = Instantiate(goList[index], parent);
+            go.name = goList[index].name;
+            go.transform.position = pos;
+            go.transform.localScale = baseList[index].Scale;
+            go.transform.Rotate(Vector3.up, baseList[index].Rotation.x);
+            go.isStatic = baseList[index].ForceStatic;
+        }
         _lunch.sceneDoorDatas.Add(new QuadRectangle(pos.x, pos.z, size.x, size.z));
     }
 
@@ -359,7 +385,7 @@ public class GameLunchEditor : UnityEditor.Editor
         {
             for (int j = 0; j < zList.Count; j++)
             {
-                Vector3 pos = GetTransPosition(new Vector3(i * size.x, 0, zList[j]));
+                Vector3 pos = GetTransPosition(new Vector3(i * size.x + 2, 0, zList[j] + 2));
                 Point point = new Point(pos.x, pos.z, 1, 1);
                 bool isContinue = false;
                 foreach (QuadRectangle doorData in _lunch.sceneDoorDatas)
@@ -370,6 +396,7 @@ public class GameLunchEditor : UnityEditor.Editor
                         break;
                     }
                 }
+
                 if (isContinue) continue;
 
                 for (int k = 0; k < _lunch.sceneNodeDatas.Count; k++)
@@ -393,7 +420,7 @@ public class GameLunchEditor : UnityEditor.Editor
 
                 var go = Instantiate(goList[index], parent);
                 go.name = goList[index].name;
-                go.transform.position = GetTransPosition(new Vector3(i * size.x + 2, 0, zList[j] + 2));
+                go.transform.position = pos;
                 go.transform.localScale = baseList[index].Scale;
                 go.transform.Rotate(Vector3.up, baseList[index].Rotation.x);
                 go.isStatic = baseList[index].ForceStatic;
@@ -415,6 +442,7 @@ public class GameLunchEditor : UnityEditor.Editor
                         break;
                     }
                 }
+
                 if (isContinue) continue;
 
                 for (int k = 0; k < _lunch.sceneNodeDatas.Count; k++)

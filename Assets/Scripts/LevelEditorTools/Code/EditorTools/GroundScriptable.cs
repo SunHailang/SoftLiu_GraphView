@@ -14,13 +14,13 @@ namespace LevelEditorTools.Nodes
 
         public void CreateGround(SceneScriptable sceneData, Transform parent, List<GameObject> baseList)
         {
+            var basPos = new Vector3(sceneData.SceneScale.x / -2f, sceneData.ScenePosition.y, sceneData.SceneScale.z / -2f);
+            Vector3 centerPos = sceneData.ScenePosition + basPos;
             switch (sceneData.SceneType)
             {
                 case SceneTypeEnum.Round:
                 {
                     float radius = sceneData.Radius;
-                    Vector3 centerPos = sceneData.ScenePosition;
-
                     /* 一个圆分4个象限 */
                     int countX = Mathf.RoundToInt(radius / GroundSize.x);
                     int countZ = Mathf.RoundToInt(radius / GroundSize.z);
@@ -50,7 +50,7 @@ namespace LevelEditorTools.Nodes
                     {
                         for (int j = 0; j < countZ; j++)
                         {
-                            Vector3 pos = GetPos(sceneData.ScenePosition, 1, i, j);
+                            Vector3 pos = GetPos(centerPos, 1, i, j);
                             Object.Instantiate(baseList[0], pos, Quaternion.identity, parent);
                         }
                     }

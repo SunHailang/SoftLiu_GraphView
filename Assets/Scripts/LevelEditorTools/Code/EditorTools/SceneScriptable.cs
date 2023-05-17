@@ -12,6 +12,7 @@ namespace LevelEditorTools.Nodes
     [System.Serializable]
     public class SceneScriptable : BaseScriptable
     {
+        public bool IsActive = true;
         public SceneTypeEnum SceneType = SceneTypeEnum.Rectangle;
 
         public float Radius = 1f;

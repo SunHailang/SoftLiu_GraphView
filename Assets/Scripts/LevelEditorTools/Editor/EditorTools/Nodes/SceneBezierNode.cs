@@ -41,6 +41,12 @@ namespace LevelEditorTools.Editor.Nodes
             bool hasChange = base.DrawInspectorGUI();
             if (_state is SceneBezierScriptable scriptable)
             {
+                bool active = EditorGUILayout.Toggle("IsActive", scriptable.IsActive);
+                if (scriptable.IsActive != active)
+                {
+                    scriptable.IsActive = active;
+                    hasChange = true;
+                }
                 Vector3 start = EditorGUILayout.Vector3Field("StartPosition", scriptable.StartPosition);
                 if (scriptable.StartPosition != start)
                 {

@@ -26,7 +26,14 @@ namespace LevelEditorTools.Editor.Nodes
             bool hasChange = base.DrawInspectorGUI();
             if (_state is SceneScriptable scriptable)
             {
-                SceneTypeEnum type = (SceneTypeEnum) EditorGUILayout.EnumPopup("SceneType", scriptable.SceneType);
+                var active = EditorGUILayout.Toggle("IsActive", scriptable.IsActive);
+                if (scriptable.IsActive != active)
+                {
+                    scriptable.IsActive = active;
+                    hasChange = true;
+                }
+                
+                var type = (SceneTypeEnum) EditorGUILayout.EnumPopup("SceneType", scriptable.SceneType);
                 if (type != scriptable.SceneType)
                 {
                     scriptable.SceneType = type;
@@ -35,7 +42,7 @@ namespace LevelEditorTools.Editor.Nodes
 
                 if (type == SceneTypeEnum.Rectangle)
                 {
-                    Vector3 scale = EditorGUILayout.Vector3Field("SceneScale", scriptable.SceneScale, GUILayout.ExpandWidth(true));
+                    var scale = EditorGUILayout.Vector3Field("SceneScale", scriptable.SceneScale, GUILayout.ExpandWidth(true));
                     if (scriptable.SceneScale != scale)
                     {
                         scriptable.SceneScale = scale;
@@ -44,7 +51,7 @@ namespace LevelEditorTools.Editor.Nodes
                 }
                 else
                 {
-                    float radius = EditorGUILayout.FloatField("Radius", scriptable.Radius);
+                    var radius = EditorGUILayout.FloatField("Radius", scriptable.Radius);
                     if (Math.Abs(scriptable.Radius - radius) > 0)
                     {
                         scriptable.Radius = radius;
@@ -52,7 +59,7 @@ namespace LevelEditorTools.Editor.Nodes
                     }
                 }
 
-                Vector3 pos = EditorGUILayout.Vector3Field("ScenePosition", scriptable.ScenePosition, GUILayout.ExpandWidth(true));
+                var pos = EditorGUILayout.Vector3Field("ScenePosition", scriptable.ScenePosition, GUILayout.ExpandWidth(true));
                 if (scriptable.ScenePosition != pos)
                 {
                     scriptable.ScenePosition = pos;

@@ -1,0 +1,615 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e3a0d8bd4bc4b39b75967415494f4a7, type: 3}
+  m_Name: PrefabSceneContainer
+  m_EditorClassIdentifier: 
+  NodeDatas:
+  - NodeGuid: c4bfce8d-52a7-4599-8837-882149aa44da
+    NodePosition: {x: 551, y: -245}
+  - NodeGuid: 5cde8b60-8876-4e7f-849c-9072899eba22
+    NodePosition: {x: 49, y: -245}
+  - NodeGuid: 21e9694e-4d27-4e31-8069-d428fe43cdcf
+    NodePosition: {x: -817, y: -790}
+  - NodeGuid: 608f6e3e-e907-4c91-b764-871d25d3ae05
+    NodePosition: {x: 1348, y: -1169}
+  - NodeGuid: d00f06ae-56c0-4902-8d82-3bfb2feb8cbe
+    NodePosition: {x: 2337, y: -646}
+  - NodeGuid: b8704e01-ba1f-4c0d-b872-cf8cd48d8fcf
+    NodePosition: {x: 1028, y: -1003}
+  - NodeGuid: b82356f1-fba9-4bba-8191-6762ec968c4b
+    NodePosition: {x: 1981, y: -548}
+  - NodeGuid: 66e6199d-30db-4b6d-9107-05e8216c97e8
+    NodePosition: {x: 483, y: -115}
+  - NodeGuid: b8ea087f-372c-42f9-9d2c-2a686bc9a15c
+    NodePosition: {x: -262, y: -136}
+  - NodeGuid: cac360e6-80b1-4e80-aa59-008b496f0063
+    NodePosition: {x: 442, y: -646}
+  - NodeGuid: 0891bd41-ce97-43e9-a6cb-8b10ac80be3f
+    NodePosition: {x: -925, y: -687}
+  - NodeGuid: 74a0fb5c-4465-4c59-8377-92f55a0d40a2
+    NodePosition: {x: 2337, y: -523}
+  - NodeGuid: 66b7be08-0dc1-45b7-a529-54e708eac80b
+    NodePosition: {x: 2522, y: -523}
+  - NodeGuid: b4d06f21-5432-4f72-b94a-a40a12b5c449
+    NodePosition: {x: 2741, y: -523}
+  - NodeGuid: 512228b0-f87c-4887-bb27-05f64b4c8f84
+    NodePosition: {x: 267, y: -108}
+  - NodeGuid: e64f75c2-dda2-4e05-904b-fc7a2501d802
+    NodePosition: {x: 90, y: -108}
+  - NodeGuid: f4bdcc1b-56c3-4d14-b84c-f3a12ecc6ff0
+    NodePosition: {x: 983, y: -108}
+  - NodeGuid: 17b7b136-bc72-4c6d-bed7-a9d4114bda07
+    NodePosition: {x: 823, y: -108}
+  - NodeGuid: 86be35dd-295d-4761-bcd8-3dc9f495b09b
+    NodePosition: {x: -561, y: -673}
+  - NodeGuid: 1e597b26-2baa-4d68-817c-b33919df55ed
+    NodePosition: {x: -349, y: -673}
+  - NodeGuid: 491b9f10-d537-4edc-be60-248edad55685
+    NodePosition: {x: -158, y: -673}
+  - NodeGuid: 714cab89-51ee-411b-b7b6-9236eff1e3d1
+    NodePosition: {x: 816, y: -607}
+  - NodeGuid: 2e6b21a4-fa63-4ecf-bd08-e36ef4611d08
+    NodePosition: {x: 983, y: -607}
+  - NodeGuid: 38df00e0-99ae-4575-ad35-18762fbadd64
+    NodePosition: {x: 1161, y: -607}
+  - NodeGuid: 981f3ba9-89a9-428e-9469-4a2630777cdb
+    NodePosition: {x: 1550, y: -607}
+  - NodeGuid: c0d96f5f-1b48-4297-9593-dda77781f0da
+    NodePosition: {x: 1383, y: -607}
+  - NodeGuid: 8b7f4348-0e52-4cca-8229-bc3039e10d43
+    NodePosition: {x: 1728, y: -607}
+  - NodeGuid: 9d0ce837-ddef-4e1f-bba2-252e33646819
+    NodePosition: {x: 2152, y: -539}
+  - NodeGuid: 4c85f976-2a7e-47aa-a46c-5e17e7e6b65c
+    NodePosition: {x: 656, y: -115}
+  - NodeGuid: 86648fca-d27f-4fe8-ae03-5a7d22277456
+    NodePosition: {x: 1212, y: -1003}
+  - NodeGuid: 021137f3-091e-4241-ad31-fb1addac86a6
+    NodePosition: {x: -67, y: -115}
+  - NodeGuid: bbdd712c-f099-4912-88fc-488ffdea440c
+    NodePosition: {x: 641, y: -635}
+  - NodeGuid: e41520ff-a53d-40bd-b65d-73fd9ab1843a
+    NodePosition: {x: -757, y: -687}
+  - NodeGuid: 30b5d339-7d9e-4d05-85da-c7da89af0ccf
+    NodePosition: {x: 1028, y: -900}
+  - NodeGuid: 2f05a9ac-4dae-4907-8444-411586ab83de
+    NodePosition: {x: 2150, y: -446}
+  - NodeGuid: d4da2772-aba3-48d6-8888-d608eea4e4a2
+    NodePosition: {x: 474, y: 5}
+  - NodeGuid: 7ea57bdc-e037-454c-9aa6-04f3d31788fc
+    NodePosition: {x: 656, y: 5}
+  - NodeGuid: e8ca451a-05e7-4e28-a6e9-5396b6f40776
+    NodePosition: {x: 1204, y: -900}
+  - NodeGuid: cbddded8-9786-47ff-bd84-2bdc3d8a6421
+    NodePosition: {x: 2318, y: -441}
+  - NodeGuid: 2e125a18-8db0-4256-95f2-c7808f9b3071
+    NodePosition: {x: 2522, y: -441}
+  - NodeGuid: b14a470c-1c87-487e-ab81-3adc5533809f
+    NodePosition: {x: 2730, y: -446}
+  - NodeGuid: 73955b47-4cab-47a9-9351-f47ead6ccab6
+    NodePosition: {x: -281, y: -38}
+  - NodeGuid: f215e435-a723-4f63-91e9-3d0aacd21865
+    NodePosition: {x: -86, y: -16}
+  - NodeGuid: b4e4c4ac-2ab0-41bf-a0ed-80dc33fbca6c
+    NodePosition: {x: 81, y: -16}
+  - NodeGuid: 2508a29e-3d54-471a-aeec-1f114a0aebce
+    NodePosition: {x: 823, y: 5}
+  - NodeGuid: 544a4794-5a51-4901-9e4e-ce8b3cb7db9c
+    NodePosition: {x: 267, y: -16}
+  - NodeGuid: 2353387c-a534-4cc1-8c32-1bcc7dec1ec8
+    NodePosition: {x: 1002, y: 33}
+  - NodeGuid: fea0dd01-f09b-4344-973f-8bd7c4140b30
+    NodePosition: {x: 423, y: -540}
+  - NodeGuid: a343643d-ffac-4161-8f30-f49db4f521ad
+    NodePosition: {x: 629, y: -540}
+  - NodeGuid: 85ed14b3-aed8-4257-97d3-565d92f471f5
+    NodePosition: {x: -934, y: -592}
+  - NodeGuid: 22b0acb2-f181-4fd3-b6a5-8f5116b51692
+    NodePosition: {x: -757, y: -592}
+  - NodeGuid: c6ed677a-6b29-453c-9cd8-319b3419329d
+    NodePosition: {x: -349, y: -581}
+  - NodeGuid: fc5d6a35-7047-4cb3-86f5-c7aac1fe3e27
+    NodePosition: {x: -139, y: -581}
+  - NodeGuid: c798cac6-768c-4bf1-b426-1d5a1b405b65
+    NodePosition: {x: -561, y: -581}
+  - NodeGuid: 6aa53e1f-272e-4d84-a70c-88f0a224f31c
+    NodePosition: {x: 797, y: -512}
+  - NodeGuid: 67526448-2175-4594-9d91-5c05665123b1
+    NodePosition: {x: 974, y: -512}
+  - NodeGuid: 7e2c54c4-3a1e-4ff5-b468-983872d94811
+    NodePosition: {x: 1161, y: -501}
+  - NodeGuid: aece9065-d05e-4101-918b-e8c9568cc29c
+    NodePosition: {x: 1981, y: -446}
+  - NodeGuid: ba356092-6bf4-4311-84ff-9184426ee720
+    NodePosition: {x: 1364, y: -504}
+  - NodeGuid: 51025b53-0d38-46cb-9b09-d3e2998308b4
+    NodePosition: {x: 1550, y: -504}
+  - NodeGuid: 1b144dcc-efbb-4237-8e98-e628fa68d00f
+    NodePosition: {x: 1727, y: -504}
+  - NodeGuid: f855d586-76f8-48f7-8c7c-1259cdbe47f6
+    NodePosition: {x: 732, y: -752}
+  NodeLinkDatas:
+  - OutputNodeGuid: 0891bd41-ce97-43e9-a6cb-8b10ac80be3f
+    InputNodeGuid: 85ed14b3-aed8-4257-97d3-565d92f471f5
+  - OutputNodeGuid: 21e9694e-4d27-4e31-8069-d428fe43cdcf
+    InputNodeGuid: 0891bd41-ce97-43e9-a6cb-8b10ac80be3f
+  - OutputNodeGuid: e41520ff-a53d-40bd-b65d-73fd9ab1843a
+    InputNodeGuid: 22b0acb2-f181-4fd3-b6a5-8f5116b51692
+  - OutputNodeGuid: 86be35dd-295d-4761-bcd8-3dc9f495b09b
+    InputNodeGuid: c798cac6-768c-4bf1-b426-1d5a1b405b65
+  - OutputNodeGuid: 1e597b26-2baa-4d68-817c-b33919df55ed
+    InputNodeGuid: c6ed677a-6b29-453c-9cd8-319b3419329d
+  - OutputNodeGuid: 491b9f10-d537-4edc-be60-248edad55685
+    InputNodeGuid: fc5d6a35-7047-4cb3-86f5-c7aac1fe3e27
+  - OutputNodeGuid: 608f6e3e-e907-4c91-b764-871d25d3ae05
+    InputNodeGuid: b8704e01-ba1f-4c0d-b872-cf8cd48d8fcf
+  - OutputNodeGuid: b8704e01-ba1f-4c0d-b872-cf8cd48d8fcf
+    InputNodeGuid: 30b5d339-7d9e-4d05-85da-c7da89af0ccf
+  - OutputNodeGuid: 608f6e3e-e907-4c91-b764-871d25d3ae05
+    InputNodeGuid: 86648fca-d27f-4fe8-ae03-5a7d22277456
+  - OutputNodeGuid: 86648fca-d27f-4fe8-ae03-5a7d22277456
+    InputNodeGuid: e8ca451a-05e7-4e28-a6e9-5396b6f40776
+  - OutputNodeGuid: c0d96f5f-1b48-4297-9593-dda77781f0da
+    InputNodeGuid: ba356092-6bf4-4311-84ff-9184426ee720
+  - OutputNodeGuid: 981f3ba9-89a9-428e-9469-4a2630777cdb
+    InputNodeGuid: 51025b53-0d38-46cb-9b09-d3e2998308b4
+  - OutputNodeGuid: 8b7f4348-0e52-4cca-8229-bc3039e10d43
+    InputNodeGuid: 1b144dcc-efbb-4237-8e98-e628fa68d00f
+  - OutputNodeGuid: cac360e6-80b1-4e80-aa59-008b496f0063
+    InputNodeGuid: fea0dd01-f09b-4344-973f-8bd7c4140b30
+  - OutputNodeGuid: f855d586-76f8-48f7-8c7c-1259cdbe47f6
+    InputNodeGuid: cac360e6-80b1-4e80-aa59-008b496f0063
+  - OutputNodeGuid: bbdd712c-f099-4912-88fc-488ffdea440c
+    InputNodeGuid: a343643d-ffac-4161-8f30-f49db4f521ad
+  - OutputNodeGuid: f855d586-76f8-48f7-8c7c-1259cdbe47f6
+    InputNodeGuid: bbdd712c-f099-4912-88fc-488ffdea440c
+  - OutputNodeGuid: 714cab89-51ee-411b-b7b6-9236eff1e3d1
+    InputNodeGuid: 6aa53e1f-272e-4d84-a70c-88f0a224f31c
+  - OutputNodeGuid: 2e6b21a4-fa63-4ecf-bd08-e36ef4611d08
+    InputNodeGuid: 67526448-2175-4594-9d91-5c05665123b1
+  - OutputNodeGuid: 38df00e0-99ae-4575-ad35-18762fbadd64
+    InputNodeGuid: 7e2c54c4-3a1e-4ff5-b468-983872d94811
+  - OutputNodeGuid: d00f06ae-56c0-4902-8d82-3bfb2feb8cbe
+    InputNodeGuid: b82356f1-fba9-4bba-8191-6762ec968c4b
+  - OutputNodeGuid: b82356f1-fba9-4bba-8191-6762ec968c4b
+    InputNodeGuid: aece9065-d05e-4101-918b-e8c9568cc29c
+  - OutputNodeGuid: d00f06ae-56c0-4902-8d82-3bfb2feb8cbe
+    InputNodeGuid: 9d0ce837-ddef-4e1f-bba2-252e33646819
+  - OutputNodeGuid: 9d0ce837-ddef-4e1f-bba2-252e33646819
+    InputNodeGuid: 2f05a9ac-4dae-4907-8444-411586ab83de
+  - OutputNodeGuid: d00f06ae-56c0-4902-8d82-3bfb2feb8cbe
+    InputNodeGuid: 74a0fb5c-4465-4c59-8377-92f55a0d40a2
+  - OutputNodeGuid: 74a0fb5c-4465-4c59-8377-92f55a0d40a2
+    InputNodeGuid: cbddded8-9786-47ff-bd84-2bdc3d8a6421
+  - OutputNodeGuid: d00f06ae-56c0-4902-8d82-3bfb2feb8cbe
+    InputNodeGuid: 66b7be08-0dc1-45b7-a529-54e708eac80b
+  - OutputNodeGuid: 66b7be08-0dc1-45b7-a529-54e708eac80b
+    InputNodeGuid: 2e125a18-8db0-4256-95f2-c7808f9b3071
+  - OutputNodeGuid: d00f06ae-56c0-4902-8d82-3bfb2feb8cbe
+    InputNodeGuid: b4d06f21-5432-4f72-b94a-a40a12b5c449
+  - OutputNodeGuid: b4d06f21-5432-4f72-b94a-a40a12b5c449
+    InputNodeGuid: b14a470c-1c87-487e-ab81-3adc5533809f
+  - OutputNodeGuid: 5cde8b60-8876-4e7f-849c-9072899eba22
+    InputNodeGuid: b8ea087f-372c-42f9-9d2c-2a686bc9a15c
+  - OutputNodeGuid: b8ea087f-372c-42f9-9d2c-2a686bc9a15c
+    InputNodeGuid: 73955b47-4cab-47a9-9351-f47ead6ccab6
+  - OutputNodeGuid: 5cde8b60-8876-4e7f-849c-9072899eba22
+    InputNodeGuid: 021137f3-091e-4241-ad31-fb1addac86a6
+  - OutputNodeGuid: 021137f3-091e-4241-ad31-fb1addac86a6
+    InputNodeGuid: f215e435-a723-4f63-91e9-3d0aacd21865
+  - OutputNodeGuid: c4bfce8d-52a7-4599-8837-882149aa44da
+    InputNodeGuid: 66e6199d-30db-4b6d-9107-05e8216c97e8
+  - OutputNodeGuid: 66e6199d-30db-4b6d-9107-05e8216c97e8
+    InputNodeGuid: d4da2772-aba3-48d6-8888-d608eea4e4a2
+  - OutputNodeGuid: c4bfce8d-52a7-4599-8837-882149aa44da
+    InputNodeGuid: 4c85f976-2a7e-47aa-a46c-5e17e7e6b65c
+  - OutputNodeGuid: 4c85f976-2a7e-47aa-a46c-5e17e7e6b65c
+    InputNodeGuid: 7ea57bdc-e037-454c-9aa6-04f3d31788fc
+  - OutputNodeGuid: 5cde8b60-8876-4e7f-849c-9072899eba22
+    InputNodeGuid: e64f75c2-dda2-4e05-904b-fc7a2501d802
+  - OutputNodeGuid: e64f75c2-dda2-4e05-904b-fc7a2501d802
+    InputNodeGuid: b4e4c4ac-2ab0-41bf-a0ed-80dc33fbca6c
+  - OutputNodeGuid: 512228b0-f87c-4887-bb27-05f64b4c8f84
+    InputNodeGuid: 544a4794-5a51-4901-9e4e-ce8b3cb7db9c
+  - OutputNodeGuid: 5cde8b60-8876-4e7f-849c-9072899eba22
+    InputNodeGuid: 512228b0-f87c-4887-bb27-05f64b4c8f84
+  - OutputNodeGuid: c4bfce8d-52a7-4599-8837-882149aa44da
+    InputNodeGuid: 17b7b136-bc72-4c6d-bed7-a9d4114bda07
+  - OutputNodeGuid: c4bfce8d-52a7-4599-8837-882149aa44da
+    InputNodeGuid: f4bdcc1b-56c3-4d14-b84c-f3a12ecc6ff0
+  - OutputNodeGuid: 17b7b136-bc72-4c6d-bed7-a9d4114bda07
+    InputNodeGuid: 2508a29e-3d54-471a-aeec-1f114a0aebce
+  - OutputNodeGuid: f4bdcc1b-56c3-4d14-b84c-f3a12ecc6ff0
+    InputNodeGuid: 2353387c-a534-4cc1-8c32-1bcc7dec1ec8
+  - OutputNodeGuid: 21e9694e-4d27-4e31-8069-d428fe43cdcf
+    InputNodeGuid: e41520ff-a53d-40bd-b65d-73fd9ab1843a
+  - OutputNodeGuid: f855d586-76f8-48f7-8c7c-1259cdbe47f6
+    InputNodeGuid: 714cab89-51ee-411b-b7b6-9236eff1e3d1
+  - OutputNodeGuid: f855d586-76f8-48f7-8c7c-1259cdbe47f6
+    InputNodeGuid: 2e6b21a4-fa63-4ecf-bd08-e36ef4611d08
+  - OutputNodeGuid: f855d586-76f8-48f7-8c7c-1259cdbe47f6
+    InputNodeGuid: 38df00e0-99ae-4575-ad35-18762fbadd64
+  - OutputNodeGuid: f855d586-76f8-48f7-8c7c-1259cdbe47f6
+    InputNodeGuid: c0d96f5f-1b48-4297-9593-dda77781f0da
+  - OutputNodeGuid: f855d586-76f8-48f7-8c7c-1259cdbe47f6
+    InputNodeGuid: 981f3ba9-89a9-428e-9469-4a2630777cdb
+  - OutputNodeGuid: f855d586-76f8-48f7-8c7c-1259cdbe47f6
+    InputNodeGuid: 8b7f4348-0e52-4cca-8229-bc3039e10d43
+  NodeSceneDatas:
+  - Title: SceneNodeWallSN
+    Guid: c4bfce8d-52a7-4599-8837-882149aa44da
+    IsActive: 0
+    SceneType: 0
+    Radius: 1
+    SceneScale: {x: 20, y: 1, z: 40}
+    ScenePosition: {x: 0, y: 0, z: 0}
+  - Title: SceneNodeWallEW
+    Guid: 5cde8b60-8876-4e7f-849c-9072899eba22
+    IsActive: 0
+    SceneType: 0
+    Radius: 1
+    SceneScale: {x: 40, y: 1, z: 20}
+    ScenePosition: {x: 0, y: 0, z: 0}
+  - Title: SceneNodeE
+    Guid: 21e9694e-4d27-4e31-8069-d428fe43cdcf
+    IsActive: 0
+    SceneType: 0
+    Radius: 1
+    SceneScale: {x: 60, y: 1, z: 60}
+    ScenePosition: {x: 0, y: 0, z: 0}
+  - Title: SceneNodeNS
+    Guid: 608f6e3e-e907-4c91-b764-871d25d3ae05
+    IsActive: 0
+    SceneType: 0
+    Radius: 1
+    SceneScale: {x: 60, y: 1, z: 60}
+    ScenePosition: {x: 0, y: 0, z: 0}
+  - Title: SceneNodeWN
+    Guid: d00f06ae-56c0-4902-8d82-3bfb2feb8cbe
+    IsActive: 0
+    SceneType: 0
+    Radius: 1
+    SceneScale: {x: 60, y: 1, z: 60}
+    ScenePosition: {x: 0, y: 0, z: 0}
+  - Title: SceneNodeSN
+    Guid: f855d586-76f8-48f7-8c7c-1259cdbe47f6
+    IsActive: 1
+    SceneType: 0
+    Radius: 1
+    SceneScale: {x: 60, y: 1, z: 60}
+    ScenePosition: {x: 0, y: 0, z: 0}
+  NodeBezierDatas: []
+  NodeGroundDatas:
+  - Title: GroundNode
+    Guid: b8704e01-ba1f-4c0d-b872-cf8cd48d8fcf
+    Seed: 1
+    GroundSize: {x: 4, y: 1, z: 4}
+  - Title: GroundNode
+    Guid: b82356f1-fba9-4bba-8191-6762ec968c4b
+    Seed: 41
+    GroundSize: {x: 4, y: 1, z: 4}
+  - Title: GroundNode
+    Guid: 66e6199d-30db-4b6d-9107-05e8216c97e8
+    Seed: 78
+    GroundSize: {x: 4, y: 1, z: 4}
+  - Title: GroundNode
+    Guid: b8ea087f-372c-42f9-9d2c-2a686bc9a15c
+    Seed: 31
+    GroundSize: {x: 4, y: 1, z: 4}
+  - Title: GroundNode
+    Guid: cac360e6-80b1-4e80-aa59-008b496f0063
+    Seed: 76
+    GroundSize: {x: 4, y: 1, z: 4}
+  - Title: GroundNode
+    Guid: 0891bd41-ce97-43e9-a6cb-8b10ac80be3f
+    Seed: 31
+    GroundSize: {x: 4, y: 1, z: 4}
+  NodeDoorDatas:
+  - Title: DoorNode
+    Guid: 74a0fb5c-4465-4c59-8377-92f55a0d40a2
+    DoorSize: {x: 4, y: 1, z: 4}
+  - Title: DoorNode
+    Guid: 66b7be08-0dc1-45b7-a529-54e708eac80b
+    DoorSize: {x: 4, y: 1, z: 4}
+  - Title: DoorNode
+    Guid: b4d06f21-5432-4f72-b94a-a40a12b5c449
+    DoorSize: {x: 4, y: 1, z: 4}
+  - Title: DoorNode
+    Guid: 512228b0-f87c-4887-bb27-05f64b4c8f84
+    DoorSize: {x: 4, y: 1, z: 12}
+  - Title: DoorNode
+    Guid: e64f75c2-dda2-4e05-904b-fc7a2501d802
+    DoorSize: {x: 4, y: 1, z: 12}
+  - Title: DoorNode
+    Guid: f4bdcc1b-56c3-4d14-b84c-f3a12ecc6ff0
+    DoorSize: {x: 12, y: 1, z: 4}
+  - Title: DoorNode
+    Guid: 17b7b136-bc72-4c6d-bed7-a9d4114bda07
+    DoorSize: {x: 12, y: 1, z: 4}
+  - Title: DoorNode
+    Guid: 86be35dd-295d-4761-bcd8-3dc9f495b09b
+    DoorSize: {x: 4, y: 1, z: 4}
+  - Title: DoorNode
+    Guid: 1e597b26-2baa-4d68-817c-b33919df55ed
+    DoorSize: {x: 4, y: 1, z: 4}
+  - Title: DoorNode
+    Guid: 491b9f10-d537-4edc-be60-248edad55685
+    DoorSize: {x: 4, y: 1, z: 4}
+  - Title: DoorNode
+    Guid: 714cab89-51ee-411b-b7b6-9236eff1e3d1
+    DoorSize: {x: 4, y: 1, z: 4}
+  - Title: DoorNode
+    Guid: 2e6b21a4-fa63-4ecf-bd08-e36ef4611d08
+    DoorSize: {x: 4, y: 1, z: 4}
+  - Title: DoorNode
+    Guid: 38df00e0-99ae-4575-ad35-18762fbadd64
+    DoorSize: {x: 4, y: 1, z: 4}
+  - Title: DoorNode
+    Guid: 981f3ba9-89a9-428e-9469-4a2630777cdb
+    DoorSize: {x: 4, y: 1, z: 4}
+  - Title: DoorNode
+    Guid: c0d96f5f-1b48-4297-9593-dda77781f0da
+    DoorSize: {x: 4, y: 1, z: 4}
+  - Title: DoorNode
+    Guid: 8b7f4348-0e52-4cca-8229-bc3039e10d43
+    DoorSize: {x: 4, y: 1, z: 4}
+  NodeObstacleDatas: []
+  NodeWallDatas:
+  - Title: WallNode
+    Guid: 9d0ce837-ddef-4e1f-bba2-252e33646819
+    Seed: 78
+    WallSize: {x: 4, y: 1, z: 4}
+  - Title: WallNode
+    Guid: 4c85f976-2a7e-47aa-a46c-5e17e7e6b65c
+    Seed: 65
+    WallSize: {x: 4, y: 1, z: 4}
+  - Title: WallNode
+    Guid: 86648fca-d27f-4fe8-ae03-5a7d22277456
+    Seed: 31
+    WallSize: {x: 4, y: 1, z: 4}
+  - Title: WallNode
+    Guid: 021137f3-091e-4241-ad31-fb1addac86a6
+    Seed: 45
+    WallSize: {x: 4, y: 1, z: 4}
+  - Title: WallNode
+    Guid: bbdd712c-f099-4912-88fc-488ffdea440c
+    Seed: 36
+    WallSize: {x: 4, y: 1, z: 4}
+  - Title: WallNode
+    Guid: e41520ff-a53d-40bd-b65d-73fd9ab1843a
+    Seed: 51
+    WallSize: {x: 4, y: 1, z: 4}
+  NodeGameObjectDatas:
+  - Title: GameObjectNode
+    Guid: 30b5d339-7d9e-4d05-85da-c7da89af0ccf
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: 8338da4901f3c884bae653fa401d3289
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 2f05a9ac-4dae-4907-8444-411586ab83de
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 90}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: 6ca5eceb56bd7a845a57696be381b874
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: d4da2772-aba3-48d6-8888-d608eea4e4a2
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: f462b36866a0cee499e2faf980143c29
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 7ea57bdc-e037-454c-9aa6-04f3d31788fc
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 90}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: 8a64294891d353943b33b0ca5033f551
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: e8ca451a-05e7-4e28-a6e9-5396b6f40776
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 90}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: 764ab5d46be818640aae7556112503a4
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: cbddded8-9786-47ff-bd84-2bdc3d8a6421
+    Position: {x: 58, y: 0, z: 26}
+    Rotation: {x: 90, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: ca4488080a69ab84588dbac1838c27b9
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 2e125a18-8db0-4256-95f2-c7808f9b3071
+    Position: {x: 58, y: 0, z: 30}
+    Rotation: {x: 90, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: ca4488080a69ab84588dbac1838c27b9
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: b14a470c-1c87-487e-ab81-3adc5533809f
+    Position: {x: 58, y: 0, z: 34}
+    Rotation: {x: 90, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: ca4488080a69ab84588dbac1838c27b9
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 73955b47-4cab-47a9-9351-f47ead6ccab6
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: f462b36866a0cee499e2faf980143c29
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: f215e435-a723-4f63-91e9-3d0aacd21865
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: 567bc9d6c31e266438e1e43dff714985
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: b4e4c4ac-2ab0-41bf-a0ed-80dc33fbca6c
+    Position: {x: 38, y: 0, z: 10}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: 
+    Probability: 0.2
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 2508a29e-3d54-471a-aeec-1f114a0aebce
+    Position: {x: 10, y: 0, z: 38}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: 
+    Probability: 0.2
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 544a4794-5a51-4901-9e4e-ce8b3cb7db9c
+    Position: {x: 2, y: 0, z: 10}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: 
+    Probability: 0.2
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 2353387c-a534-4cc1-8c32-1bcc7dec1ec8
+    Position: {x: 10, y: 0, z: 2}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: 
+    Probability: 0.2
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: fea0dd01-f09b-4344-973f-8bd7c4140b30
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: 9144bb1c082b065458df6f82ab36f466
+    Probability: 0.2
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: a343643d-ffac-4161-8f30-f49db4f521ad
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 90}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: 784802da5f6d26c48b75e3dd5214b0ad
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 85ed14b3-aed8-4257-97d3-565d92f471f5
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: f462b36866a0cee499e2faf980143c29
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 22b0acb2-f181-4fd3-b6a5-8f5116b51692
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: 5d7abfd68bd21ea4d90511aac54bd464
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: c6ed677a-6b29-453c-9cd8-319b3419329d
+    Position: {x: 2, y: 0, z: 30}
+    Rotation: {x: 90, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: e363c165037d9a44bb30fd7c4df0adb8
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: fc5d6a35-7047-4cb3-86f5-c7aac1fe3e27
+    Position: {x: 2, y: 0, z: 34}
+    Rotation: {x: 90, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: b6c8fb45f1e35c247bdc0ca91acf2478
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: c798cac6-768c-4bf1-b426-1d5a1b405b65
+    Position: {x: 2, y: 0, z: 26}
+    Rotation: {x: 90, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: ca4488080a69ab84588dbac1838c27b9
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 6aa53e1f-272e-4d84-a70c-88f0a224f31c
+    Position: {x: 26, y: 0, z: 2}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: bcb85d3fc05940c489f669d7f7f773b2
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 67526448-2175-4594-9d91-5c05665123b1
+    Position: {x: 30, y: 0, z: 2}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: bcb85d3fc05940c489f669d7f7f773b2
+    Probability: 0.2
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 7e2c54c4-3a1e-4ff5-b468-983872d94811
+    Position: {x: 34, y: 0, z: 2}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: bcb85d3fc05940c489f669d7f7f773b2
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: aece9065-d05e-4101-918b-e8c9568cc29c
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: f462b36866a0cee499e2faf980143c29
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: ba356092-6bf4-4311-84ff-9184426ee720
+    Position: {x: 26, y: 0, z: 58}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: 86367b61caa2bba43a27893cf9d271c5
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 51025b53-0d38-46cb-9b09-d3e2998308b4
+    Position: {x: 30, y: 0, z: 58}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: e363c165037d9a44bb30fd7c4df0adb8
+    Probability: 1
+    ForceStatic: 1
+  - Title: GameObjectNode
+    Guid: 1b144dcc-efbb-4237-8e98-e628fa68d00f
+    Position: {x: 34, y: 0, z: 58}
+    Rotation: {x: 0, y: 0, z: 0}
+    Scale: {x: 1, y: 1, z: 1}
+    TemplateGo: ca4488080a69ab84588dbac1838c27b9
+    Probability: 1
+    ForceStatic: 1

@@ -11,8 +11,6 @@ namespace LevelEditorTools.Editor.Nodes
     {
         public event Action<BaseNode, bool> onSelected;
 
-        private string _title;
-
         private string _guidValue;
 
         protected BaseScriptable _state;
@@ -30,10 +28,7 @@ namespace LevelEditorTools.Editor.Nodes
 
         
         
-        public BaseScriptable State
-        {
-            get => _state;
-        }
+        public BaseScriptable State => _state;
 
         public override void OnSelected()
         {
@@ -47,41 +42,28 @@ namespace LevelEditorTools.Editor.Nodes
             base.OnUnselected();
         }
 
-        public void SetTitle(string title = "")
+        public void SetTitle(string stateTitle = "")
         {
-            if (string.IsNullOrEmpty(title))
-            {
-                _title = nameof(BaseNode);
-            }
-            else
-            {
-                _title = title;
-            }
+            stateTitle = string.IsNullOrEmpty(stateTitle) ? nameof(BaseNode) : stateTitle;
 
-            this.title = _title;
-            _state.Title = _title;
+            this.title = stateTitle;
+            _state.Title = stateTitle;
         }
 
-        public void SetGuid(string _guid = "")
+        public void SetGuid(string stateGuid = "")
         {
-            if (string.IsNullOrEmpty(_guid))
-            {
-                _guidValue = Guid.NewGuid().ToString();
-            }
-            else
-            {
-                _guidValue = _guid;
-            }
+            _guidValue = string.IsNullOrEmpty(stateGuid) ? Guid.NewGuid().ToString() : stateGuid;
             _state.Guid = _guidValue;
         }
 
         public virtual bool DrawInspectorGUI()
         {
-            bool hasChange = false;
-            string title = EditorGUILayout.TextField("Title", _state.Title, GUILayout.ExpandHeight(true));
-            if (_state.Title != title)
+            var hasChange = false;
+            var stateTitle = EditorGUILayout.TextField("Title", _state.Title, GUILayout.ExpandHeight(true));
+            if (_state.Title != stateTitle)
             {
-                _state.Title = title;
+                _state.Title = stateTitle;
+                SetTitle(stateTitle);
                 hasChange = true;
             }
             EditorGUILayout.TextField("Guid:",_state.Guid, GUILayout.ExpandWidth(true));

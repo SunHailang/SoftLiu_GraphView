@@ -46,8 +46,6 @@ namespace LevelEditorTools.GraphViews
 
         private GraphViewChange OnGraphViewChanged(GraphViewChange change)
         {
-            Debug.Log($"SceneGraphView Changed!");
-            
             if (change.edgesToCreate != null)
             {
                 // 有 edge 创建

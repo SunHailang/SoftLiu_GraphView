@@ -6,6 +6,8 @@ namespace LevelEditorTools.Nodes
     [System.Serializable]
     public class SceneBezierScriptable : BaseScriptable
     {
+        public bool IsActive = false;
+        
         public Vector3 StartPosition;
         public Vector3 EndPosition;
 
