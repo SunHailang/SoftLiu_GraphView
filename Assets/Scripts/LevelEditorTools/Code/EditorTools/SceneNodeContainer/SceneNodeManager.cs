@@ -20,6 +20,15 @@ namespace LevelEditorTools.Nodes
         WestNorth = West | North,
         EastWest = East | West,
         SouthNorth = South | North,
+
+        EastSouthNorth = East | South | North,
+        WestSouthNorth = West | South | North,
+        EastWestSouth = East | West | South,
+        EastWestNorth = East | West | North,
+
+        EastWestSouthNorth = East | West | South | North,
+
+
         EastWestRoad = 1 << 4,
         SouthNorthRoad = 1 << 5,
     }
@@ -43,7 +52,9 @@ namespace LevelEditorTools.Nodes
 
         public List<GameObject> NodeGoList = new List<GameObject>();
 
-        private List<ScenePointData> _nodeDataList = new List<ScenePointData>();
+        private HashSet<ScenePointData> _nodeDataList = new HashSet<ScenePointData>();
+
+        private Dictionary<ScenePointData, QuadRectangle> _SceneRectDict = new Dictionary<ScenePointData, QuadRectangle>();
 
         public int MaxCount = 10;
 
@@ -53,10 +64,10 @@ namespace LevelEditorTools.Nodes
         {
             curCount = 0;
             Random.InitState(randomSeed);
-            CreateObject(InitType, Vector3.zero, null);
+            CreateObject(PointType.None, InitType, Vector3.zero, false);
         }
 
-        private void CreateObject(SceneNodeType value, Vector3 pos, ScenePointData parent)
+        private ScenePointData CreateObject(PointType point, SceneNodeType value, Vector3 pos, bool close)
         {
             int index = GetIndex(value);
             GameObject go = Instantiate(NodeGoList[index], pos, Quaternion.identity, transform);
@@ -66,49 +77,244 @@ namespace LevelEditorTools.Nodes
                 CurGameObject = go,
                 Position = pos
             };
-            data.SetNextLink();
-            data.SetLinkData(parent);
-            _nodeDataList.Add(data);
 
-            bool canLink = data.CanLinePoint(out List<KeyValuePair<PointType, SceneNodeType>> list);
-            if (!canLink)
+            data.SetLinkData(point);
+
+            data.SetNextLink(close);
+            Vector3 scale = GetScale(value);
+            QuadRectangle rectangle = new QuadRectangle(pos.x, pos.z, scale.x, scale.z);
+            // 判断 新生成的 有没有和之前交叉的如果有交叉则替换 并使用替换的
+            foreach (KeyValuePair<ScenePointData, QuadRectangle> valuePair in _SceneRectDict)
             {
-                return;
+                if (valuePair.Value.intersects(rectangle))
+                {
+                    // 相交 ， 销毁当前 和 Value
+
+                    SceneNodeType newType = GetSceneCommon(data.Type, out bool use1, valuePair.Key.Type, out bool use2);
+                    if (use1)
+                    {
+                        _nodeDataList.Remove(valuePair.Key);
+                        DestroyImmediate(valuePair.Key.CurGameObject);
+                        foreach (PointType type in valuePair.Key.LinkPointList)
+                        {
+                            data.SetLinkData(type);
+                        }
+                    }
+                    else if (use2)
+                    {
+                        DestroyImmediate(go);
+                        foreach (PointType type in data.LinkPointList)
+                        {
+                            valuePair.Key.SetLinkData(type);
+                        }
+
+                        data = valuePair.Key;
+                    }
+                    else
+                    {
+                        // 新的类型
+                        _nodeDataList.Remove(valuePair.Key);
+                        DestroyImmediate(valuePair.Key.CurGameObject);
+                        DestroyImmediate(go);
+
+
+                        index = GetIndex(newType);
+                        GameObject newGo = Instantiate(NodeGoList[index], pos, Quaternion.identity, transform);
+                        ScenePointData newData = new ScenePointData
+                        {
+                            Type = newType,
+                            CurGameObject = newGo,
+                            Position = pos
+                        };
+                        foreach (PointType type in valuePair.Key.LinkPointList)
+                        {
+                            newData.SetLinkData(type);
+                        }
+
+                        foreach (PointType type in data.LinkPointList)
+                        {
+                            newData.SetLinkData(type);
+                        }
+
+                        data = newData;
+                    }
+
+                    break;
+                }
             }
-            if (curCount >= MaxCount) return;
-            curCount++;
-            foreach (KeyValuePair<PointType, SceneNodeType> type in list)
+
+            _nodeDataList.Add(data);
+            _SceneRectDict[data] = rectangle;
+
+            List<KeyValuePair<PointType, SceneNodeType>> tempList = null;
+            
+            if (curCount >= MaxCount)
             {
-                CreateObject(type.Value, GetPosition(data.Type, data.Position, type.Key, type.Value), data);
+                // 将还没有封闭的口  封闭
+                ScenePointData closeData = null;
+                foreach (ScenePointData pointData in _nodeDataList)
+                {
+                    bool link = data.CanLinePoint(out tempList);
+                    if (link)
+                    {
+                        closeData = pointData;
+                        break;
+                    }
+                }
+                if (closeData == null)
+                {
+                    return null;
+                }
+                close = true;
+            }
+            else
+            {
+                bool canLink = data.CanLinePoint(out tempList);
+                if (!canLink)
+                {
+                    return null;
+                }
+            }
+
+            curCount++;
+            foreach (KeyValuePair<PointType, SceneNodeType> type in tempList)
+            {
+                var targetPos = GetPosition(data.Type, data.Position, type.Key, type.Value, out point);
+                data.SetLinkData(type.Key);
+                var ret = CreateObject(point, type.Value, targetPos, close);
+            }
+
+            return data;
+        }
+
+        private SceneNodeType GetSceneCommon(SceneNodeType type1, out bool use1, SceneNodeType type2, out bool use2)
+        {
+            use1 = false;
+            use2 = false;
+
+            HashSet<SceneNodeType> types1 = GetNewScene(type1);
+            HashSet<SceneNodeType> types2 = GetNewScene(type2);
+
+            HashSet<SceneNodeType> types = new HashSet<SceneNodeType>();
+            foreach (SceneNodeType type in types1)
+            {
+                types.Add(type);
+            }
+
+            foreach (SceneNodeType type in types2)
+            {
+                types.Add(type);
+            }
+
+            if (types.Count == types1.Count)
+            {
+                use1 = true;
+                foreach (SceneNodeType type in types1)
+                {
+                    if (!types.Contains(type))
+                    {
+                        use1 = false;
+                        break;
+                    }
+                }
+            }
+
+            if (use1)
+            {
+                use2 = false;
+                return type1;
+            }
+
+            if (types.Count == types2.Count)
+            {
+                use2 = true;
+                foreach (SceneNodeType type in types2)
+                {
+                    if (!types.Contains(type))
+                    {
+                        use2 = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!use2)
+            {
+                // 获取新的类型
+                SceneNodeType newType = SceneNodeType.None;
+                foreach (SceneNodeType type in types)
+                {
+                    newType |= type;
+                }
+
+                return newType;
+            }
+            else
+            {
+                return type2;
             }
         }
 
-        private Vector3 GetPosition(SceneNodeType originType, Vector3 originPosition, PointType pointType, SceneNodeType type)
+        private HashSet<SceneNodeType> GetNewScene(SceneNodeType type)
         {
-            var targetPosition = Vector3.zero;
-            if (!SceneNodeScale.TryGetValue(originType, out Vector3 originScale))
+            HashSet<SceneNodeType> types = new HashSet<SceneNodeType>();
+            if ((type & SceneNodeType.East) > 0)
             {
-                originScale = NomalScale;
+                types.Add(SceneNodeType.East);
             }
 
+            if ((type & SceneNodeType.South) > 0)
+            {
+                types.Add(SceneNodeType.South);
+            }
+
+            if ((type & SceneNodeType.West) > 0)
+            {
+                types.Add(SceneNodeType.West);
+            }
+
+            if ((type & SceneNodeType.North) > 0)
+            {
+                types.Add(SceneNodeType.North);
+            }
+
+            return types;
+        }
+
+        private Vector3 GetScale(SceneNodeType type)
+        {
             if (!SceneNodeScale.TryGetValue(type, out Vector3 scale))
             {
                 scale = NomalScale;
             }
 
-            switch (pointType)
+            return scale;
+        }
+
+        private Vector3 GetPosition(SceneNodeType originType, Vector3 originPosition, PointType originPointType, SceneNodeType type, out PointType targetPointType)
+        {
+            var targetPosition = Vector3.zero;
+            Vector3 originScale = GetScale(originType);
+            Vector3 scale = GetScale(type);
+
+            targetPointType = PointType.None;
+            switch (originPointType)
             {
                 case PointType.East:
                     targetPosition = new Vector3(originPosition.x + originScale.x / 2 + scale.x / 2, originPosition.y, originPosition.z);
+                    targetPointType = PointType.West;
                     break;
                 case PointType.North:
                     targetPosition = new Vector3(originPosition.x, originPosition.y, originPosition.z + originScale.z / 2 + scale.z / 2);
+                    targetPointType = PointType.South;
                     break;
                 case PointType.South:
-                    targetPosition = new Vector3(originPosition.x, originPosition.y, originPosition.z + originScale.z / 2 + scale.z / 2);
+                    targetPosition = new Vector3(originPosition.x, originPosition.y, originPosition.z - originScale.z / 2 - scale.z / 2);
+                    targetPointType = PointType.North;
                     break;
                 case PointType.West:
                     targetPosition = new Vector3(originPosition.x - originScale.x / 2 - scale.x / 2, originPosition.y, originPosition.z);
+                    targetPointType = PointType.East;
                     break;
             }
 
@@ -140,10 +346,20 @@ namespace LevelEditorTools.Nodes
                     return 8;
                 case SceneNodeType.SouthNorth:
                     return 9;
-                case SceneNodeType.EastWestRoad:
+                case SceneNodeType.EastSouthNorth:
                     return 10;
-                case SceneNodeType.SouthNorthRoad:
+                case SceneNodeType.WestSouthNorth:
                     return 11;
+                case SceneNodeType.EastWestSouth:
+                    return 12;
+                case SceneNodeType.EastWestNorth:
+                    return 13;
+                case SceneNodeType.EastWestSouthNorth:
+                    return 14;
+                case SceneNodeType.EastWestRoad:
+                    return 15;
+                case SceneNodeType.SouthNorthRoad:
+                    return 16;
             }
 
             return 0;
@@ -152,15 +368,25 @@ namespace LevelEditorTools.Nodes
         public void Destroy()
         {
             _nodeDataList.Clear();
+            _SceneRectDict.Clear();
             while (transform.childCount > 0)
             {
                 DestroyImmediate(transform.GetChild(0).gameObject);
+            }
+        }
+
+        private void OnDrawGizmos()
+        {
+            foreach (KeyValuePair<ScenePointData, QuadRectangle> keyValuePair in _SceneRectDict)
+            {
+                keyValuePair.Value.DrawGizmos();
             }
         }
     }
 
     public enum PointType
     {
+        None = 0x00,
         East = 0x01,
         South = 0x02,
         West = 0x03,
@@ -177,7 +403,7 @@ namespace LevelEditorTools.Nodes
             set => _type = value;
         }
 
-        public void SetNextLink()
+        public void SetNextLink(bool close)
         {
             if ((_type & SceneNodeType.East) > 0)
             {
@@ -204,39 +430,54 @@ namespace LevelEditorTools.Nodes
             {
                 // 东西路支持两个点
                 // East： 支持带有 West
-                LinkPointTypeList[PointType.East] = GetRandomWestNode(SceneNodeType.West);
+                if (!LinkPointList.Contains(PointType.East)) LinkPointTypeList[PointType.East] = GetRandomWestNode(SceneNodeType.West, close);
                 // West： 支持带有 East
-                LinkPointTypeList[PointType.West] = GetRandomWestNode(SceneNodeType.East);
+                if (!LinkPointList.Contains(PointType.West)) LinkPointTypeList[PointType.West] = GetRandomWestNode(SceneNodeType.East, close);
+            }
+
+            if ((_type & SceneNodeType.SouthNorthRoad) > 0)
+            {
+                // South： 支持带有 North
+                if (!LinkPointList.Contains(PointType.South)) LinkPointTypeList[PointType.South] = GetRandomWestNode(SceneNodeType.North, close);
+                // North： 支持带有 South
+                if (!LinkPointList.Contains(PointType.North)) LinkPointTypeList[PointType.North] = GetRandomWestNode(SceneNodeType.South, close);
             }
         }
-
-        public void SetLinkData(ScenePointData data)
+        
+        public void SetLinkData(PointType data)
         {
-            if (data == null) return;
+            if (data == PointType.None) return;
             LinkPointList.Add(data);
         }
 
-        private SceneNodeType GetRandomWestNode(SceneNodeType perType)
+        private SceneNodeType GetRandomWestNode(SceneNodeType perType, bool close)
         {
-            List<SceneNodeType> types = new List<SceneNodeType>();
-            foreach (var item in Enum.GetValues(typeof(SceneNodeType)))
+            if (close)
             {
-                var type = (SceneNodeType) item;
-                if ((type & perType) > 0)
-                {
-                    types.Add(type);
-                }
+                return perType;
             }
+            else
+            {
+                List<SceneNodeType> types = new List<SceneNodeType>();
+                foreach (var item in Enum.GetValues(typeof(SceneNodeType)))
+                {
+                    var type = (SceneNodeType) item;
+                    if ((type & perType) > 0)
+                    {
+                        types.Add(type);
+                    }
+                }
 
-            var value = Random.Range(0, types.Count);
-            return types[value];
+                var value = Random.Range(0, types.Count);
+                return types[value];
+            }
         }
 
         public Vector3 Position = Vector3.zero;
         public GameObject CurGameObject;
 
         private Dictionary<PointType, SceneNodeType> LinkPointTypeList = new Dictionary<PointType, SceneNodeType>();
-        private List<ScenePointData> LinkPointList = new List<ScenePointData>();
+        public HashSet<PointType> LinkPointList = new HashSet<PointType>();
 
         /// <summary>
         /// 当前点是否支持链接其他点
@@ -250,17 +491,11 @@ namespace LevelEditorTools.Nodes
 
             foreach (KeyValuePair<PointType, SceneNodeType> keyValuePair in LinkPointTypeList)
             {
-                bool exist = false;
-                foreach (ScenePointData pointData in LinkPointList)
+                if (LinkPointList.Contains(keyValuePair.Key))
                 {
-                    if (pointData.Type == keyValuePair.Value)
-                    {
-                        exist = true;
-                        break;
-                    }
+                    continue;
                 }
 
-                if (exist) continue;
                 canLink = true;
                 types.Add(keyValuePair);
             }
