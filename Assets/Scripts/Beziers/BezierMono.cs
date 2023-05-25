@@ -11,6 +11,8 @@ public class BezierMono : MonoBehaviour
     public string BezierGuidName;
     public SceneContainer SceneContainer;
 
+    public bool OpenDraw = false;
+    
     public int SegmentNum = 100;
     public float Width = 32;
     public List<Transform> list = new List<Transform>();
@@ -81,12 +83,14 @@ public class BezierMono : MonoBehaviour
         }
     }
 
+
     private void OnDrawGizmos()
     {
+        if(!OpenDraw) return;
         Gizmos.color = Color.red;
         if (points == null)
         {
-            points = new List<Vector3>(list.Count + 2);
+            points = new List<Vector3>(list.Count);
         }
 
         points.Clear();
@@ -120,6 +124,7 @@ public class BezierMono : MonoBehaviour
         }
 
         pointsMin.Clear();
+
         for (int i = 0; i < paths.Length - 1; i++)
         {
             Vector3 dir1 = (paths[i + 1] - paths[i]).normalized;
@@ -146,6 +151,7 @@ public class BezierMono : MonoBehaviour
             minZ = Mathf.Min(min.z, max.z, minZ);
             MaxX = Mathf.Max(min.x, max.x, MaxX);
             MaxZ = Mathf.Max(min.z, max.z, MaxZ);
+
         }
 
         if (rectangles == null) rectangles = new List<QuadRectangle>();
