@@ -72,6 +72,24 @@ namespace Marchings.MarchingSquares
                 }
             }
 
+            if (IsBuild3D)
+            {
+                // 底板
+                main.AddQuad(Vector3.zero, new Vector3(0, 0, squareSizeY), new Vector3(squareSizeX, 0, squareSizeY),
+                    new Vector3(squareSizeX, 0, 0));
+                // 左
+                main.AddQuad(Vector3.zero, new Vector3(0, Height3D, 0), new Vector3(0, Height3D, squareSizeY), new Vector3(0, 0, squareSizeY));
+                // 上
+                main.AddQuad(new Vector3(0, 0, squareSizeY), new Vector3(0, Height3D, squareSizeY), new Vector3(squareSizeX, Height3D, squareSizeY),
+                    new Vector3(squareSizeX, 0, squareSizeY));
+                // 右
+                main.AddQuad(new Vector3(squareSizeX, 0, squareSizeY), new Vector3(squareSizeX, Height3D, squareSizeY), new Vector3(squareSizeX, Height3D, 0),
+                    new Vector3(squareSizeX, 0, 0));
+                // 下
+                main.AddQuad(new Vector3(squareSizeX, 0, 0), new Vector3(squareSizeX, Height3D, 0), new Vector3(0, Height3D, 0),
+                    Vector3.zero);
+            }
+
             main.FillArrays();
             var mesh = new Mesh();
             _meshFilter.sharedMesh = mesh;
