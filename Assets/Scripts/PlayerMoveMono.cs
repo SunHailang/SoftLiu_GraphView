@@ -51,7 +51,7 @@ public class PlayerMoveMono : MonoBehaviour
             0,
             forward.x * Mathf.Sin(angle) + forward.z * Mathf.Cos(angle));
         dir1 = dir1.normalized * horizontal;
-        Vector3 targetDir = dir + dir1;
+        Vector3 targetDir = (dir + dir1).normalized;
 
         m_player.velocity = targetDir * Time.deltaTime * Speed;;
     }

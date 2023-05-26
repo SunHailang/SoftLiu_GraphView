@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
-using UnityEngine;
+using System;
+using Random = UnityEngine.Random;
 
 namespace PerlinNoise
 {
@@ -23,20 +21,25 @@ namespace PerlinNoise
             49, 192, 214, 31, 181, 199, 106, 157, 184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150, 254,
             138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180
         };
+        
 
-
-        private double noise(double x, double y, double z)
+        private float[,] GenerateWhiteNoise(int width, int height)
         {
-            int X = (int) math.floor(x) & 255;
-            int Y = (int) math.floor(y) & 255;
-            int Z = (int) math.floor(z) & 255;
+            // 这里的随机数种子很重要
+            // 如果想要每次生成的 Perlin Noise 都一样，只要设置一个相同的值即可
+            // 这里使用随机种子，所有每次都会生成不同的 Perlin Noise
+            Random.InitState(Random.Range(int.MinValue, int.MaxValue));
+            float[,] noise = new float[width, height];
 
-            x -= math.floor(x);
-            y -= math.floor(y);
-            z -= math.floor(z);
-            
-            //Unity.Mathematics.noise.s 
-            return 1;
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    noise[i, j] = Random.value;
+                }
+            }
+
+            return noise;
         }
     }
 }
