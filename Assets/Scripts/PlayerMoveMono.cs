@@ -53,6 +53,6 @@ public class PlayerMoveMono : MonoBehaviour
         dir1 = dir1.normalized * horizontal;
         Vector3 targetDir = (dir + dir1).normalized;
 
-        m_player.velocity = targetDir * Time.deltaTime * Speed;;
+        m_player.velocity = targetDir * Speed;;
     }
 }

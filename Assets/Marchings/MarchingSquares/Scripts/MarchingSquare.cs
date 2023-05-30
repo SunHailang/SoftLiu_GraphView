@@ -204,6 +204,8 @@ namespace Marchings.MarchingSquares
         private List<Vector2> _uvs = new List<Vector2>();
         private List<Color> _colors = new List<Color>();
 
+        private Dictionary<Vector3, int> _verticesDict = new Dictionary<Vector3, int>();
+
         public void FillArrays()
         {
             Vertices = _vertices.ToArray();
@@ -249,17 +251,70 @@ namespace Marchings.MarchingSquares
 
         public void AddTriangle(Vector3 point1, Vector3 point2, Vector3 point3)
         {
-            int vertexIndex = _vertices.Count;
-            _vertices.Add(point1);
-            _vertices.Add(point2);
-            _vertices.Add(point3);
-            _triangles.Add(vertexIndex);
-            _triangles.Add(vertexIndex + 1);
-            _triangles.Add(vertexIndex + 2);
+            if (!_verticesDict.TryGetValue(point1, out int index))
+            {
+                index = _vertices.Count;
+                _vertices.Add(point1);
+                _verticesDict[point1] = index;
+            }
+            _triangles.Add(index);
+            if (!_verticesDict.TryGetValue(point2, out index))
+            {
+                index = _vertices.Count;
+                _vertices.Add(point2);
+                _verticesDict[point2] = index;
+            }
+            _triangles.Add(index);
+            if (!_verticesDict.TryGetValue(point3, out index))
+            {
+                index = _vertices.Count;
+                _vertices.Add(point3);
+                _verticesDict[point3] = index;
+            }
+            _triangles.Add(index);
+            
+            // int vertexIndex = _vertices.Count;
+            // _vertices.Add(point1);
+            // _vertices.Add(point2);
+            // _vertices.Add(point3);
+            // _triangles.Add(vertexIndex);
+            // _triangles.Add(vertexIndex + 1);
+            // _triangles.Add(vertexIndex + 2);
         }
 
         public void AddQuad(Vector3 lb, Vector3 lt, Vector3 rt, Vector3 rb)
         {
+            // if (!_verticesDict.TryGetValue(lb, out int index1))
+            // {
+            //     index1 = _vertices.Count;
+            //     _vertices.Add(lb);
+            //     _verticesDict[lb] = index1;
+            // }
+            // _triangles.Add(index1);
+            // if (!_verticesDict.TryGetValue(lt, out int index2))
+            // {
+            //     index2 = _vertices.Count;
+            //     _vertices.Add(lt);
+            //     _verticesDict[lt] = index2;
+            // }
+            // _triangles.Add(index2);
+            // if (!_verticesDict.TryGetValue(rt, out int index3))
+            // {
+            //     index3 = _vertices.Count;
+            //     _vertices.Add(rt);
+            //     _verticesDict[rt] = index3;
+            // }
+            // _triangles.Add(index3);
+            // _triangles.Add(index1);
+            // _triangles.Add(index3);
+            // if (!_verticesDict.TryGetValue(rb, out int index4))
+            // {
+            //     index4 = _vertices.Count;
+            //     _vertices.Add(rb);
+            //     _verticesDict[rb] = index4;
+            // }
+            // _triangles.Add(index4);
+            
             int vertexIndex = _vertices.Count;
             _vertices.Add(lb);
             _vertices.Add(lt);
