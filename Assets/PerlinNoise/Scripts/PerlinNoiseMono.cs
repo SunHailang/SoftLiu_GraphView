@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -20,6 +20,21 @@ public class PerlinNoiseMono : MonoBehaviour
     private void Start()
     {
         maxPos = new float3(1, 0, 1) * 100;
+        
+        values.Clear();
+        for (int i = -20; i < 20; i++)
+        {
+            for (int j = -20; j < 20; j++)
+            {
+                var value = AscIIHash($"{i}{j}");
+                
+                if (!values.Add(value))
+                {
+                    Debug.LogError($"Error: {i},{j}, Value:{value}");
+                }
+            }
+        }
+        Debug.LogError("");
     }
 
     private void Update()
@@ -40,10 +55,34 @@ public class PerlinNoiseMono : MonoBehaviour
         prefab.transform.rotation = Quaternion.AngleAxis(angle, Vector3.up);
     }
 
+    private HashSet<int> values = new HashSet<int>();
 
+    public static unsafe int AscIIHash(string source)
+    {
+        int h = 0;
+        fixed (char* c = source)
+        {
+            byte* p = (byte*)c;
+            int len = source.Length * 2;
+            for (int i = 0; i < len; i += 2) h = 31 * h + p[i];
+        }
+
+        return h;
+    }
+    
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.magenta;
         Gizmos.DrawRay(new Ray(prefab.transform.position, prefabDir));
+        if(values.Count > 0) return;
+        values.Clear();
+        for (int i = -20; i <= 20; i++)
+        {
+            for (int j = -20; j <= 20; j++)
+            {
+                var value = AscIIHash($"{i}{j}");
+                           }
+        }
+        
     }
 }

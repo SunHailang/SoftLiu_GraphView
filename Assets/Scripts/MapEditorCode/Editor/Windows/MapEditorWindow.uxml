@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd"
+>
+    <editor:Toolbar name="Toolbar" style="height: 26px; width: 100%">
+        <editor:ToolbarMenu name="ToolbarMenuFile" text="File" class="toolbar_menu"/>
+        <editor:ToolbarMenu name="ToolbarMenuEditor" text="Editor" class="toolbar_menu"/>
+        <editor:ToolbarMenu name="ToolbarMenuHelp" text="Help" class="toolbar_menu"/>
+    </editor:Toolbar>
+</engine:UXML>

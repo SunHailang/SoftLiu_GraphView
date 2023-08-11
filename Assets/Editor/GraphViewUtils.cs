@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using LevelEditorTools;
 using LevelEditorTools.Editor.Nodes;
 using Unity.CodeEditor;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace LevelEditorTools
+namespace EditorUtils
 {
     public static class GraphViewUtils
     {
