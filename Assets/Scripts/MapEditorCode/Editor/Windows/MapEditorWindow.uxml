@@ -10,4 +10,52 @@
         <editor:ToolbarMenu name="ToolbarMenuEditor" text="Editor" class="toolbar_menu"/>
         <editor:ToolbarMenu name="ToolbarMenuHelp" text="Help" class="toolbar_menu"/>
     </editor:Toolbar>
+
+    <engine:VisualElement style="height:85px; width:100%; max-height:85px;" >
+        <engine:IMGUIContainer name="ContainerFile" style="justify-content: center; height: 100%" class="inspector_graph_view" />
+    </engine:VisualElement>
+    <engine:VisualElement name="LeftView" style="width: 20%; height: 100%; min-width: 200px;" >
+        <engine:Label text="Hierarchy" class="title_graph_view_label"/>
+        <engine:Box style="height: 1px; width: 100%; background-color: rgb(111, 111, 111);"/>
+        <MapEditor.MapHierarchyView name="MapHierarchyView" style="width: 100%; height: 100%;">
+            <engine:ScrollView name="HierarchyScrollView" class="ScrollView" style="position: absolute; left:0px; top: 5px; right: 0px; bottom: 35px">
+                <engine:IMGUIContainer name="HierarchyContainer"/>
+            </engine:ScrollView>            
+            <engine:Button name="BtnAddHierarchyGroup" text="添加组" style="position: absolute; bottom: 6px; left: 0px; right: 0px"/>
+        </MapEditor.MapHierarchyView>
+    </engine:VisualElement>
+    <engine:VisualElement name="RightContentView" style="width: 80%; height: 100%; flex-direction: row; min-width: 400px;">
+        <engine:VisualElement name="MidView" style="width: 70%; height: 100%; min-width: 200px;">
+            <engine:VisualElement style="height: 26px; flex-direction: row;">
+                <engine:Label text="Scene" class="title_graph_view_label" style="align-items: flex-end"/>
+                <engine:Label style="width: 100px"/>
+                <engine:Toggle text="矩形" name="RectangleToggle" value="true" style="align-items: flex-end"/>
+                <engine:Toggle text="六边形" name="HexagonToggle" style="align-items: flex-end"/>
+            </engine:VisualElement>            
+            <engine:Box style="height: 1px; width: 100%; background-color: rgb(111, 111, 111);"/>
+            <MapEditor.MapSceneView name="MapSceneView" style="width: 100%; height: 100%;">
+                <engine:Button name="BtnAddLeftLine" text="+"  style="width:20px; height: 40%; position: absolute; left:2px; top: 9%; background-color: #0000FF"/>
+                <engine:Button name="BtnReduceLeftLine" text="-"  style="width:20px; height: 40%; position: absolute; left:2px; bottom: 9%; background-color: #FF0000"/>
+                <engine:Button name="BtnAddTopLine" text="+"  style="height:20px; width: 40%; position: absolute; left:9%; top: 2px; background-color: #0000FF"/>
+                <engine:Button name="BtnReduceTopLine" text="-"  style="height:20px; width: 40%; position: absolute; right:9%; top: 2px; background-color: #FF0000"/>
+                <engine:ScrollView name="SceneScrollView" class="ScrollView" mode="VerticalAndHorizontal" style="position: absolute; left: 30px; top: 30px; right: 30px; bottom: 30px">
+                    <engine:IMGUIContainer name="SceneContainer" style="align-items: center; justify-content: center;"/>
+                </engine:ScrollView>
+                <engine:Button name="BtnAddRightLine" text="+" style="height:40%; width: 20px; position: absolute; top: 9%; right: 2px; background-color: #0000FF"/>
+                <engine:Button name="BtnReduceRightLine" text="-" style="height:40%; width: 20px; position: absolute; bottom: 9%; right: 2px; background-color: #FF0000"/>
+                <engine:Button name="BtnAddBottomLine" text="+" style="height: 20px; width: 40%; position: absolute; left: 9%; bottom: 2px; background-color: #0000FF"/>
+                <engine:Button name="BtnReduceBottomLine" text="-" style="height: 20px; width: 40%; position: absolute; right: 9%; bottom: 2px; background-color: #FF0000"/>
+            </MapEditor.MapSceneView>
+        </engine:VisualElement>
+        <engine:VisualElement name="RightView" style="width: 30%; height: 100%; min-width: 200px;">
+            <engine:Label text="Inspector" class="title_graph_view_label"/>
+            <engine:Box style="height: 1px; width: 100%; background-color: rgb(111, 111, 111);"/>
+            <MapEditor.MapInspectorView name="MapInspectorView" style="width: 100%; height: 100%;">
+                <engine:ScrollView name="InspectorScrollView" class="ScrollView" style="position: absolute; left:0px; top: 5px; right: 0px; bottom: 0px">
+                    <engine:IMGUIContainer name="InspectorContainer" style="position: absolute; left:5px; top: 5px; right: 5px; bottom: 0px"/>
+                </engine:ScrollView>
+            </MapEditor.MapInspectorView>
+        </engine:VisualElement>
+    </engine:VisualElement>
+    
 </engine:UXML>
