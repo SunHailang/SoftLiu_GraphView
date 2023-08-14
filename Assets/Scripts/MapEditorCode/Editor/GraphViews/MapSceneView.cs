@@ -26,14 +26,6 @@ namespace MapEditor
         {
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath("3809fd0b7d9d4ab495256122da5f0407"));
             this.styleSheets.Add(styleSheet);
-
-            graphViewChanged = OnGraphViewChanged;
-        }
-
-        private GraphViewChange OnGraphViewChanged(GraphViewChange graphviewchange)
-        {
-            Debug.Log("Changed");
-            return graphviewchange;
         }
 
         public void InitDrawParentElement(VisualElement element)
@@ -47,35 +39,20 @@ namespace MapEditor
         {
             _parentElement.Clear();
 
-            var columnCount = _rightValue - _leftValue + 1;
-            var rowCount = _upValue - _downValue + 1;
-
-            var size = this.viewport.localBound.size;
-            var grid = _gridSize.x;
-            var width = columnCount * grid;
-            var height = rowCount * grid;
-            var centerX = Mathf.RoundToInt(size.x / 2);
-            var centerY = Mathf.RoundToInt(size.y / 2);
-
-            // 右上角坐标
-            var rightUp = new Vector2(centerX - width / 2, centerY - height / 2);
-
             for (var i = _downValue; i <= _upValue; i++)
             {
                 var box = new Box
                 {
                     style =
                     {
-                        width = width,
+                        width = (_rightValue - _leftValue + 1) * _gridSize.x,
                         height = _gridSize.y,
                         flexDirection = FlexDirection.Row
-                    },
+                    }
                 };
 
                 for (var j = _leftValue; j <= _rightValue; j++)
                 {
-                    var basPos = new Vector3((j - _leftValue) * grid, (i - _downValue) * grid, 0);
-                    var pos = new Vector3(rightUp.x, rightUp.y, 0) + basPos;
                     var btn = new ButtonBox();
                     btn.SetColor("123456", Color.red);
                     box.Add(btn);
