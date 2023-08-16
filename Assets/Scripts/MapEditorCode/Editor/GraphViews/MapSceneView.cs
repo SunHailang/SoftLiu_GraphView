@@ -20,10 +20,19 @@ namespace MapEditor
         private int _rightValue = 500;
         private int _downValue = 500;
 
-        private int _baseValue = 500;
-
         public MapSceneView()
         {
+            Insert(0, new GridBackground());
+            // 滚轮
+            this.SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
+            this.AddManipulator(new ContentZoomer());
+            // 可以选中单个Node
+            this.AddManipulator(new SelectionDragger());
+            // 按住 Alt键 可以拖动
+            this.AddManipulator(new ContentDragger());
+            // 可以框选多个Node
+            this.AddManipulator(new RectangleSelector());
+            
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath("3809fd0b7d9d4ab495256122da5f0407"));
             this.styleSheets.Add(styleSheet);
         }
@@ -31,7 +40,6 @@ namespace MapEditor
         public void InitDrawParentElement(VisualElement element)
         {
             _parentElement = element;
-
             DrawGrid();
         }
 
@@ -54,12 +62,28 @@ namespace MapEditor
                 for (var j = _leftValue; j <= _rightValue; j++)
                 {
                     var btn = new ButtonBox();
-                    btn.SetColor("123456", Color.red);
+                    btn.SetSelectCallback(SelectCallback);
+                    btn.SetIndex(i, j, "");
+                    btn.SetColor("", new Color(0, 0, 0, 0));
+                    btn.SetSelect(_curSelectButtonBox != null && _curSelectButtonBox.EqualIndex(btn.IndexX, btn.IndexY));
                     box.Add(btn);
                 }
 
                 _parentElement.Add(box);
             }
+        }
+
+        private ButtonBox _curSelectButtonBox = null;
+
+        private void SelectCallback(ButtonBox data)
+        {
+            if (_curSelectButtonBox != null && !_curSelectButtonBox.EqualIndex(data.IndexX, data.IndexY))
+            {
+                _curSelectButtonBox.SetSelect(false);
+            }
+
+            _curSelectButtonBox = data;
+            // TODO
         }
 
         private bool _isDraw = false;
@@ -69,34 +93,7 @@ namespace MapEditor
             if (_isDraw) return;
             _isDraw = true;
         }
-
-        // 绘制正六边型
-        private void DrawHexagon(Vector3 center, float size, int i, int j)
-        {
-            var baseAngle = Mathf.PI / 3;
-            var angle = i % 2 == 0 ? baseAngle : 0;
-
-            var angle_0 = new Vector3(center.x + size, center.y, 0);
-            var angle_60 = new Vector3(center.x + size / 2, center.y + size * Mathf.Sin(Mathf.PI / 3));
-            var angle_120 = new Vector3(center.x - size / 2, center.y + size * Mathf.Sin(Mathf.PI / 3));
-            var angle_180 = new Vector3(center.x - size, center.y, 0);
-            var angle_240 = new Vector3(center.x - size / 2, center.y - size * Mathf.Sin(Mathf.PI / 3));
-            var angle_300 = new Vector3(center.x + size / 2, center.y - size * Mathf.Sin(Mathf.PI / 3));
-
-            Handles.DrawLine(angle_0, angle_60);
-            Handles.DrawLine(angle_60, angle_120);
-            Handles.DrawLine(angle_120, angle_180);
-            Handles.DrawLine(angle_180, angle_240);
-            Handles.DrawLine(angle_240, angle_300);
-            Handles.DrawLine(angle_300, angle_0);
-        }
-
-        private Vector3 GetAnglePosition(Vector3 center, float size, float angle)
-        {
-            var dir = Quaternion.AngleAxis(angle, Vector3.forward) * (Vector3.right - center) + center;
-            var ray = new UnityEngine.Ray(center, dir.normalized);
-            return ray.GetPoint(size);
-        }
+        
 
         public void BtnLeftLine_OnClick(bool isAdd = true)
         {

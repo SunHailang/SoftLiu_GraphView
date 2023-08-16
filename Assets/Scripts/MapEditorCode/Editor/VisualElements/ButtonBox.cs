@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -16,6 +17,8 @@ namespace MapEditor
 
         private VisualElement _background;
         private Label _des;
+        private Image _selectImage;
+        private Image _entryImage;
 
         private Texture2D _image;
 
@@ -25,6 +28,12 @@ namespace MapEditor
         private HashSet<string> _guidList = new HashSet<string>();
         private List<Color> _colorList = new List<Color>();
 
+        private System.Action<ButtonBox> _selectCallback;
+
+        private int _indexX = int.MinValue;
+        public int IndexX => _indexX;
+        private int _indexY = int.MinValue;
+        public int IndexY => _indexY;
         public ButtonBox()
         {
             // Import UXML // "Assets/Scripts/MapEditorCode/Editor/VisualElements/ButtonBox.uxml"
@@ -32,14 +41,37 @@ namespace MapEditor
             visualTree.CloneTree(this);
             _background = this.Q<VisualElement>("BtnElement");
             _des = this.Q<Label>("Desc");
+            _entryImage = this.Q<Image>("EntryImage");
+            _selectImage = this.Q<Image>("SelectImage");
 
             this.style.width = Width;
             this.style.height = Height;
 
             RegisterCallback<MouseUpEvent>(OnMouseUpEvent);
+            RegisterCallback<MouseDownEvent>(OnMouseDownEvent);
+            RegisterCallback<MouseEnterEvent>(OnMouseEntryEvent);
+            RegisterCallback<MouseLeaveEvent>(OnMouseLeaveEvent);
 
             _image = new Texture2D(Width, Height, TextureFormat.RGBA32, false);
             _background.style.backgroundImage = _image;
+        }
+
+        
+
+        public void SetSelectCallback(System.Action<ButtonBox> callback)
+        {
+            _selectCallback = callback;
+        }
+
+        public void SetIndex(int x, int y, string path)
+        {
+            _indexX = x;
+            _indexY = y;
+        }
+
+        public bool EqualIndex(int x, int y)
+        {
+            return x == _indexX && y == _indexY;
         }
 
         public void SetColor(string guid, Color color)
@@ -50,7 +82,7 @@ namespace MapEditor
             }
 
             _colorList.Add(color);
-            
+
             SetColor(_colorList);
         }
 
@@ -71,9 +103,11 @@ namespace MapEditor
                             {
                                 continue;
                             }
+
                             _image.SetPixel(x, y, colors[0]);
                         }
                     }
+
                     _image.Apply();
                     break;
                 }
@@ -81,17 +115,18 @@ namespace MapEditor
                 {
                     for (var x = 0; x < _image.width; x++)
                     {
-                        
                         for (var y = 0; y < _image.height; y++)
                         {
                             if (math.distancesq(center, new float2(x, y)) > Width * Width)
                             {
                                 continue;
                             }
+
                             var color = x < half ? colors[0] : colors[1];
                             _image.SetPixel(x, y, color);
                         }
                     }
+
                     _image.Apply();
                     break;
                 }
@@ -113,19 +148,21 @@ namespace MapEditor
                             Color color;
                             if (y > y1 && x < half)
                             {
-                                color =colors[0];
+                                color = colors[0];
                             }
                             else if (y > y2 && x > half)
                             {
-                                color =colors[1];
+                                color = colors[1];
                             }
                             else
                             {
                                 color = colors[2];
                             }
+
                             _image.SetPixel(x, y, color);
                         }
                     }
+
                     _image.Apply();
                     break;
                 }
@@ -147,13 +184,13 @@ namespace MapEditor
                             Color color;
                             if (y >= 0 && y < half && x >= 0 && x < half)
                             {
-                                color =colors[0];
+                                color = colors[0];
                             }
                             else if (y >= half && x >= 0 && x < half)
                             {
-                                color =colors[1];
+                                color = colors[1];
                             }
-                            else if(y >= 0 && y < half && x >= half)
+                            else if (y >= 0 && y < half && x >= half)
                             {
                                 color = colors[2];
                             }
@@ -161,17 +198,18 @@ namespace MapEditor
                             {
                                 color = colors[3];
                             }
+
                             _image.SetPixel(x, y, color);
                         }
                     }
+
                     _image.Apply();
                     break;
                 }
             }
         }
 
-
-        private void OnMouseUpEvent(MouseUpEvent evt)
+        private void OnMouseDownEvent(MouseDownEvent evt)
         {
             if (evt.button == 0)
             {
@@ -181,6 +219,36 @@ namespace MapEditor
             {
                 // 右键
             }
+            else if (evt.button == 2)
+            {
+                // 中键 只作为选取
+            }
+
+            SetSelect(true);
+        }
+        
+        private void OnMouseUpEvent(MouseUpEvent evt)
+        {
+            
+        }
+
+        public void SetSelect(bool active)
+        {
+            _selectImage.visible = active;
+            if (active)
+            {
+                _selectCallback?.Invoke(this);
+            }
+        }
+
+        private void OnMouseEntryEvent(MouseEnterEvent evt)
+        {
+            _entryImage.visible = true;
+        }
+
+        private void OnMouseLeaveEvent(MouseLeaveEvent evt)
+        {
+            _entryImage.visible = false;
         }
 
 

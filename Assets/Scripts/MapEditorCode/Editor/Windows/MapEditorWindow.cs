@@ -72,7 +72,7 @@ namespace MapEditor
 
             var splitView = new TwoPaneSplitView(0, 300, TwoPaneSplitViewOrientation.Horizontal)
             {
-                fixedPaneInitialDimension = 200
+                fixedPaneInitialDimension = 270,
             };
             root.Add(splitView);
             splitView.Add(leftView);

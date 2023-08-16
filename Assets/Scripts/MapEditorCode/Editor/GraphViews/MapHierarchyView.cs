@@ -9,7 +9,7 @@ namespace MapEditor
     public class ResData
     {
         public string Key;
-        public string Guid;
+        public string ResPath;
         public Color Color = Color.black;
     }
 
@@ -58,9 +58,9 @@ namespace MapEditor
                     EditorGUILayout.LabelField($"--:{resData.Key}");
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.Toggle(false, GUILayout.Width(20), GUILayout.Height(20));
-                    var go = AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(resData.Guid));
+                    var go = AssetDatabase.LoadAssetAtPath<GameObject>(resData.ResPath);
                     var obj = EditorGUILayout.ObjectField("", go, typeof(GameObject), false, GUILayout.Width(150));
-                    resData.Guid = AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(obj)).ToString();
+                    resData.ResPath = AssetDatabase.GetAssetPath(obj);
                     if (obj != null)
                     {
                         resData.Key = obj.name;
@@ -80,8 +80,11 @@ namespace MapEditor
 
         public void BtnAddHierarchyGroup_OnClick()
         {
-            _groupList.Add(new ResGroupData());
-            _groupFoldoutList.Add(true);
+            // _groupList.Add(new ResGroupData());
+            // _groupFoldoutList.Add(true);
+
+            var foldout = new FoldoutList();
+            this.Add(foldout);
         }
     }
 }
