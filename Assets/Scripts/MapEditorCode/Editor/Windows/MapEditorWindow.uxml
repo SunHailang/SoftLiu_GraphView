@@ -18,9 +18,7 @@
         <engine:Label text="Hierarchy" class="title_graph_view_label"/>
         <engine:Box style="height: 1px; width: 100%; background-color: rgb(111, 111, 111);"/>
         <MapEditor.MapHierarchyView name="MapHierarchyView" style="width: 100%; height: 100%;">
-            <engine:ScrollView name="HierarchyScrollView" class="ScrollView" style="position: absolute; left:0px; top: 5px; right: 0px; bottom: 35px">
-                <engine:IMGUIContainer name="HierarchyContainer"/>
-            </engine:ScrollView>            
+            <engine:ScrollView name="HierarchyScrollView" class="ScrollView" style="position: absolute; left:0px; top: 5px; right: 0px; bottom: 35px"/>
             <engine:Button name="BtnAddHierarchyGroup" text="添加组" style="position: absolute; bottom: 6px; left: 0px; right: 0px"/>
         </MapEditor.MapHierarchyView>
     </engine:VisualElement>

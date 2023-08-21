@@ -94,8 +94,6 @@ namespace MapEditor
             #region MapHierarchyView
 
             _mapHierarchyView = root.Q<MapHierarchyView>("MapHierarchyView");
-            var hierarchy = root.Q<IMGUIContainer>("HierarchyContainer");
-            hierarchy.onGUIHandler = HierarchyContainerHandler;
             var btnAddHierarchyGroup = root.Q<Button>("BtnAddHierarchyGroup");
             btnAddHierarchyGroup.clicked += BtnAddHierarchyGroup_OnClick;
 
@@ -168,11 +166,6 @@ namespace MapEditor
         private void BtnAddHierarchyGroup_OnClick()
         {
             _mapHierarchyView.BtnAddHierarchyGroup_OnClick();
-        }
-
-        private void HierarchyContainerHandler()
-        {
-            _mapHierarchyView.HierarchyContainerHandler();
         }
 
         #endregion

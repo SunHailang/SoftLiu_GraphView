@@ -3,7 +3,6 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:engine="UnityEngine.UIElements"
         xmlns:ui="UnityEditor.UIElements"
-        xsi:noNamespaceSchemaLocation="../../../../../../../UIElementsSchema/UIElements.xsd"
         xsi:schemaLocation="UnityEditor.UIElements file:///../../../UIElementsSchema/UnityEditor.UIElements.xsd">
     <ui:Toolbar name="Toolbar" class="graph_view_toolbar">
         <engine:Label text="Input:" style="-unity-text-align: middle-center;"/>

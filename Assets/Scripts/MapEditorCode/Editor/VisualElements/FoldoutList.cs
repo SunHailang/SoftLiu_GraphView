@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using Unity.Entities.UniversalDelegates;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -32,6 +29,11 @@ namespace MapEditor
         private int _curSelectIndex = 0;
         private int _curRefreshIndex = 0;
 
+        private TextField _curTextField = null;
+        private string _curGroupName = "新建组";
+
+        private int _curUnique = -1;
+
         public FoldoutList()
         {
             // guid 
@@ -47,16 +49,53 @@ namespace MapEditor
 
             _listView = new ListView(_items, 20, OnListViewMakItem, OnListViewBindItem)
             {
-                style =
+                style=
                 {
                     position = Position.Relative,
                     right = 0,
-                    left = -30,
-                    marginLeft = 32
+                    left = -3,
+                    marginLeft = 3
                 }
             };
             _listView.onSelectionChange += OnListViewSelectionChanged;
             _foldout.Add(_listView);
+
+            RegisterCallback<MouseDownEvent>(OnMouseDownEvent);
+        }
+
+        public void SetUnique(int index)
+        {
+            _curUnique = index;
+        }
+
+        private void OnMouseDownEvent(MouseDownEvent evt)
+        {
+            if (evt.button == 2 && !this.Contains(_curTextField))
+            {
+                _curTextField ??= new TextField
+                {
+                    style =
+                    {
+                        position = Position.Absolute,
+                        top = 10,
+                        left = 18,
+                        right = 28
+                    },
+                    value = _curGroupName
+                };
+
+                this.Add(_curTextField);
+            }
+            else if (_curTextField != null && this.Contains(_curTextField))
+            {
+                if (!string.IsNullOrEmpty(_curTextField.value) && _curGroupName != _curTextField.value)
+                {
+                    _curGroupName = _curTextField.value;
+                    _foldout.text = _curGroupName;
+                }
+
+                this.Remove(_curTextField);
+            }
         }
 
         private void BtnAddItem_OnClick()
@@ -85,12 +124,12 @@ namespace MapEditor
                 style =
                 {
                     position = Position.Relative,
-                    marginLeft = 0, 
+                    marginLeft = 0,
                     left = 0,
                     right = 0
-                }
+                },
+                tabIndex = _curRefreshIndex
             };
-            objField.tabIndex = _curRefreshIndex;
             _curRefreshIndex++;
             objField.RegisterValueChangedCallback(v =>
             {
@@ -113,6 +152,7 @@ namespace MapEditor
                 {
                     _items[arg2].Label = _items[arg2].FieldObj.name;
                 }
+
                 obj.label = _items[arg2].Label;
                 obj.SetValueWithoutNotify(_items[arg2].FieldObj);
             }
