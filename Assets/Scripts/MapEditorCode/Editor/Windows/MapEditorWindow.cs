@@ -94,6 +94,8 @@ namespace MapEditor
             #region MapHierarchyView
 
             _mapHierarchyView = root.Q<MapHierarchyView>("MapHierarchyView");
+            var scroll = root.Q<ScrollView>("HierarchyScrollView");
+            _mapHierarchyView.SetScrollView(scroll);
             var btnAddHierarchyGroup = root.Q<Button>("BtnAddHierarchyGroup");
             btnAddHierarchyGroup.clicked += BtnAddHierarchyGroup_OnClick;
 

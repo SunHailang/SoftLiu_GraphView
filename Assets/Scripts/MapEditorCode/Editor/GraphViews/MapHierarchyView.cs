@@ -27,11 +27,18 @@ namespace MapEditor
 
         private readonly Dictionary<int, FoldoutList> _groupList = new Dictionary<int, FoldoutList>();
 
+        private ScrollView _scrollView;
+
         public MapHierarchyView()
         {
             // Inport USS
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath("3809fd0b7d9d4ab495256122da5f0407"));
             styleSheets.Add(styleSheet);
+        }
+
+        public void SetScrollView(ScrollView scrollView)
+        {
+            _scrollView = scrollView;
         }
 
         public void BtnAddHierarchyGroup_OnClick()
@@ -43,9 +50,19 @@ namespace MapEditor
             }
             var foldout = new FoldoutList();
             foldout.SetUnique(index);
-            this.Add(foldout);
+            foldout.SetRemoveCallback(RemoveCallback);
+            _scrollView.Add(foldout);
             
             _groupList[index] = foldout;
+        }
+
+        private void RemoveCallback(int unique)
+        {
+            if (_groupList.TryGetValue(unique, out var foldout))
+            {
+                _scrollView.Remove(foldout);
+                _groupList.Remove(unique);
+            }
         }
     }
 }

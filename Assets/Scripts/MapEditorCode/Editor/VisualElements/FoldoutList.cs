@@ -11,6 +11,7 @@ namespace MapEditor
         public int Index;
         public string Label;
         public GameObject FieldObj;
+        public Color ColorObj;
     }
 
     public class FoldoutList : VisualElement
@@ -24,7 +25,7 @@ namespace MapEditor
         private Foldout _foldout;
         private ListView _listView;
 
-        private List<ObjectData> _items = new List<ObjectData>();
+        private List<FoldoutListItem> _items = new List<FoldoutListItem>();
 
         private int _curSelectIndex = 0;
         private int _curRefreshIndex = 0;
@@ -33,6 +34,8 @@ namespace MapEditor
         private string _curGroupName = "新建组";
 
         private int _curUnique = -1;
+
+        private System.Action<int> _removeCallback;
 
         public FoldoutList()
         {
@@ -61,11 +64,25 @@ namespace MapEditor
             _foldout.Add(_listView);
 
             RegisterCallback<MouseDownEvent>(OnMouseDownEvent);
+            RegisterCallback<KeyDownEvent>(OnKeyDownEvent);
+        }
+
+        private void OnKeyDownEvent(KeyDownEvent evt)
+        {
+            if (evt.keyCode == KeyCode.Escape)
+            {
+                _removeCallback?.Invoke(_curUnique);
+            }
         }
 
         public void SetUnique(int index)
         {
             _curUnique = index;
+        }
+
+        public void SetRemoveCallback(System.Action<int> callback)
+        {
+            _removeCallback = callback;
         }
 
         private void OnMouseDownEvent(MouseDownEvent evt)
@@ -100,12 +117,7 @@ namespace MapEditor
 
         private void BtnAddItem_OnClick()
         {
-            _items.Add(new ObjectData
-            {
-                Index = _items.Count,
-                Label = _defaultLabel,
-                FieldObj = null,
-            });
+            _items.Add(new FoldoutListItem());
             _curRefreshIndex = 0;
             _listView.Rebuild();
         }
@@ -115,46 +127,35 @@ namespace MapEditor
             _curSelectIndex = _listView.selectedIndex;
         }
 
+        private void RemoveItem(FoldoutListItem item)
+        {
+            if (_items.Remove(item))
+            {
+                _listView.Rebuild();
+            }
+        }
+        
         private VisualElement OnListViewMakItem()
         {
-            var objField = new ObjectField
-            {
-                objectType = typeof(GameObject),
-                allowSceneObjects = false,
-                style =
-                {
-                    position = Position.Relative,
-                    marginLeft = 0,
-                    left = 0,
-                    right = 0
-                },
-                tabIndex = _curRefreshIndex
-            };
-            _curRefreshIndex++;
-            objField.RegisterValueChangedCallback(v =>
-            {
-                var go = v.newValue as GameObject;
-                objField.value = go;
-                _items[objField.tabIndex].FieldObj = go;
-                var label = go == null ? _defaultLabel : go.name;
-                objField.label = label;
-                _items[objField.tabIndex].Label = label;
-            });
-
-            return objField;
+            var item = new FoldoutListItem();
+            item.SetRemoveCallback(RemoveItem);
+            return item;
         }
 
         private void OnListViewBindItem(VisualElement arg1, int arg2)
         {
-            if (arg1 is ObjectField obj)
+            if (arg1 is FoldoutListItem item)
             {
-                if (_items[arg2].FieldObj != null)
+                var temp = _items[arg2];
+                if (temp == null)
                 {
-                    _items[arg2].Label = _items[arg2].FieldObj.name;
+                    _items[arg2] = item;
                 }
-
-                obj.label = _items[arg2].Label;
-                obj.SetValueWithoutNotify(_items[arg2].FieldObj);
+                else
+                {
+                    _items[arg2] = item;
+                    item.SetValue(temp);
+                }
             }
         }
     }
