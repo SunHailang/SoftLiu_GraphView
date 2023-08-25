@@ -35,6 +35,8 @@ namespace MapEditor
 
         private MapInspectorView _mapInspectorView;
 
+        public static EditorWindow MapWindow;
+
         public void CreateGUI()
         {
             // Each editor window contains a root VisualElement object
@@ -94,11 +96,22 @@ namespace MapEditor
             #region MapHierarchyView
 
             _mapHierarchyView = root.Q<MapHierarchyView>("MapHierarchyView");
-            var scroll = root.Q<ScrollView>("HierarchyScrollView");
-            _mapHierarchyView.SetScrollView(scroll);
+
+            _mapHierarchyView.OnSelectFoldoutItem += OnSelectFoldoutItemEvent;
+            
+            var scrollHierarchy = root.Q<ScrollView>("HierarchyScrollView");
+            _mapHierarchyView.SetScrollView(scrollHierarchy);
             var btnAddHierarchyGroup = root.Q<Button>("BtnAddHierarchyGroup");
             btnAddHierarchyGroup.clicked += BtnAddHierarchyGroup_OnClick;
 
+            #endregion
+
+            #region MapInspectorView
+
+            _mapInspectorView = root.Q<MapInspectorView>("MapInspectorView");
+            var scrollInspector = root.Q<ScrollView>("InspectorScrollView");
+            _mapInspectorView.SetScrollView(scrollInspector);
+            
             #endregion
 
             #region MapSceneView
@@ -129,11 +142,17 @@ namespace MapEditor
             btnReduceBottomLine.clicked += BtnReduceBottomLine_OnClick;
 
             _mapSceneView.InitDrawParentElement(_sceneContainer);
-
+            _mapSceneView.OnSelectEvent += OnSelectBox;
             #endregion
+
+            MapWindow = this;
         }
 
-        
+        private void OnSelectFoldoutItemEvent(FoldoutListItem obj)
+        {
+            _mapSceneView.SetFoldoutItem(obj);
+        }
+
 
         private void ContainerFileHandler()
         {
@@ -147,10 +166,12 @@ namespace MapEditor
 
         private void SaveAction(DropdownMenuAction obj)
         {
+            _mapHierarchyView.Save();
         }
 
         private void SaveAsAction(DropdownMenuAction obj)
         {
+            _mapHierarchyView.Initialization(null);
         }
 
         private void DocumentationAction(DropdownMenuAction obj)
@@ -173,6 +194,11 @@ namespace MapEditor
         #endregion
 
         #region Scene 面板事件
+
+        private void OnSelectBox(ButtonBox box)
+        {
+            _mapInspectorView.OnSelectButtonBox(box);
+        }
 
         private void SceneContainerHandler()
         {
@@ -198,7 +224,7 @@ namespace MapEditor
         {
             _mapSceneView.BtnBottomLine_OnClick();
         }
-        
+
         private void BtnReduceLeftLine_OnClick()
         {
             _mapSceneView.BtnLeftLine_OnClick(false);

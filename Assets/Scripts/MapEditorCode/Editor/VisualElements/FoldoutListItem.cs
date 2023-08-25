@@ -69,10 +69,10 @@ namespace MapEditor
             _objectField.label = go == null ? "New Item" : go.name;
         }
 
-        public void SetValue(FoldoutListItem item)
+        public void SetValue(GameObject go, Color color)
         {
-            OnObjectFieldValueChanged(item.GetFieldObj());
-            _colorField.value = item.GetColor();
+            OnObjectFieldValueChanged(go);
+            _colorField.value = color;
         }
 
         public string GetLabel()

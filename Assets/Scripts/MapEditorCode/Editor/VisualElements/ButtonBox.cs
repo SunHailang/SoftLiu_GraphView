@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
@@ -9,6 +10,26 @@ using UnityEditor.UIElements;
 
 namespace MapEditor
 {
+    public enum MouseKeyType
+    {
+        None = -1,
+        Left = 0,
+        Right = 1,
+        Middle = 2
+    }
+
+    public class BoxColorData
+    {
+        public string DataPath;
+        public Color DataColor;
+
+        public static BoxColorData Zero = new BoxColorData
+        {
+            DataPath = "",
+            DataColor = Color.clear
+        };
+    }
+
     public class ButtonBox : VisualElement
     {
         public class Factory : UxmlFactory<ButtonBox, UxmlTraits>
@@ -25,15 +46,15 @@ namespace MapEditor
         private const int Width = 50;
         private const int Height = 50;
 
-        private HashSet<string> _guidList = new HashSet<string>();
-        private List<Color> _colorList = new List<Color>();
+        public readonly List<BoxColorData> BoxColorList = new List<BoxColorData>();
 
-        private System.Action<ButtonBox> _selectCallback;
+        private System.Action<ButtonBox, MouseKeyType> _selectCallback;
 
         private int _indexX = int.MinValue;
         public int IndexX => _indexX;
         private int _indexY = int.MinValue;
         public int IndexY => _indexY;
+
         public ButtonBox()
         {
             // Import UXML // "Assets/Scripts/MapEditorCode/Editor/VisualElements/ButtonBox.uxml"
@@ -56,14 +77,12 @@ namespace MapEditor
             _background.style.backgroundImage = _image;
         }
 
-        
-
-        public void SetSelectCallback(System.Action<ButtonBox> callback)
+        public void SetSelectCallback(System.Action<ButtonBox, MouseKeyType> callback)
         {
             _selectCallback = callback;
         }
 
-        public void SetIndex(int x, int y, string path)
+        public void SetIndex(int x, int y)
         {
             _indexX = x;
             _indexY = y;
@@ -74,37 +93,67 @@ namespace MapEditor
             return x == _indexX && y == _indexY;
         }
 
-        public void SetColor(string guid, Color color)
+        public void RemoveColor(string path, Color color)
         {
-            if (!_guidList.Add(guid))
+            for (int i = BoxColorList.Count - 1; i >= 0; i--)
             {
-                return;
+                var data = BoxColorList[i];
+                if (data.DataPath == path)
+                {
+                    BoxColorList.RemoveAt(i);
+                    break;
+                }
             }
 
-            _colorList.Add(color);
-
-            SetColor(_colorList);
+            SetColor(BoxColorList);
         }
 
-        private void SetColor(List<Color> colors)
+        public void SetColor(string path, Color color)
+        {
+            if (!string.IsNullOrEmpty(path))
+            {
+                BoxColorList.Add(new BoxColorData
+                {
+                    DataPath = path,
+                    DataColor = color
+                });
+            }
+
+            SetColor(BoxColorList);
+        }
+
+        private void SetColor(List<BoxColorData> colors)
         {
             var len = colors.Count;
             var half = Width / 2;
             var center = new float2(half, half);
             switch (len)
             {
+                case 0:
+                {
+                    for (var x = 0; x < _image.width; x++)
+                    {
+                        for (var y = 0; y < _image.height; y++)
+                        {
+                            _image.SetPixel(x, y, Color.clear);
+                        }
+                    }
+                    _image.Apply();
+                }
+                    break;
                 case 1:
                 {
                     for (var x = 0; x < _image.width; x++)
                     {
                         for (var y = 0; y < _image.height; y++)
                         {
-                            if (math.distancesq(center, new float2(x, y)) > Width * Width)
+                            if (math.distancesq(center, new float2(x, y)) > half * half)
                             {
+                                _image.SetPixel(x, y, Color.clear);
                                 continue;
                             }
 
-                            _image.SetPixel(x, y, colors[0]);
+                            _image.SetPixel(x, y, colors[0].DataColor);
                         }
                     }
 
@@ -117,12 +166,13 @@ namespace MapEditor
                     {
                         for (var y = 0; y < _image.height; y++)
                         {
-                            if (math.distancesq(center, new float2(x, y)) > Width * Width)
+                            if (math.distancesq(center, new float2(x, y)) > half * half)
                             {
+                                _image.SetPixel(x, y, Color.clear);
                                 continue;
                             }
 
-                            var color = x < half ? colors[0] : colors[1];
+                            var color = x < half ? colors[0].DataColor : colors[1].DataColor;
                             _image.SetPixel(x, y, color);
                         }
                     }
@@ -138,7 +188,7 @@ namespace MapEditor
                         {
                             if (math.distancesq(center, new float2(x, y)) > (Width / 2) * (Width / 2))
                             {
-                                _image.SetPixel(x, y, Color.gray);
+                                _image.SetPixel(x, y, Color.clear);
                                 continue;
                             }
 
@@ -148,15 +198,15 @@ namespace MapEditor
                             Color color;
                             if (y > y1 && x < half)
                             {
-                                color = colors[0];
+                                color = colors[0].DataColor;
                             }
                             else if (y > y2 && x > half)
                             {
-                                color = colors[1];
+                                color = colors[1].DataColor;
                             }
                             else
                             {
-                                color = colors[2];
+                                color = colors[2].DataColor;
                             }
 
                             _image.SetPixel(x, y, color);
@@ -174,7 +224,7 @@ namespace MapEditor
                         {
                             if (math.distancesq(center, new float2(x, y)) > half * half)
                             {
-                                _image.SetPixel(x, y, Color.gray);
+                                _image.SetPixel(x, y, Color.clear);
                                 continue;
                             }
 
@@ -184,19 +234,19 @@ namespace MapEditor
                             Color color;
                             if (y >= 0 && y < half && x >= 0 && x < half)
                             {
-                                color = colors[0];
+                                color = colors[0].DataColor;
                             }
                             else if (y >= half && x >= 0 && x < half)
                             {
-                                color = colors[1];
+                                color = colors[1].DataColor;
                             }
                             else if (y >= 0 && y < half && x >= half)
                             {
-                                color = colors[2];
+                                color = colors[2].DataColor;
                             }
                             else
                             {
-                                color = colors[3];
+                                color = colors[3].DataColor;
                             }
 
                             _image.SetPixel(x, y, color);
@@ -211,6 +261,7 @@ namespace MapEditor
 
         private void OnMouseDownEvent(MouseDownEvent evt)
         {
+            var keyType = MouseKeyType.Left;
             if (evt.button == 0)
             {
                 // 左键
@@ -218,26 +269,27 @@ namespace MapEditor
             else if (evt.button == 1)
             {
                 // 右键
+                keyType = MouseKeyType.Right;
             }
             else if (evt.button == 2)
             {
                 // 中键 只作为选取
+                keyType = MouseKeyType.Middle;
             }
 
-            SetSelect(true);
-        }
-        
-        private void OnMouseUpEvent(MouseUpEvent evt)
-        {
-            
+            SetSelect(true, keyType);
         }
 
-        public void SetSelect(bool active)
+        private void OnMouseUpEvent(MouseUpEvent evt)
+        {
+        }
+
+        public void SetSelect(bool active, MouseKeyType keyType)
         {
             _selectImage.visible = active;
             if (active)
             {
-                _selectCallback?.Invoke(this);
+                _selectCallback?.Invoke(this, keyType);
             }
         }
 

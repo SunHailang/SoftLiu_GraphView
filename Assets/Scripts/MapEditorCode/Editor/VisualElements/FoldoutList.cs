@@ -27,15 +27,14 @@ namespace MapEditor
 
         private List<FoldoutListItem> _items = new List<FoldoutListItem>();
 
-        private int _curSelectIndex = 0;
-        private int _curRefreshIndex = 0;
-
         private TextField _curTextField = null;
         private string _curGroupName = "新建组";
 
         private int _curUnique = -1;
 
         private System.Action<int> _removeCallback;
+
+        public event System.Action<FoldoutListItem> OnSelectListItem; 
 
         public FoldoutList()
         {
@@ -75,14 +74,44 @@ namespace MapEditor
             }
         }
 
+        public void AddItem(string assetPath, Color color)
+        {
+            var go = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+            var item = new FoldoutListItem();
+            item.SetValue(go, color);
+            _items.Add(item);
+            _listView.Rebuild();
+        }
+
         public void SetUnique(int index)
         {
             _curUnique = index;
         }
 
+        public void SetGroupName(string group)
+        {
+            _foldout.text = group;
+            _curGroupName = group;
+        }
+
         public void SetRemoveCallback(System.Action<int> callback)
         {
             _removeCallback = callback;
+        }
+
+        public int GetUnique()
+        {
+            return _curUnique;
+        }
+        
+        public string GetGroupName()
+        {
+            return _curGroupName;
+        }
+
+        public List<FoldoutListItem> GetItemList()
+        {
+            return _items;
         }
 
         private void OnMouseDownEvent(MouseDownEvent evt)
@@ -118,13 +147,15 @@ namespace MapEditor
         private void BtnAddItem_OnClick()
         {
             _items.Add(new FoldoutListItem());
-            _curRefreshIndex = 0;
             _listView.Rebuild();
         }
 
         private void OnListViewSelectionChanged(IEnumerable<object> obj)
         {
-            _curSelectIndex = _listView.selectedIndex;
+            // _listView.selectedIndex;
+            Debug.Log($"FoldoutList Select: {_curGroupName}, {_listView.selectedIndex}");
+            var item = _items[_listView.selectedIndex];
+            OnSelectListItem?.Invoke(item);
         }
 
         private void RemoveItem(FoldoutListItem item)
@@ -154,7 +185,7 @@ namespace MapEditor
                 else
                 {
                     _items[arg2] = item;
-                    item.SetValue(temp);
+                    item.SetValue(temp.GetFieldObj(), temp.GetColor());
                 }
             }
         }

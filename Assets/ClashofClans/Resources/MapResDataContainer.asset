@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a86aed32db814215be95d13de45070ac, type: 3}
+  m_Name: MapResDataContainer
+  m_EditorClassIdentifier: 
+  MapItemList:
+  - ItemGroupUnique: 0
+    ItemGroup: "\u5730\u677F"
+    ItemPath: Assets/ResourcesRex/Demo/Meshes/BockadeBase1.fbx
+    ItemColor: {r: 0.44983998, g: 0.29973474, b: 0.7585144, a: 1}
+  - ItemGroupUnique: 0
+    ItemGroup: "\u5730\u677F"
+    ItemPath: Assets/ResourcesRex/Demo/Prefab/BockadeTile2.prefab
+    ItemColor: {r: 0.29641414, g: 0.26385212, b: 0.2993783, a: 1}
+  - ItemGroupUnique: 0
+    ItemGroup: "\u5730\u677F"
+    ItemPath: Assets/ResourcesRex/Demo/Meshes/Boulder1.fbx
+    ItemColor: {r: 0.046412073, g: 0.055414874, b: 0.81788456, a: 1}
+  - ItemGroupUnique: 0
+    ItemGroup: "\u5730\u677F"
+    ItemPath: Assets/ResourcesRex/Demo/Meshes/Chest.fbx
+    ItemColor: {r: 0.095045306, g: 0.1200452, b: 0.12970473, a: 1}
+  - ItemGroupUnique: 1
+    ItemGroup: "\u5899"
+    ItemPath: Assets/ResourcesRex/Demo/Meshes/DoorLargeLocked.fbx
+    ItemColor: {r: 0.047661234, g: 0.051204152, b: 0.05375112, a: 1}
+  - ItemGroupUnique: 1
+    ItemGroup: "\u5899"
+    ItemPath: Assets/ResourcesRex/Demo/Meshes/DoorLargeOneWay.fbx
+    ItemColor: {r: 0.024364704, g: 0.55119985, b: 0.016220056, a: 1}
+  - ItemGroupUnique: 1
+    ItemGroup: "\u5899"
+    ItemPath: Assets/ResourcesRex/Prefabs/EastWest.prefab
+    ItemColor: {r: 0.5198522, g: 0.00028432393, b: 0.39879498, a: 1}

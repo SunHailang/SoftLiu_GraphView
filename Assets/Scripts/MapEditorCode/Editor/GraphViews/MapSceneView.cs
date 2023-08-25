@@ -20,6 +20,8 @@ namespace MapEditor
         private int _rightValue = 500;
         private int _downValue = 500;
 
+        private FoldoutListItem _selectFoldoutListItem;
+
         public MapSceneView()
         {
             Insert(0, new GridBackground());
@@ -43,6 +45,11 @@ namespace MapEditor
             DrawGrid();
         }
 
+        public void SetFoldoutItem(FoldoutListItem item)
+        {
+            _selectFoldoutListItem = item;
+        }
+
         private void DrawGrid()
         {
             _parentElement.Clear();
@@ -63,9 +70,9 @@ namespace MapEditor
                 {
                     var btn = new ButtonBox();
                     btn.SetSelectCallback(SelectCallback);
-                    btn.SetIndex(i, j, "");
-                    btn.SetColor("", new Color(0, 0, 0, 0));
-                    btn.SetSelect(_curSelectButtonBox != null && _curSelectButtonBox.EqualIndex(btn.IndexX, btn.IndexY));
+                    btn.SetIndex(i, j);
+                    btn.SetColor("", Color.clear);
+                    btn.SetSelect(_curSelectButtonBox != null && _curSelectButtonBox.EqualIndex(btn.IndexX, btn.IndexY), MouseKeyType.None);
                     box.Add(btn);
                 }
 
@@ -75,15 +82,35 @@ namespace MapEditor
 
         private ButtonBox _curSelectButtonBox = null;
 
-        private void SelectCallback(ButtonBox data)
+        public event System.Action<ButtonBox> OnSelectEvent;
+
+        private void SelectCallback(ButtonBox data, MouseKeyType keyType)
         {
             if (_curSelectButtonBox != null && !_curSelectButtonBox.EqualIndex(data.IndexX, data.IndexY))
             {
-                _curSelectButtonBox.SetSelect(false);
+                _curSelectButtonBox.SetSelect(false, MouseKeyType.None);
             }
 
             _curSelectButtonBox = data;
+            if (_selectFoldoutListItem != null && !string.IsNullOrEmpty(_selectFoldoutListItem.GetObjFieldPath()))
+            {
+                switch (keyType)
+                {
+                    case MouseKeyType.Left:
+                    {
+                        _curSelectButtonBox.SetColor(_selectFoldoutListItem.GetObjFieldPath(), _selectFoldoutListItem.GetColor());
+                    }
+                        break;
+                    case MouseKeyType.Right:
+                    {
+                        _curSelectButtonBox.RemoveColor(_selectFoldoutListItem.GetObjFieldPath(), _selectFoldoutListItem.GetColor());
+                    }
+                        break;
+                }
+            }
+
             // TODO
+                OnSelectEvent?.Invoke(_curSelectButtonBox);
         }
 
         private bool _isDraw = false;

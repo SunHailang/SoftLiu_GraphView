@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd"
+>
+    <engine:VisualElement style="flex-direction: row; height: 20px;">
+        <editor:ObjectField name="ObjectField" allow-scene-objects="false" style="position: absolute; left: 0px; right: 25px;"/>
+        <editor:ColorField name="ColorField" show-alpha="false" show-eye-dropper="false" style="width: 20px; position: absolute; right: 0px;"/>
+    </engine:VisualElement>
+    <engine:Image name="PreviewImage" style="height: 120px"/>
+    <engine:Box style="height: 2px"/>
+</engine:UXML>
